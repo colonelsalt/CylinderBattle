@@ -29,4 +29,4 @@ This README documents whatever steps are necessary to get your application up an
 
 ### Can I edit the existing code? ###
 
-* Yes, we encourage you to use and edit the existing code to your needs.
+* Yes, we encourage you to use and edit the existing code to your needs. It must be clear to the assessors though that there is purpose behind these changes and that you fully understand the original source.
