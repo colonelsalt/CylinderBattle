@@ -24,24 +24,27 @@ public class UIManager : MonoBehaviour
     void OnEnable()
     {
         DeathTrigger.OnPlayerDeath += OnUpdateScore;
+        Pi.OnPiCaptured += OnUpdateScore;
     }
 
     void OnDisable()
     {
         DeathTrigger.OnPlayerDeath -= OnUpdateScore;
+        Pi.OnPiCaptured -= OnUpdateScore;
     }
 
     void OnUpdateScore(int playerNum)
     {
         if(playerNum == 1)
         {
-            m_Player2Score += 1;
-            m_Player2ScoreText.text = "" + m_Player2Score;
+            m_Player1Score += 1;
+            m_Player1ScoreText.text = "" + m_Player1Score;
+
         }
         else if(playerNum == 2)
         {
-            m_Player1Score += 1;
-            m_Player1ScoreText.text = "" + m_Player1Score;
+            m_Player2Score += 1;
+            m_Player2ScoreText.text = "" + m_Player2Score;
         }
     }
 }
