@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pi : MonoBehaviour {
+public class Pi : MonoBehaviour
+{
+    // --------------------------------------------------------------
 
+    // Events
     public delegate void PiCaptured(int playerNum);
     public static event PiCaptured OnPiCaptured;
+
+    // --------------------------------------------------------------
 
     private void OnTriggerEnter(Collider other)
     {
@@ -19,7 +24,7 @@ public class Pi : MonoBehaviour {
 
     private void Vanish()
     {
-        
+        // play vanish animation
         Destroy(gameObject);
     }
 }
