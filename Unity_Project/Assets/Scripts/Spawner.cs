@@ -14,10 +14,16 @@ public class Spawner : MonoBehaviour
 
     private Transform[] m_spawnPositions;
     private float m_timeSinceLastSpawn = 0f;
+    private Transform m_lastSpawnPosition;
     // --------------------------------------------------------------
 
     private void Awake()
     {
+        if (transform.childCount <= 0)
+        {
+            Debug.LogError("No Spawn positions set for " + gameObject + "!");
+        }
+
         GameManager.OnGameOver += OnGameOver;
 
         m_spawnPositions = new Transform[transform.childCount];
@@ -33,14 +39,20 @@ public class Spawner : MonoBehaviour
         if (m_timeSinceLastSpawn >= m_timeBetweenSpawns)
         {
             Spawn();
-            m_timeSinceLastSpawn = 0f;
         }
     }
 
     private void Spawn()
     {
-        Transform spawnPoint = m_spawnPositions[Random.Range(0, m_spawnPositions.Length)];
+        Transform spawnPoint;
+        do
+        {
+            spawnPoint = m_spawnPositions[Random.Range(0, m_spawnPositions.Length)];
+        } while (spawnPoint == m_lastSpawnPosition);
+
         Instantiate(m_objectToSpawn, spawnPoint.position, Quaternion.identity);
+        m_timeSinceLastSpawn = 0f;
+        m_lastSpawnPosition = spawnPoint;
     }
 
     private void OnGameOver(int numOfWinner)
