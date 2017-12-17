@@ -11,6 +11,21 @@ public class Pi : MonoBehaviour
     public static event PiCaptured OnPiCaptured;
 
     // --------------------------------------------------------------
+    private const int MAX_NUM_PIS = 2;
+    private static int numPisInPlay = 0;
+    // --------------------------------------------------------------
+
+    private void Awake()
+    {
+        if (numPisInPlay >= MAX_NUM_PIS)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            numPisInPlay++;
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,6 +40,7 @@ public class Pi : MonoBehaviour
     private void Vanish()
     {
         // play vanish animation
+        numPisInPlay--;
         Destroy(gameObject);
     }
 }

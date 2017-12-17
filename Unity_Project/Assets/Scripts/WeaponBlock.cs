@@ -5,24 +5,22 @@ using UnityEngine;
 public class WeaponBlock : MonoBehaviour
 {
     // --------------------------------------------------------------
-    // Events
-    public delegate void WeaponPickup(Weapon type);
-    public static event WeaponPickup OnWeaponPickup;
+    
     // --------------------------------------------------------------
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Weapon block triggered against " + other.gameObject);
-        WeaponManager weaponManager = other.GetComponent<WeaponManager>();
-        if (weaponManager != null)
+        PowerupManager powerupManager = other.GetComponent<PowerupManager>();
+        if (powerupManager != null)
         {
-            weaponManager.AddWeapon((Weapon)Random.Range(0, (int)Weapon.BOXING_GLOVES));
+            powerupManager.AddPowerup(PowerupGenerator.RandomWeapon());
             Break();
         }
     }
 
     private void Break()
     {
+        // play break animation
         Destroy(gameObject);
     }
 }
