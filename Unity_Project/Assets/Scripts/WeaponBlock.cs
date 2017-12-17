@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponBlock : MonoBehaviour
-{
-    // --------------------------------------------------------------
-    
+{   
     // --------------------------------------------------------------
 
     private void OnTriggerEnter(Collider other)

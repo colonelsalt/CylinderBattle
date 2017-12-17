@@ -9,7 +9,8 @@ public enum Powerup
     BOXING_GLOVES = 2
 }
 
-public static class PowerupGenerator {
+public static class PowerupGenerator
+{
 
     public static Powerup[] ListAll()
     {
@@ -23,6 +24,6 @@ public static class PowerupGenerator {
 
     public static Powerup RandomWeapon()
     {
-        return Powerup.BOMB;
+        return Powerup.GUN;
     }
 }

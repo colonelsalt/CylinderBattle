@@ -5,13 +5,9 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     // --------------------------------------------------------------
-    [SerializeField]
-    private GameObject m_objectToSpawn;
-
-    [SerializeField]
-    private float m_timeBetweenSpawns;
+    [SerializeField] private GameObject m_objectToSpawn;
+    [SerializeField] private float m_timeBetweenSpawns;
     // --------------------------------------------------------------
-
     private Transform[] m_spawnPositions;
     private float m_timeSinceLastSpawn = 0f;
     private Transform m_lastSpawnPosition;

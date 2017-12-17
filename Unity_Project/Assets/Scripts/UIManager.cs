@@ -7,25 +7,26 @@ public class UIManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    [SerializeField]
-    Text m_Player1ScoreText;
+    [SerializeField] private PlayerHUD m_Player1HUD;
+    [SerializeField] private PlayerHUD m_Player2HUD;
 
-    [SerializeField]
-    Text m_Player2ScoreText;
-
-    [SerializeField]
-    private Text m_GameOverTitle;
+    [SerializeField] private Text m_Player1ScoreText;
+    [SerializeField] private Text m_Player2ScoreText;
+    [SerializeField] private Text m_GameOverTitle;
 
     // --------------------------------------------------------------
 
-    int m_Player1Score = 0;
-    int m_Player2Score = 0;
+    private int m_Player1Score = 0;
+    private int m_Player1NumPluses = 0;
 
+    private int m_Player2Score = 0;
+    private int m_Player2NumPluses = 0;
+    
     // --------------------------------------------------------------
 
     void OnEnable()
     {
-        DeathTrigger.OnPlayerDeath += OnUpdateScore;
+        //DeathTrigger.OnPlayerDeath += OnUpdateScore;
         Pi.OnPiCaptured += OnUpdateScore;
         GameManager.OnGameOver += OnGameOver;
     }
@@ -34,6 +35,8 @@ public class UIManager : MonoBehaviour
     {
         if(playerNum == 1)
         {
+            // TODO: Pass this call to Player1HUD and move text elements to it
+
             m_Player1Score += 1;
             m_Player1ScoreText.text = m_Player1Score + "/" + GameManager.MAX_NUM_PIS;
         }
@@ -47,7 +50,7 @@ public class UIManager : MonoBehaviour
     private void OnGameOver(int numOfWinner)
     {
         GameManager.OnGameOver -= OnGameOver;
-        DeathTrigger.OnPlayerDeath -= OnUpdateScore;
+        //DeathTrigger.OnPlayerDeath -= OnUpdateScore;
         Pi.OnPiCaptured -= OnUpdateScore;
         m_GameOverTitle.enabled = true;
         m_GameOverTitle.text += "\nPlayer " + numOfWinner + " wins!";
