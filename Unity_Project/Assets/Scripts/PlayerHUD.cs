@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,8 +29,12 @@ public class PlayerHUD : MonoBehaviour {
     public void IncrementAndUpdatePluses()
     {
         m_NumPluses++;
-        // Update display
+        m_NumPlusesText.text = m_NumPluses.ToString();
     }
 
-
+    public void ResetPluses()
+    {
+        m_NumPluses = 0;
+        m_NumPlusesText.text = m_NumPluses.ToString();
+    }
 }

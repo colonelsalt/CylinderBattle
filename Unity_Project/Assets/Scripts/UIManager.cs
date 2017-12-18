@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
 
     void OnEnable()
     {
-        //DeathTrigger.OnPlayerDeath += OnUpdateScore;
+        DeathTrigger.OnPlayerDeath += OnResetPluses;
         Pi.OnPiCaptured += OnUpdateScore;
         Plus.OnPlusCaptured += OnUpdatePluses;
         GameManager.OnGameOver += OnGameOver;
@@ -23,6 +23,11 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("Incorrect number of PlayerHUDs assigned.");
         }
+    }
+
+    private void OnResetPluses(int playerNum)
+    {
+        m_PlayerHUDs[playerNum - 1].ResetPluses();
     }
 
     private void OnUpdatePluses(int playerNum)

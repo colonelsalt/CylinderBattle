@@ -32,6 +32,15 @@ public class PowerupManager : MonoBehaviour
     {
         m_Player = GetComponent<PlayerController>();
         Plus.OnPlusCaptured += OnPlusCaptured;
+        DeathTrigger.OnPlayerDeath += OnResetPluses;
+    }
+
+    private void OnResetPluses(int playerNum)
+    {
+        if (playerNum == m_Player.GetPlayerNum())
+        {
+            m_NumPluses = 0;
+        }
     }
 
     private void OnPlusCaptured(int playerNum)
@@ -39,9 +48,19 @@ public class PowerupManager : MonoBehaviour
         if (playerNum == m_Player.GetPlayerNum())
         {
             m_NumPluses++;
-            if (m_NumPluses % 5 == 0)
+            // Get bonus powerup for every 5 pluses collected
+            switch (m_NumPluses % 20)
             {
-                // Get bonus powerup
+                case 5:
+                    Debug.Log("5 pluses collected by " + gameObject);
+                    break;
+                case 10:
+                    Debug.Log("10 pluses collected by " + gameObject);
+                    break;
+                case 15:
+                    break;
+                case 0:
+                    break;
             }
         }
     }
@@ -56,7 +75,7 @@ public class PowerupManager : MonoBehaviour
 
     private void ActivatePowerup()
     {
-        if (!m_HasPowerup) return;
+        if (!m_HasPowerup || m_PowerupIsRunning) return;
 
         m_PowerupIsRunning = true;
         switch (m_Powerup)
