@@ -19,10 +19,23 @@ public class UIManager : MonoBehaviour
         Pi.OnPiCaptured += OnUpdateScore;
         Plus.OnPlusCaptured += OnUpdatePluses;
         GameManager.OnGameOver += OnGameOver;
+        Gun.OnGunFired += OnUpdateAmmo;
+        PowerupManager.OnPowerupActivated += OnDisplayPowerup;
+
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
         {
             Debug.LogError("Incorrect number of PlayerHUDs assigned.");
         }
+    }
+
+    private void OnDisplayPowerup(Powerup type, int playerNum)
+    {
+        m_PlayerHUDs[playerNum - 1].ShowPowerup(type);
+    }
+
+    private void OnUpdateAmmo(int playerNum)
+    {
+        m_PlayerHUDs[playerNum - 1].DecrementAndUpdateAmmo();
     }
 
     private void OnResetPluses(int playerNum)
@@ -42,9 +55,12 @@ public class UIManager : MonoBehaviour
 
     private void OnGameOver(int numOfWinner)
     {
-        GameManager.OnGameOver -= OnGameOver;
-        //DeathTrigger.OnPlayerDeath -= OnUpdateScore;
+        DeathTrigger.OnPlayerDeath -= OnResetPluses;
         Pi.OnPiCaptured -= OnUpdateScore;
+        Plus.OnPlusCaptured -= OnUpdatePluses;
+        GameManager.OnGameOver -= OnGameOver;
+        Gun.OnGunFired -= OnUpdateAmmo;
+
         m_GameOverTitle.enabled = true;
         m_GameOverTitle.text += "\nPlayer " + numOfWinner + " wins!";
     }

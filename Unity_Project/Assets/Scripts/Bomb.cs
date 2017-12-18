@@ -36,6 +36,6 @@ public class Bomb : MonoBehaviour
             }
         }
 
-        Destroy(gameObject);
+        Destroy(gameObject, 1f);
     }
 }
