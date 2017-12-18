@@ -12,12 +12,15 @@ public class PlayerHUD : MonoBehaviour
     [SerializeField] private Text m_NumPisText;
     [SerializeField] private Text m_NumPlusesText;
     [SerializeField] private Text m_AmmoText;
+    [SerializeField] private Text m_HealthText;
     [SerializeField] private Image m_PowerupImage;
+    [SerializeField] private Texture[] m_PowerupImages;
 
     // --------------------------------------------------------------
 
     private int m_NumPis = 0;
     private int m_NumPluses = 0;
+    private int m_Health;
     private int m_Ammo;
 
     // --------------------------------------------------------------
@@ -26,6 +29,8 @@ public class PlayerHUD : MonoBehaviour
     {
         m_NumPisText.text = m_NumPis + "/" + GameManager.MAX_NUM_PIS;
         m_NumPlusesText.text = m_NumPluses.ToString();
+        m_Health = GameManager.PLAYER_HEALTH;
+        m_HealthText.text = m_Health.ToString();
     }
 
     public void IncrementAndUpdatePis()
@@ -44,6 +49,12 @@ public class PlayerHUD : MonoBehaviour
     {
         m_NumPluses = 0;
         m_NumPlusesText.text = m_NumPluses.ToString();
+    }
+
+    public void IncrementHealthDisplayBy(int amount)
+    {
+        m_Health += amount;
+        m_HealthText.text = m_Health.ToString();
     }
 
     public void ShowPowerup(Powerup type)

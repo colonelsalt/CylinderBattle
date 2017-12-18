@@ -21,11 +21,17 @@ public class UIManager : MonoBehaviour
         GameManager.OnGameOver += OnGameOver;
         Gun.OnGunFired += OnUpdateAmmo;
         PowerupManager.OnPowerupActivated += OnDisplayPowerup;
+        Health.OnPlayerHealthChange += OnUpdateHealth;
 
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
         {
             Debug.LogError("Incorrect number of PlayerHUDs assigned.");
         }
+    }
+
+    private void OnUpdateHealth(int playerNum, int healthChange)
+    {
+        m_PlayerHUDs[playerNum - 1].IncrementHealthDisplayBy(healthChange);
     }
 
     private void OnDisplayPowerup(Powerup type, int playerNum)
@@ -60,6 +66,8 @@ public class UIManager : MonoBehaviour
         Plus.OnPlusCaptured -= OnUpdatePluses;
         GameManager.OnGameOver -= OnGameOver;
         Gun.OnGunFired -= OnUpdateAmmo;
+        PowerupManager.OnPowerupActivated -= OnDisplayPowerup;
+        Health.OnPlayerHealthChange -= OnUpdateHealth;
 
         m_GameOverTitle.enabled = true;
         m_GameOverTitle.text += "\nPlayer " + numOfWinner + " wins!";
