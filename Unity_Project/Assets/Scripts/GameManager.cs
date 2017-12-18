@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     // --------------------------------------------------------------
 
     public const int MAX_NUM_PIS = 10;
+    public static int NUM_PLAYERS = 2;
     
     // --------------------------------------------------------------
 

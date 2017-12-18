@@ -57,11 +57,14 @@ public class PowerupManager : MonoBehaviour
     private void ActivatePowerup()
     {
         if (!m_HasPowerup) return;
+
+        m_PowerupIsRunning = true;
         switch (m_Powerup)
         {
             case Powerup.BOMB:
                 // Spawn bomb 1m in front of Player with fuse pointing up (x=-90 deg. angle)
                 Instantiate(m_BombPrefab, transform.position + transform.forward, Quaternion.Euler(-90f, 0, 0));
+                m_PowerupIsRunning = false;
                 break;
             case Powerup.GUN:
                 // Spawn gun 80cm in front of Player, and child it to the Player's Transform
@@ -76,12 +79,11 @@ public class PowerupManager : MonoBehaviour
 
     public void AddPowerup(Powerup powerup)
     {
-        if (!m_HasPowerup)
-        {
-            m_HasPowerup = true;
-            m_Powerup = powerup;
-            Debug.Log("Received weapon " + m_Powerup);
-        }
+        if (m_HasPowerup) return;
+        
+        m_HasPowerup = true;
+        m_Powerup = powerup;
+        Debug.Log("Received powerup " + m_Powerup);
     }
 
     private void DisablePowerup()

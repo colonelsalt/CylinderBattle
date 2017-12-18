@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,20 +8,8 @@ public class UIManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    [SerializeField] private PlayerHUD m_Player1HUD;
-    [SerializeField] private PlayerHUD m_Player2HUD;
-
-    [SerializeField] private Text m_Player1ScoreText;
-    [SerializeField] private Text m_Player2ScoreText;
+    [SerializeField] private PlayerHUD[] m_PlayerHUDs;
     [SerializeField] private Text m_GameOverTitle;
-
-    // --------------------------------------------------------------
-
-    private int m_Player1Score = 0;
-    private int m_Player1NumPluses = 0;
-
-    private int m_Player2Score = 0;
-    private int m_Player2NumPluses = 0;
     
     // --------------------------------------------------------------
 
@@ -28,23 +17,22 @@ public class UIManager : MonoBehaviour
     {
         //DeathTrigger.OnPlayerDeath += OnUpdateScore;
         Pi.OnPiCaptured += OnUpdateScore;
+        Plus.OnPlusCaptured += OnUpdatePluses;
         GameManager.OnGameOver += OnGameOver;
+        if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
+        {
+            Debug.LogError("Incorrect number of PlayerHUDs assigned.");
+        }
+    }
+
+    private void OnUpdatePluses(int playerNum)
+    {
+        m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePluses();
     }
 
     void OnUpdateScore(int playerNum)
     {
-        if(playerNum == 1)
-        {
-            // TODO: Pass this call to Player1HUD and move text elements to it
-
-            m_Player1Score += 1;
-            m_Player1ScoreText.text = m_Player1Score + "/" + GameManager.MAX_NUM_PIS;
-        }
-        else if(playerNum == 2)
-        {
-            m_Player2Score += 1;
-            m_Player2ScoreText.text = m_Player2Score + "/" + GameManager.MAX_NUM_PIS;
-        }
+        m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePis();
     }
 
     private void OnGameOver(int numOfWinner)
