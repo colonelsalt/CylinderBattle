@@ -90,9 +90,6 @@ public class PlayerController : MonoBehaviour
 
     void UpdateMovementState()
     {
-        // If Player has been struck by an explosion, do not move
-        if (!m_Body.isKinematic) return;
-
         // Get Player's movement input and determine direction and set run speed
         float horizontalInput = Input.GetAxisRaw("Horizontal" + m_PlayerInputString);
         float verticalInput = Input.GetAxisRaw("Vertical" + m_PlayerInputString);
@@ -104,7 +101,7 @@ public class PlayerController : MonoBehaviour
     void UpdateJumpState()
     {
         // Character can jump when standing on the ground (and when not affected by Bomb explosion)
-        if (Input.GetButtonDown("Jump" + m_PlayerInputString) && m_CharacterController.isGrounded && m_Body.isKinematic)
+        if (Input.GetButtonDown("Jump" + m_PlayerInputString) && m_CharacterController.isGrounded)
         {
             Jump();
         }
@@ -130,14 +127,19 @@ public class PlayerController : MonoBehaviour
         // Calculate actual motion
         m_CurrentMovementOffset = (m_MovementDirection * m_MovementSpeed + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
 
-        // Move character
-        m_CharacterController.Move(m_CurrentMovementOffset);
-
-        // Rotate the character in movement direction
-        if(m_MovementDirection != Vector3.zero)
+        if (m_Body.isKinematic)
         {
-            RotateCharacter(m_MovementDirection);
+            // Move character
+            m_CharacterController.Move(m_CurrentMovementOffset);
+
+            // Rotate the character in movement direction
+            if (m_MovementDirection != Vector3.zero)
+            {
+                RotateCharacter(m_MovementDirection);
+            }
         }
+
+        
     }
 
     void RotateCharacter(Vector3 movementDirection)
@@ -171,11 +173,13 @@ public class PlayerController : MonoBehaviour
     public void ActivatePhysicsReactions()
     {
         m_Body.isKinematic = false;
+        m_CharacterController.enabled = false;
         Invoke("DeactivatePhysicsReactions", m_ExplosionDazeTime);
     }
 
     private void DeactivatePhysicsReactions()
     {
+        m_CharacterController.enabled = true;
         m_Body.isKinematic = true;
     }
 

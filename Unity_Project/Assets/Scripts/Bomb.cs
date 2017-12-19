@@ -23,7 +23,7 @@ public class Bomb : MonoBehaviour
         Collider[] collidersStruck = Physics.OverlapSphere(transform.position, m_ExplosionRadius);
         foreach (Collider hit in collidersStruck)
         {
-            // If struck a Player object, deactivate their physics
+            // If struck a Player object, trigger them to be affected by physics
             PlayerController playerHit = hit.GetComponent<PlayerController>();
             if (playerHit != null)
             {
