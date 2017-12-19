@@ -19,7 +19,6 @@ public class Bomb : MonoBehaviour
 
     private void Explode()
     {
-        Debug.Log("Bomb exploded!");
         Collider[] collidersStruck = Physics.OverlapSphere(transform.position, m_ExplosionRadius);
         foreach (Collider hit in collidersStruck)
         {
@@ -33,7 +32,6 @@ public class Bomb : MonoBehaviour
             Rigidbody rigidBody = hit.GetComponent<Rigidbody>();
             if (rigidBody != null)
             {
-                Debug.Log("Sending explosion force!");
                 rigidBody.AddExplosionForce(m_ExplosionForce, transform.position, m_ExplosionRadius, m_ExplosionUpForce);
             }
         }

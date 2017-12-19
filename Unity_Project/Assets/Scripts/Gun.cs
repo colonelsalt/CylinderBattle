@@ -9,8 +9,6 @@ public class Gun : MonoBehaviour {
 
     [SerializeField] private GameObject m_LaserPrefab;
     [SerializeField] private float m_FiringRate = 0.2f;
-    [SerializeField] private int m_PlayerNum;
-    [SerializeField] private string m_PlayerInputString;
 
     // --------------------------------------------------------------
     
