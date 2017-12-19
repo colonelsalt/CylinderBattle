@@ -90,6 +90,7 @@ public class PowerupManager : MonoBehaviour
                 // Spawn gun 80cm in front of Player, and child it to the Player's Transform
                 GameObject gun = Instantiate(m_GunPrefab, transform) as GameObject;
                 gun.transform.position += (transform.forward * 0.8f);
+                gun.GetComponent<Gun>().AttachToPlayer(m_Player);
                 break;
             case Powerup.BOXING_GLOVES:
                 break;

@@ -43,6 +43,13 @@ public class Health : MonoBehaviour {
 
     private void Die()
     {
-        Destroy(gameObject);
+        if (m_Player != null)
+        {
+            m_Player.Die();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

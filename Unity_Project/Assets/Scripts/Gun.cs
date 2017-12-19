@@ -24,25 +24,27 @@ public class Gun : MonoBehaviour {
     public const int MAX_AMMO = 10;
 
     private int m_CurrentAmmo;
+    private PlayerController m_Player;
     
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_CurrentAmmo = MAX_AMMO;
-        if (m_PlayerNum <= 0)
-        {
-            Debug.LogError("Invalid Player number specified.");
-        }
+    }
+
+    public void AttachToPlayer(PlayerController player)
+    {
+        m_Player = player;
     }
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1" + m_PlayerInputString))
+        if (Input.GetButtonDown("Fire1" + m_Player.GetPlayerInputString()))
         {
             InvokeRepeating("Fire", 0.00001f, m_FiringRate);
         }
-        if (Input.GetButtonUp("Fire1" + m_PlayerInputString))
+        if (Input.GetButtonUp("Fire1" + m_Player.GetPlayerInputString()))
         {
             CancelInvoke("Fire");
         }
@@ -50,9 +52,10 @@ public class Gun : MonoBehaviour {
 
     private void Fire()
     {
-        OnGunFired(m_PlayerNum);
+        OnGunFired(m_Player.GetPlayerNum());
         m_CurrentAmmo--;
-        Instantiate(m_LaserPrefab, transform.position, transform.rotation);
+        Vector3 spawnPos = m_Player.transform.position + (2.5f * m_Player.transform.forward);
+        Instantiate(m_LaserPrefab, spawnPos, m_Player.transform.rotation);
         if (m_CurrentAmmo <= 0)
         {
             //OnGunDisabled(m_PlayerNum);
