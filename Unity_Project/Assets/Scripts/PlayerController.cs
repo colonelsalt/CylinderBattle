@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -25,7 +26,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     string m_PlayerInputString = "_P1";
 
+    // After struck by an explosion, how long will Player remain immobile
+    [SerializeField]
+    private float m_ExplosionDazeTime;
+
     // --------------------------------------------------------------
+
+    Rigidbody m_Body;
 
     // The charactercontroller of the player
     CharacterController m_CharacterController;
@@ -57,6 +64,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         m_CharacterController = GetComponent<CharacterController>();
+        m_Body = GetComponent<Rigidbody>();
     }
 
     // Use this for initialization
@@ -82,6 +90,9 @@ public class PlayerController : MonoBehaviour
 
     void UpdateMovementState()
     {
+        // If Player has been struck by an explosion, do not move
+        if (!m_Body.isKinematic) return;
+
         // Get Player's movement input and determine direction and set run speed
         float horizontalInput = Input.GetAxisRaw("Horizontal" + m_PlayerInputString);
         float verticalInput = Input.GetAxisRaw("Vertical" + m_PlayerInputString);
@@ -92,8 +103,8 @@ public class PlayerController : MonoBehaviour
 
     void UpdateJumpState()
     {
-        // Character can jump when standing on the ground
-        if (Input.GetButtonDown("Jump" + m_PlayerInputString) && m_CharacterController.isGrounded)
+        // Character can jump when standing on the ground (and when not affected by Bomb explosion)
+        if (Input.GetButtonDown("Jump" + m_PlayerInputString) && m_CharacterController.isGrounded && m_Body.isKinematic)
         {
             Jump();
         }
@@ -155,6 +166,17 @@ public class PlayerController : MonoBehaviour
     public string GetPlayerInputString()
     {
         return m_PlayerInputString;
+    }
+
+    public void ActivatePhysicsReactions()
+    {
+        m_Body.isKinematic = false;
+        Invoke("DeactivatePhysicsReactions", m_ExplosionDazeTime);
+    }
+
+    private void DeactivatePhysicsReactions()
+    {
+        m_Body.isKinematic = true;
     }
 
     public void Die()

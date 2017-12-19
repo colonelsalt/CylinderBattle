@@ -23,9 +23,17 @@ public class Bomb : MonoBehaviour
         Collider[] collidersStruck = Physics.OverlapSphere(transform.position, m_ExplosionRadius);
         foreach (Collider hit in collidersStruck)
         {
+            // If struck a Player object, deactivate their physics
+            PlayerController playerHit = hit.GetComponent<PlayerController>();
+            if (playerHit != null)
+            {
+                playerHit.ActivatePhysicsReactions();
+            }
+
             Rigidbody rigidBody = hit.GetComponent<Rigidbody>();
             if (rigidBody != null)
             {
+                Debug.Log("Sending explosion force!");
                 rigidBody.AddExplosionForce(m_ExplosionForce, transform.position, m_ExplosionRadius, m_ExplosionUpForce);
             }
         }
