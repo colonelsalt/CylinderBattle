@@ -24,6 +24,6 @@ public static class PowerupGenerator
 
     public static Powerup RandomWeapon()
     {
-        return Powerup.GUN;
+        return Powerup.BOMB;
     }
 }
