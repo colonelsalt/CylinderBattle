@@ -10,6 +10,7 @@ public class Gun : MonoBehaviour {
     [SerializeField] private GameObject m_LaserPrefab;
     [SerializeField] private float m_FiringRate = 0.2f;
     [SerializeField] private int m_PlayerNum;
+    [SerializeField] private string m_PlayerInputString;
 
     // --------------------------------------------------------------
     
@@ -37,11 +38,11 @@ public class Gun : MonoBehaviour {
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1" + m_PlayerInputString))
         {
             InvokeRepeating("Fire", 0.00001f, m_FiringRate);
         }
-        if (Input.GetButtonUp("Fire1"))
+        if (Input.GetButtonUp("Fire1" + m_PlayerInputString))
         {
             CancelInvoke("Fire");
         }

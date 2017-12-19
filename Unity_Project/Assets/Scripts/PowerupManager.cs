@@ -20,7 +20,7 @@ public class PowerupManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private int m_PlayerNum;
+    private PlayerController m_Player;
     private bool m_HasPowerup = false;
     private bool m_PowerupIsRunning = false;
     private int m_NumPluses = 0;
@@ -30,14 +30,14 @@ public class PowerupManager : MonoBehaviour
 
     private void Start()
     {
-        m_PlayerNum = GetComponent<PlayerController>().GetPlayerNum();
+        m_Player = GetComponent<PlayerController>();
         Plus.OnPlusCaptured += OnPlusCaptured;
         DeathTrigger.OnPlayerDeath += OnResetPluses;
     }
 
     private void OnResetPluses(int playerNum)
     {
-        if (playerNum == m_PlayerNum)
+        if (playerNum == m_Player.GetPlayerNum())
         {
             m_NumPluses = 0;
         }
@@ -45,7 +45,7 @@ public class PowerupManager : MonoBehaviour
 
     private void OnPlusCaptured(int playerNum)
     {
-        if (playerNum == m_PlayerNum)
+        if (playerNum == m_Player.GetPlayerNum())
         {
             m_NumPluses++;
             // Get bonus powerup for every 5 pluses collected
@@ -67,7 +67,7 @@ public class PowerupManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1" + m_Player.GetPlayerInputString()))
         {
             ActivatePowerup();
         }
@@ -78,7 +78,7 @@ public class PowerupManager : MonoBehaviour
         if (!m_HasPowerup || m_PowerupIsRunning) return;
 
         m_PowerupIsRunning = true;
-        OnPowerupActivated(m_Powerup, m_PlayerNum);
+        OnPowerupActivated(m_Powerup, m_Player.GetPlayerNum());
         switch (m_Powerup)
         {
             case Powerup.BOMB:

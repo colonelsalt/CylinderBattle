@@ -30,7 +30,7 @@ public class PlayerHUD : MonoBehaviour
         m_NumPisText.text = m_NumPis + "/" + GameManager.MAX_NUM_PIS;
         m_NumPlusesText.text = m_NumPluses.ToString();
         m_Health = GameManager.PLAYER_HEALTH;
-        m_HealthText.text = m_Health.ToString();
+        m_HealthText.text = "x" + m_Health;
     }
 
     public void IncrementAndUpdatePis()
@@ -54,7 +54,7 @@ public class PlayerHUD : MonoBehaviour
     public void IncrementHealthDisplayBy(int amount)
     {
         m_Health += amount;
-        m_HealthText.text = m_Health.ToString();
+        m_HealthText.text = "x" + m_Health.ToString();
     }
 
     public void ShowPowerup(Powerup type)

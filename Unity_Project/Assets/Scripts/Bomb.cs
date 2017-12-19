@@ -10,17 +10,11 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float m_ExplosionForce;
     [SerializeField] private float m_ExplosionUpForce;
     [SerializeField] private float m_ExplosionRadius;
-
-    private float m_timePassed = 0f;
     // --------------------------------------------------------------
 
-    private void Update()
+    private void Start()
     {
-        m_timePassed += Time.deltaTime;
-        if (m_timePassed >= m_ExplosionTime)
-        {
-            Explode();
-        }
+        Invoke("Explode", m_ExplosionTime);
     }
 
     private void Explode()
@@ -36,6 +30,6 @@ public class Bomb : MonoBehaviour
             }
         }
 
-        Destroy(gameObject, 1f);
+        Destroy(gameObject, 0.5f);
     }
 }

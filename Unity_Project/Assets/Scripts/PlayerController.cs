@@ -152,6 +152,11 @@ public class PlayerController : MonoBehaviour
         return 0;
     }
 
+    public string GetPlayerInputString()
+    {
+        return m_PlayerInputString;
+    }
+
     public void Die()
     {
         m_IsAlive = false;
