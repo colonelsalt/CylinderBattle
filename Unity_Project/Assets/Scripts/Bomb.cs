@@ -10,6 +10,7 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float m_ExplosionForce;
     [SerializeField] private float m_ExplosionUpForce;
     [SerializeField] private float m_ExplosionRadius;
+    [SerializeField] private int m_Damage;
     // --------------------------------------------------------------
 
     private void Start()
@@ -29,11 +30,20 @@ public class Bomb : MonoBehaviour
                 playerHit.ActivatePhysicsReactions();
             }
 
+            // Apply explosion force to each Rigidbody hit
             Rigidbody rigidBody = hit.GetComponent<Rigidbody>();
             if (rigidBody != null)
             {
                 rigidBody.AddExplosionForce(m_ExplosionForce, transform.position, m_ExplosionRadius, m_ExplosionUpForce);
             }
+
+            // Deal damage to all objects with Health
+            Health beingHit = hit.GetComponent<Health>();
+            if (beingHit != null)
+            {
+                beingHit.TakeDamage(m_Damage);
+            }
+
         }
 
         Destroy(gameObject, 0.5f);

@@ -32,7 +32,6 @@ public class PowerupManager : MonoBehaviour
     {
         m_Player = GetComponent<PlayerController>();
         Plus.OnPlusCaptured += OnPlusCaptured;
-        DeathTrigger.OnPlayerDeath += OnResetPluses;
     }
 
     private void OnResetPluses(int playerNum)
@@ -109,6 +108,7 @@ public class PowerupManager : MonoBehaviour
 
     public void DisablePowerup()
     {
-        //OnPowerupDisable(m_Powerup.PowerType, m_Player.GetPlayerNum());
+        m_PowerupIsRunning = false;
+        OnPowerupDisabled(m_Powerup, m_Player.GetPlayerNum());
     }
 }

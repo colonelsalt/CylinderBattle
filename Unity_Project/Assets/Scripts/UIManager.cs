@@ -15,13 +15,14 @@ public class UIManager : MonoBehaviour
 
     void OnEnable()
     {
-        DeathTrigger.OnPlayerDeath += OnResetPluses;
         Pi.OnPiCaptured += OnUpdateScore;
         Plus.OnPlusCaptured += OnUpdatePluses;
         GameManager.OnGameOver += OnGameOver;
         Gun.OnGunFired += OnUpdateAmmo;
         PowerupManager.OnPowerupActivated += OnDisplayPowerup;
+        PowerupManager.OnPowerupDisabled += OnHidePowerup;
         Health.OnPlayerHealthChange += OnUpdateHealth;
+        PlayerController.OnPlayerRespawn += OnResetDisplay;
 
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
         {
@@ -29,45 +30,56 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnUpdateHealth(int playerNum, int healthChange)
+    private void OnHidePowerup(Powerup type, int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].IncrementHealthDisplayBy(healthChange);
+        m_PlayerHUDs[playerNum - 1].HidePowerup();
     }
 
+    // Update and display new Player health
+    private void OnUpdateHealth(int playerNum, int newHealth)
+    {
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(newHealth);
+    }
+
+    // Display new powerup received
     private void OnDisplayPowerup(Powerup type, int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].ShowPowerup(type);
     }
 
+    // Update and display ammo change
     private void OnUpdateAmmo(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].DecrementAndUpdateAmmo();
+        m_PlayerHUDs[playerNum - 1].UpdateAmmoDisplay();
     }
 
-    private void OnResetPluses(int playerNum)
+    // Reset HUD after Player death
+    private void OnResetDisplay(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].ResetPluses();
+        m_PlayerHUDs[playerNum - 1].DeathReset();
     }
 
+    // Update and display number of Pluses collected
     private void OnUpdatePluses(int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePluses();
     }
 
-    void OnUpdateScore(int playerNum)
+    private void OnUpdateScore(int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePis();
     }
 
     private void OnGameOver(int numOfWinner)
     {
-        DeathTrigger.OnPlayerDeath -= OnResetPluses;
         Pi.OnPiCaptured -= OnUpdateScore;
         Plus.OnPlusCaptured -= OnUpdatePluses;
         GameManager.OnGameOver -= OnGameOver;
         Gun.OnGunFired -= OnUpdateAmmo;
         PowerupManager.OnPowerupActivated -= OnDisplayPowerup;
+        PowerupManager.OnPowerupDisabled -= OnHidePowerup;
         Health.OnPlayerHealthChange -= OnUpdateHealth;
+        PlayerController.OnPlayerRespawn -= OnResetDisplay;
 
         m_GameOverTitle.enabled = true;
         m_GameOverTitle.text += "\nPlayer " + numOfWinner + " wins!";

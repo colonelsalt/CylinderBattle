@@ -26,11 +26,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     string m_PlayerInputString = "_P1";
 
-    // After struck by an explosion, how long will Player remain immobile
+    // After struck by an explosion, how long Player will remain immobile
     [SerializeField]
     private float m_ExplosionDazeTime;
 
     // --------------------------------------------------------------
+    
+    // Events
+    public delegate void PlayerEvent(int playerNum);
+    public static event PlayerEvent OnPlayerDeath;
+    public static event PlayerEvent OnPlayerRespawn;
+
+    // --------------------------------------------------------------
+
 
     Rigidbody m_Body;
 
@@ -187,6 +195,7 @@ public class PlayerController : MonoBehaviour
     {
         m_IsAlive = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
+        //OnPlayerDeath(GetPlayerNum());
     }
 
     void UpdateRespawnTime()
@@ -203,5 +212,6 @@ public class PlayerController : MonoBehaviour
         m_IsAlive = true;
         transform.position = m_SpawningPosition;
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+        OnPlayerRespawn(GetPlayerNum());
     }
 }

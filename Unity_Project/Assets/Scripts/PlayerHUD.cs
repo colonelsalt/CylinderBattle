@@ -27,9 +27,10 @@ public class PlayerHUD : MonoBehaviour
 
     private void Awake()
     {
-        m_NumPisText.text = m_NumPis + "/" + GameManager.MAX_NUM_PIS;
-        m_NumPlusesText.text = m_NumPluses.ToString();
         m_Health = GameManager.PLAYER_HEALTH;
+
+        m_NumPisText.text = m_NumPis + "/" + GameManager.MAX_NUM_PIS;
+        m_NumPlusesText.text = "0";
         m_HealthText.text = "x" + m_Health;
     }
 
@@ -45,16 +46,17 @@ public class PlayerHUD : MonoBehaviour
         m_NumPlusesText.text = m_NumPluses.ToString();
     }
 
-    public void ResetPluses()
+    public void DeathReset()
     {
         m_NumPluses = 0;
+        m_Health = GameManager.PLAYER_HEALTH;
         m_NumPlusesText.text = m_NumPluses.ToString();
+        m_HealthText.text = "x" + m_Health;
     }
 
-    public void IncrementHealthDisplayBy(int amount)
+    public void UpdateHealthDisplay(int newHealth)
     {
-        m_Health += amount;
-        m_HealthText.text = "x" + m_Health.ToString();
+        m_HealthText.text = "x" + newHealth.ToString();
     }
 
     public void ShowPowerup(Powerup type)
@@ -71,9 +73,17 @@ public class PlayerHUD : MonoBehaviour
             case Powerup.BOXING_GLOVES:
                 break;
         }
+
+        m_PowerupImage.enabled = true;
     }
 
-    public void DecrementAndUpdateAmmo()
+    public void HidePowerup()
+    {
+        m_AmmoText.enabled = false;
+        m_PowerupImage.enabled = false;
+    }
+
+    public void UpdateAmmoDisplay()
     {
         m_Ammo--;
         m_AmmoText.text = m_Ammo.ToString();

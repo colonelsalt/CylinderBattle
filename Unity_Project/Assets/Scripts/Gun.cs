@@ -15,7 +15,6 @@ public class Gun : MonoBehaviour {
     // Events
     public delegate void GunEvent(int playerNum);
     public static event GunEvent OnGunFired;
-    public static event GunEvent OnGunDisabled;
 
     // --------------------------------------------------------------
 
@@ -56,7 +55,7 @@ public class Gun : MonoBehaviour {
         Instantiate(m_LaserPrefab, spawnPos, m_Player.transform.rotation);
         if (m_CurrentAmmo <= 0)
         {
-            //OnGunDisabled(m_PlayerNum);
+            m_Player.GetComponent<PowerupManager>().DisablePowerup();
             Destroy(gameObject);
         }
     }

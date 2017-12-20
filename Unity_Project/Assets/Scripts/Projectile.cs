@@ -11,6 +11,9 @@ public class Projectile : MonoBehaviour
     [SerializeField] private int m_FiredByPlayer;
     // --------------------------------------------------------------
 
+    private bool m_TriggeredThisFrame = false;
+
+    // --------------------------------------------------------------
 
     private void Update()
     {
@@ -19,6 +22,10 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (m_TriggeredThisFrame) return;
+
+        m_TriggeredThisFrame = true;
+
         Health otherHealth = other.GetComponent<Health>();
         if (otherHealth != null)
         {
