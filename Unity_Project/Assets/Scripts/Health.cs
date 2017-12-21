@@ -26,6 +26,7 @@ public class Health : MonoBehaviour {
     // --------------------------------------------------------------
 
     private PlayerController m_Player;
+    private Animator m_Animator;
     private int m_CurrentHealth;
     
     // --------------------------------------------------------------
@@ -34,6 +35,7 @@ public class Health : MonoBehaviour {
     {
         m_CurrentHealth = m_StartHealth;
         m_Player = GetComponent<PlayerController>();
+        m_Animator = GetComponent<Animator>();
     }
 
     public void TakeDamage(int damage)
@@ -54,9 +56,24 @@ public class Health : MonoBehaviour {
         else
         {
             m_IsInvincible = true;
-            // TODO: Trigger invincibility animation
-            Invoke("DisableInvincibility", m_InvincibilityTime);
+            StartCoroutine(InvincibilityFlash());
+            //m_Animator.SetTrigger("InvincibilityTrigger");
+            //Invoke("DisableInvincibility", m_InvincibilityTime);
         }
+    }
+
+    private IEnumerator InvincibilityFlash()
+    {
+        Renderer rend = GetComponent<Renderer>();
+        bool visible = false;
+        for (float i = 0; i < m_InvincibilityTime; i += 0.10f)
+        {
+            rend.enabled = visible;
+            visible = !visible;
+            yield return new WaitForSeconds(0.10f);
+        }
+        rend.enabled = true;
+        DisableInvincibility();
     }
 
     private void DisableInvincibility()

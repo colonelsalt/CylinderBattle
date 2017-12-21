@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
     // --------------------------------------------------------------
 
 
-    Rigidbody m_Body;
+    private Rigidbody m_Body;
 
     // The charactercontroller of the player
     CharacterController m_CharacterController;
@@ -195,6 +195,10 @@ public class PlayerController : MonoBehaviour
     {
         m_IsAlive = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
+
+        // TODO: Trigger death animation
+        GetComponent<Renderer>().enabled = false; // TEMPORARY!!!
+
         //OnPlayerDeath(GetPlayerNum());
     }
 
@@ -209,6 +213,7 @@ public class PlayerController : MonoBehaviour
 
     void Respawn()
     {
+        GetComponent<Renderer>().enabled = true; // TEMPORARY!!!
         m_IsAlive = true;
         transform.position = m_SpawningPosition;
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
