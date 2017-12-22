@@ -9,6 +9,7 @@ public class PowerupManager : MonoBehaviour
     // --------------------------------------------------------------
 
     [SerializeField] private GameObject m_BombPrefab;
+
     [SerializeField] private GameObject m_GunPrefab;
     
     // --------------------------------------------------------------
@@ -21,9 +22,11 @@ public class PowerupManager : MonoBehaviour
     // --------------------------------------------------------------
 
     private PlayerController m_Player;
+
     private bool m_HasPowerup = false;
+
     private bool m_PowerupIsRunning = false;
-    private int m_NumPluses = 0;
+
     private Powerup m_Powerup;
     
     // --------------------------------------------------------------
@@ -31,37 +34,6 @@ public class PowerupManager : MonoBehaviour
     private void Start()
     {
         m_Player = GetComponent<PlayerController>();
-        Plus.OnPlusCaptured += OnPlusCaptured;
-    }
-
-    private void OnResetPluses(int playerNum)
-    {
-        if (playerNum == m_Player.GetPlayerNum())
-        {
-            m_NumPluses = 0;
-        }
-    }
-
-    private void OnPlusCaptured(int playerNum)
-    {
-        if (playerNum == m_Player.GetPlayerNum())
-        {
-            m_NumPluses++;
-            // Get bonus powerup for every 5 pluses collected
-            switch (m_NumPluses % 20)
-            {
-                case 5:
-                    Debug.Log("5 pluses collected by " + gameObject);
-                    break;
-                case 10:
-                    Debug.Log("10 pluses collected by " + gameObject);
-                    break;
-                case 15:
-                    break;
-                case 0:
-                    break;
-            }
-        }
     }
 
     private void Update()
@@ -78,6 +50,7 @@ public class PowerupManager : MonoBehaviour
 
         m_PowerupIsRunning = true;
         OnPowerupActivated(m_Powerup, m_Player.GetPlayerNum());
+
         switch (m_Powerup)
         {
             case Powerup.BOMB:

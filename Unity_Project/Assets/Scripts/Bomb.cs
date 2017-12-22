@@ -6,11 +6,20 @@ using UnityEngine;
 public class Bomb : MonoBehaviour
 {
     // --------------------------------------------------------------
+
+    // Time before bomb explodes after being dropped
     [SerializeField] private float m_ExplosionTime;
+
+    // Force surrounding objects will be struck by (horizontally)
     [SerializeField] private float m_ExplosionForce;
+
+    // How hard surrounding objects will be thrust upwards
     [SerializeField] private float m_ExplosionUpForce;
+
     [SerializeField] private float m_ExplosionRadius;
+
     [SerializeField] private int m_Damage;
+    
     // --------------------------------------------------------------
 
     private void Start()

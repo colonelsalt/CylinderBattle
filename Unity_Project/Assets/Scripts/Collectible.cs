@@ -1,29 +1,37 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Plus : MonoBehaviour
+public class Collectible : MonoBehaviour
 {
+
+    public enum Type { PLUS, PI };
+
+    // --------------------------------------------------------------
+
+    [SerializeField] private Type type;
+
     // --------------------------------------------------------------
 
     // Events
-    public delegate void PlusCapture(int playerNum);
-    public static event PlusCapture OnPlusCaptured;
+    public delegate void CollectiblePickup(Type t, int playerNum);
+    public static event CollectiblePickup OnCollectiblePickup;
 
     // --------------------------------------------------------------
+
     private void OnTriggerEnter(Collider other)
     {
         PlayerController capturedBy = other.GetComponent<PlayerController>();
         if (capturedBy != null)
         {
-            OnPlusCaptured(capturedBy.GetPlayerNum());
+            OnCollectiblePickup(type, capturedBy.GetPlayerNum());
             Vanish();
         }
     }
 
     private void Vanish()
     {
+        // play vanish animation
         Destroy(gameObject);
     }
 }

@@ -8,16 +8,17 @@ public class UIManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    // HUD object for each Player in game
     [SerializeField] private PlayerHUD[] m_PlayerHUDs;
+
     [SerializeField] private Text m_GameOverTitle;
     
     // --------------------------------------------------------------
 
     void OnEnable()
     {
-        Pi.OnPiCaptured += OnUpdateScore;
-        Plus.OnPlusCaptured += OnUpdatePluses;
-        GameManager.OnGameOver += OnGameOver;
+        Collectible.OnCollectiblePickup += OnUpdateScore;
+        Collector.OnAllPisCollected += OnGameOver;
         Gun.OnGunFired += OnUpdateAmmo;
         PowerupManager.OnPowerupActivated += OnDisplayPowerup;
         PowerupManager.OnPowerupDisabled += OnHidePowerup;
@@ -30,6 +31,20 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void OnUpdateScore(Collectible.Type type, int playerNum)
+    {
+        switch (type)
+        {
+            case Collectible.Type.PLUS:
+                m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePluses();
+                break;
+            case Collectible.Type.PI:
+                m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePis();
+                break;
+        }
+    }
+
+    // Hide powerup images and text
     private void OnHidePowerup(Powerup type, int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].HidePowerup();
@@ -59,22 +74,10 @@ public class UIManager : MonoBehaviour
         m_PlayerHUDs[playerNum - 1].DeathReset();
     }
 
-    // Update and display number of Pluses collected
-    private void OnUpdatePluses(int playerNum)
-    {
-        m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePluses();
-    }
-
-    private void OnUpdateScore(int playerNum)
-    {
-        m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePis();
-    }
-
     private void OnGameOver(int numOfWinner)
     {
-        Pi.OnPiCaptured -= OnUpdateScore;
-        Plus.OnPlusCaptured -= OnUpdatePluses;
-        GameManager.OnGameOver -= OnGameOver;
+        Collectible.OnCollectiblePickup -= OnUpdateScore;
+        Collector.OnAllPisCollected -= OnGameOver;
         Gun.OnGunFired -= OnUpdateAmmo;
         PowerupManager.OnPowerupActivated -= OnDisplayPowerup;
         PowerupManager.OnPowerupDisabled -= OnHidePowerup;
