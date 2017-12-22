@@ -7,12 +7,14 @@ public class Spawner : MonoBehaviour
     // --------------------------------------------------------------
 
     [SerializeField] private GameObject m_ObjectToSpawn;
-    [SerializeField] private float m_TimeBetweenSpawns;
+    [SerializeField] private float m_MinTimeBetweenSpawns;
+    [SerializeField] private float m_MaxTimeBetweenSpawns;
     [SerializeField] private int m_MaxNumObjects;
 
     // --------------------------------------------------------------
 
     private Transform[] m_SpawnPositions;
+    private float m_NextSpawnTime;
     private float m_TimeSinceLastSpawn = 0f;
     
     // --------------------------------------------------------------
@@ -37,12 +39,13 @@ public class Spawner : MonoBehaviour
         }
 
         GameManager.OnGameOver += OnGameOver;
+        m_NextSpawnTime = Random.Range(m_MinTimeBetweenSpawns, m_MaxTimeBetweenSpawns);
     }
 
     private void Update()
     {
         m_TimeSinceLastSpawn += Time.deltaTime;
-        if (m_TimeSinceLastSpawn >= m_TimeBetweenSpawns)
+        if (m_TimeSinceLastSpawn >= m_NextSpawnTime)
         {
             Spawn();
         }
@@ -51,6 +54,7 @@ public class Spawner : MonoBehaviour
     private void Spawn()
     {
         m_TimeSinceLastSpawn = 0f;
+        m_NextSpawnTime = Random.Range(m_MinTimeBetweenSpawns, m_MaxTimeBetweenSpawns);
 
         if (NumSpawnedObjects() >= m_MaxNumObjects) return;
 
