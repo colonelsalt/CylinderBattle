@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour {
-
+public class Health : MonoBehaviour
+{
     // --------------------------------------------------------------
 
     [SerializeField]
@@ -13,9 +13,6 @@ public class Health : MonoBehaviour {
     // After being damaged, how long Player will be invincible
     [SerializeField]
     private float m_InvincibilityTime = 2.5f;
-
-    [SerializeField]
-    private bool m_IsInvincible = false;
 
     // --------------------------------------------------------------
 
@@ -26,9 +23,13 @@ public class Health : MonoBehaviour {
     // --------------------------------------------------------------
 
     private PlayerController m_Player;
+
     private Animator m_Animator;
+
     private int m_CurrentHealth;
-    
+
+    private bool m_IsInvincible = false;
+
     // --------------------------------------------------------------
 
     private void Awake()

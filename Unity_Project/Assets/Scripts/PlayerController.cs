@@ -7,28 +7,24 @@ public class PlayerController : MonoBehaviour
     // --------------------------------------------------------------
 
     // The character's running speed
-    [SerializeField]
-    float m_RunSpeed = 5.0f;
+    [SerializeField] private float m_RunSpeed = 5.0f;
 
     // The gravity strength
-    [SerializeField]
-    float m_Gravity = 60.0f;
+    [SerializeField] private float m_Gravity = 60.0f;
 
     // The maximum speed the character can fall
-    [SerializeField]
-    float m_MaxFallSpeed = 20.0f;
+    [SerializeField] private float m_MaxFallSpeed = 20.0f;
 
     // The character's jump height
-    [SerializeField]
-    float m_JumpHeight = 4.0f;
+    [SerializeField] private float m_JumpHeight = 4.0f;
+
+    [SerializeField] private float m_BackFlipHeight = 8f;
 
     // Identifier for Input
-    [SerializeField]
-    string m_PlayerInputString = "_P1";
+    [SerializeField] private string m_PlayerInputString = "_P1";
 
     // After struck by an explosion, how long Player will remain immobile
-    [SerializeField]
-    private float m_ExplosionDazeTime;
+    [SerializeField] private float m_ExplosionDazeTime;
 
     // --------------------------------------------------------------
     
@@ -38,7 +34,6 @@ public class PlayerController : MonoBehaviour
     public static event PlayerEvent OnPlayerRespawn;
 
     // --------------------------------------------------------------
-
 
     private Rigidbody m_Body;
 
@@ -63,6 +58,8 @@ public class PlayerController : MonoBehaviour
     // Whether the player is alive or not
     bool m_IsAlive = true;
 
+    bool m_IsCrouching = false;
+
     // The time it takes to respawn
     const float MAX_RESPAWN_TIME = 1.0f;
     float m_RespawnTime = MAX_RESPAWN_TIME;
@@ -86,6 +83,12 @@ public class PlayerController : MonoBehaviour
         m_VerticalSpeed = Mathf.Sqrt(m_JumpHeight * m_Gravity);
     }
 
+    void BackFlip()
+    {
+        m_VerticalSpeed = Mathf.Sqrt(m_BackFlipHeight * m_Gravity);
+        GetUp();
+    }
+
     void ApplyGravity()
     {
         // Apply gravity
@@ -106,13 +109,43 @@ public class PlayerController : MonoBehaviour
         m_MovementSpeed = m_RunSpeed;
     }
 
-    void UpdateJumpState()
+    private void UpdateJumpState()
     {
         // Character can jump when standing on the ground (and when not affected by Bomb explosion)
         if (Input.GetButtonDown("Jump" + m_PlayerInputString) && m_CharacterController.isGrounded)
         {
-            Jump();
+            if (m_IsCrouching)
+            {
+                BackFlip();
+            } else
+            {
+                Jump();
+            }
         }
+    }
+
+    private void UpdateCrouchState()
+    {
+        if (Input.GetButtonDown("Crouch" + m_PlayerInputString) && m_CharacterController.isGrounded && !m_IsCrouching)
+        {
+            Crouch();
+        }
+        if (Input.GetButtonUp("Crouch" + m_PlayerInputString) && m_IsCrouching)
+        {
+            GetUp();
+        }
+    }
+
+    private void Crouch()
+    {
+        transform.Rotate(90f, 0f, 0f);
+        m_IsCrouching = true;
+    }
+
+    private void GetUp()
+    {
+        transform.Rotate(-90f, 0f, 0f);
+        m_IsCrouching = false;
     }
 
     // Update is called once per frame
@@ -129,13 +162,14 @@ public class PlayerController : MonoBehaviour
         UpdateMovementState();
 
         // Update jumping input and apply gravity
+        UpdateCrouchState();
         UpdateJumpState();
         ApplyGravity();
 
         // Calculate actual motion
         m_CurrentMovementOffset = (m_MovementDirection * m_MovementSpeed + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
 
-        if (m_Body.isKinematic)
+        if (m_Body.isKinematic && !m_IsCrouching)
         {
             // Move character
             m_CharacterController.Move(m_CurrentMovementOffset);
