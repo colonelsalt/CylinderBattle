@@ -5,12 +5,16 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     // --------------------------------------------------------------
-    [SerializeField] private GameObject m_objectToSpawn;
-    [SerializeField] private float m_timeBetweenSpawns;
+
+    [SerializeField] private GameObject m_ObjectToSpawn;
+    [SerializeField] private float m_TimeBetweenSpawns;
+    [SerializeField] private int m_MaxNumObjects;
+
     // --------------------------------------------------------------
-    private Transform[] m_spawnPositions;
-    private float m_timeSinceLastSpawn = 0f;
-    private Transform m_lastSpawnPosition;
+
+    private Transform[] m_SpawnPositions;
+    private float m_TimeSinceLastSpawn = 0f;
+    
     // --------------------------------------------------------------
 
     private void Awake()
@@ -19,20 +23,26 @@ public class Spawner : MonoBehaviour
         {
             Debug.LogError("No Spawn positions set for " + gameObject + "!");
         }
+        if (m_MaxNumObjects > transform.childCount)
+        {
+            Debug.LogError("Cannot spawn more objects than spawn positions available!");
+        }
 
         GameManager.OnGameOver += OnGameOver;
 
-        m_spawnPositions = new Transform[transform.childCount];
+        m_SpawnPositions = new Transform[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
         {
-            m_spawnPositions[i] = transform.GetChild(i);
+            m_SpawnPositions[i] = transform.GetChild(i);
         }
+
+        GameManager.OnGameOver += OnGameOver;
     }
 
     private void Update()
     {
-        m_timeSinceLastSpawn += Time.deltaTime;
-        if (m_timeSinceLastSpawn >= m_timeBetweenSpawns)
+        m_TimeSinceLastSpawn += Time.deltaTime;
+        if (m_TimeSinceLastSpawn >= m_TimeBetweenSpawns)
         {
             Spawn();
         }
@@ -40,15 +50,33 @@ public class Spawner : MonoBehaviour
 
     private void Spawn()
     {
+        m_TimeSinceLastSpawn = 0f;
+
+        if (NumSpawnedObjects() >= m_MaxNumObjects) return;
+
         Transform spawnPoint;
         do
         {
-            spawnPoint = m_spawnPositions[Random.Range(0, m_spawnPositions.Length)];
-        } while (spawnPoint == m_lastSpawnPosition);
+            spawnPoint = m_SpawnPositions[Random.Range(0, m_SpawnPositions.Length)];
+        }
+        while (IsOccupied(spawnPoint));
 
-        Instantiate(m_objectToSpawn, spawnPoint.position, Quaternion.identity);
-        m_timeSinceLastSpawn = 0f;
-        m_lastSpawnPosition = spawnPoint;
+        Instantiate(m_ObjectToSpawn, spawnPoint);
+    }
+
+    private bool IsOccupied(Transform t) 
+    {
+        return (t.childCount != 0);
+    }
+
+    private int NumSpawnedObjects()
+    {
+        int sum = 0;
+        foreach (Transform child in transform)
+        {
+            if (IsOccupied(child)) sum++;
+        }
+        return sum;
     }
 
     private void OnGameOver(int numOfWinner)
