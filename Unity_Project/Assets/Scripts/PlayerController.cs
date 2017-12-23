@@ -191,8 +191,13 @@ public class PlayerController : MonoBehaviour
             // Move character
             m_CharacterController.Move(m_CurrentMovementOffset);
 
-            // Rotate the character in movement direction
-            if (m_MovementDirection != Vector3.zero)
+            // If Player is using a GamePad, allow for manual rotation
+            if (InputHelper.GamePadConnected())
+            {
+                RotateFromGamePad();
+            }
+            // Otherwise, rotate the character in movement direction
+            else if (m_MovementDirection != Vector3.zero)
             {
                 RotateCharacter(m_MovementDirection);
             }
@@ -208,6 +213,25 @@ public class PlayerController : MonoBehaviour
         {
             transform.rotation = lookRotation;
         }
+    }
+
+    private void RotateFromGamePad()
+    {
+        float cos = InputHelper.GetRightStickX(m_PlayerNum);
+        float sin = InputHelper.GetRightStickY(m_PlayerNum);
+
+        // If right stick is in neutral position, simply rotate to movementDirection as normal
+        if (cos == 0f && sin == 0f)
+        {
+            if (m_MovementDirection != Vector3.zero) RotateCharacter(m_MovementDirection);
+            return;
+        }
+
+        // Find angle represented by current stick position
+        float rotationAngle = Mathf.Atan2(cos, sin) * Mathf.Rad2Deg;
+
+        // Rotate player by this angle around the y-axis
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotationAngle, transform.eulerAngles.z);
     }
 
     public void ActivatePhysicsReactions()
