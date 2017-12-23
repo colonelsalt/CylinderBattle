@@ -1,81 +1,123 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XboxCtrlrInput;
 
+// Wrapper around XboxControllerInput and Unity Input classes
 public static class InputHelper
 {
     public const string PLAYER1_INPUT_STRING = "_P1";
     public const string PLAYER2_INPUT_STRING = "_P2";
 
-    public static bool GamePadConnected()
+    public static bool GamePadConnected(int playerNum)
     {
-        return (Input.GetJoystickNames().Length > 0);
+        return XCI.IsPluggedIn((XboxController)playerNum);
     }
 
     public static float GetMovementX(int playerNum)
     {
-        return Input.GetAxis("Horizontal" + PlayerString(playerNum));
+        if (GamePadConnected(playerNum))
+        {
+            return XCI.GetAxis(XboxAxis.LeftStickX, (XboxController)playerNum);
+        }
+        else
+        {
+            return Input.GetAxis("Horizontal" + PlayerString(playerNum));
+        }
     }
 
     public static float GetMovementY(int playerNum)
     {
-        return Input.GetAxis("Vertical" + PlayerString(playerNum));
+        if (GamePadConnected(playerNum))
+        {
+            return XCI.GetAxis(XboxAxis.LeftStickY, (XboxController)playerNum);
+        }
+        else
+        {
+            return Input.GetAxis("Vertical" + PlayerString(playerNum));
+        }
     }
 
     public static float GetRightStickX(int playerNum)
     {
-        return Input.GetAxis("RightAxisX" + PlayerString(playerNum));
+        return XCI.GetAxis(XboxAxis.RightStickX, (XboxController)playerNum);
     }
 
     public static float GetRightStickY(int playerNum)
     {
-        return Input.GetAxis("RightAxisY" + PlayerString(playerNum));
+        return XCI.GetAxis(XboxAxis.RightStickY, (XboxController)playerNum);
     }
 
     public static bool FireButtonPressed(int playerNum)
     {
-        if (GamePadConnected())
+        if (GamePadConnected(playerNum))
         {
-            return (Input.GetAxis("RightTriggerAxis" + PlayerString(playerNum)) > 0.5f);
+            return XCI.GetAxis(XboxAxis.RightTrigger, (XboxController)playerNum) > 0.5f;
         }
-        return Input.GetButtonDown("Fire1" + PlayerString(playerNum));
+        else
+        {
+            return Input.GetButtonDown("Fire1" + PlayerString(playerNum));
+        }
     }
 
     public static bool FireButtonReleased(int playerNum)
     {
-        if (GamePadConnected())
+        if (GamePadConnected(playerNum))
         {
-            return (Input.GetAxis("RightTriggerAxis" + PlayerString(playerNum)) <= 0.5f);
+            return XCI.GetAxis(XboxAxis.RightTrigger, (XboxController)playerNum) <= 0.5f;
         }
-        return Input.GetButtonUp("Fire1" + PlayerString(playerNum));
+        else
+        {
+            return Input.GetButtonUp("Fire1" + PlayerString(playerNum));
+        }
     }
 
     public static bool JumpButtonPressed(int playerNum)
     {
-        return Input.GetButtonDown("Jump" + PlayerString(playerNum));
+        if (GamePadConnected(playerNum))
+        {
+            return XCI.GetButtonDown(XboxButton.A, (XboxController)playerNum);
+        }
+        else
+        {
+            return Input.GetButtonDown("Jump" + PlayerString(playerNum));
+        }
     }
 
     public static bool JumpButtonReleased(int playerNum)
     {
-        return Input.GetButtonUp("Jump" + PlayerString(playerNum));
+        if (GamePadConnected(playerNum))
+        {
+            return XCI.GetButtonUp(XboxButton.A, (XboxController)playerNum);
+        }
+        else
+        {
+            return Input.GetButtonUp("Jump" + PlayerString(playerNum));
+        }
     }
 
     public static bool CrouchButtonPressed(int playerNum)
     {
-        if (GamePadConnected())
+        if (GamePadConnected(playerNum))
         {
-            return (Input.GetAxis("LeftTriggerAxis" + PlayerString(playerNum)) > 0.8f);
+            return XCI.GetAxis(XboxAxis.LeftTrigger, (XboxController)playerNum) > 0.8f;
         }
-        return Input.GetButtonDown("Crouch" + PlayerString(playerNum));
+        else
+        {
+            return Input.GetButtonDown("Crouch" + PlayerString(playerNum));
+        }
     }
 
     public static bool CrouchButtonRealeased(int playerNum)
     {
-        if (GamePadConnected())
+        if (GamePadConnected(playerNum))
         {
-            return (Input.GetAxis("LeftTriggerAxis" + PlayerString(playerNum)) <= 0.8f);
+            return XCI.GetAxis(XboxAxis.LeftTrigger, (XboxController)playerNum) <= 0.8f;
+        } 
+        else
+        {
+            return Input.GetButtonUp("Crouch" + PlayerString(playerNum));
         }
-        return Input.GetButtonUp("Crouch" + PlayerString(playerNum));
     }
 
 
@@ -92,5 +134,4 @@ public static class InputHelper
                
         }
     }
-	
 }

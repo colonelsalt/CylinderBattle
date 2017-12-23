@@ -192,7 +192,7 @@ public class PlayerController : MonoBehaviour
             m_CharacterController.Move(m_CurrentMovementOffset);
 
             // If Player is using a GamePad, allow for manual rotation
-            if (InputHelper.GamePadConnected())
+            if (InputHelper.GamePadConnected(m_PlayerNum))
             {
                 RotateFromGamePad();
             }

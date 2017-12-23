@@ -29,15 +29,12 @@ public class Gun : MonoBehaviour {
 
     // Flag to keep track of whether Gun is currently firing
     private bool m_IsFiring = false;
-
-    private float m_LastRotationAngle;
     
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_CurrentAmmo = MAX_AMMO;
-        m_LastRotationAngle = transform.parent.eulerAngles.y;
     }
 
     public void AttachToPlayer(PlayerController player)
