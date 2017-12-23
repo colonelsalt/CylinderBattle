@@ -44,6 +44,7 @@ public class Gun : MonoBehaviour {
 
     private void Update()
     {
+        // Allow Player to change gun direction if using a gamepad
         if (InputHelper.GamePadConnected()) RotateAim();
 
         if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && !m_IsFiring)
@@ -62,9 +63,15 @@ public class Gun : MonoBehaviour {
     {
         float cos = InputHelper.GetRightStickX(m_Player.PlayerNum);
         float sin = InputHelper.GetRightStickY(m_Player.PlayerNum);
-        float rotationAmount = Mathf.Atan2(cos, sin) * Mathf.Rad2Deg;
 
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotationAmount, transform.eulerAngles.z);
+        // If right stick hasn't moved, don't change rotation
+        if (cos == 0f && sin == 0f) return;
+
+        // Find angle represented by current stick position
+        float rotationAngle = Mathf.Atan2(cos, sin) * Mathf.Rad2Deg;
+
+        // Rotate gun to face this direction
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotationAngle, transform.eulerAngles.z);
     }
 
     private void Fire()
