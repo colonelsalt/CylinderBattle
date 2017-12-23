@@ -28,19 +28,17 @@ public class PowerupManager : MonoBehaviour
     private bool m_PowerupIsRunning = false;
 
     private Powerup m_Powerup;
-    
+
     // --------------------------------------------------------------
 
-    private void Start()
+    private void Awake()
     {
         m_Player = GetComponent<PlayerController>();
     }
 
     private void Update()
     {
-        Debug.Log("RightTriggerAxis: " + Input.GetAxis("RightTriggerAxis" + m_Player.GetPlayerInputString()));
-
-        if (InputHelper.FireButtonPressed(m_Player.GetPlayerNum()))
+        if (InputHelper.FireButtonPressed(m_Player.PlayerNum))
         {
             ActivatePowerup();
         }
@@ -51,7 +49,7 @@ public class PowerupManager : MonoBehaviour
         if (!m_HasPowerup || m_PowerupIsRunning) return;
 
         m_PowerupIsRunning = true;
-        OnPowerupActivated(m_Powerup, m_Player.GetPlayerNum());
+        OnPowerupActivated(m_Powerup, m_Player.PlayerNum);
 
         switch (m_Powerup)
         {
@@ -61,8 +59,8 @@ public class PowerupManager : MonoBehaviour
                 m_PowerupIsRunning = false;
                 break;
             case Powerup.GUN:
-                // Spawn gun and child it to the Player's Transform
-                GameObject gun = Instantiate(m_GunPrefab, transform) as GameObject;
+                // Spawn gun and child it to the Player's 'Body' Transform
+                GameObject gun = Instantiate(m_GunPrefab, transform.GetChild(0)) as GameObject;
                 gun.GetComponent<Gun>().AttachToPlayer(m_Player);
                 break;
             case Powerup.BOXING_GLOVES:
@@ -83,6 +81,6 @@ public class PowerupManager : MonoBehaviour
     public void DisablePowerup()
     {
         m_PowerupIsRunning = false;
-        OnPowerupDisabled(m_Powerup, m_Player.GetPlayerNum());
+        OnPowerupDisabled(m_Powerup, m_Player.PlayerNum);
     }
 }

@@ -9,6 +9,7 @@ public class Gun : MonoBehaviour {
 
     [SerializeField] private GameObject m_LaserPrefab;
 
+    // How many seconds delay between consecutive shots
     [SerializeField] private float m_FiringRate = 0.2f;
 
     // --------------------------------------------------------------
@@ -21,11 +22,13 @@ public class Gun : MonoBehaviour {
 
     public const int MAX_AMMO = 10;
 
+    // The Player this Gun belongs to
+    private PlayerController m_Player;
+
     private int m_CurrentAmmo;
 
+    // Flag to keep track of whether Gun is currently firing
     private bool m_IsFiring = false;
-
-    private PlayerController m_Player;
     
     // --------------------------------------------------------------
 
@@ -41,14 +44,14 @@ public class Gun : MonoBehaviour {
 
     private void Update()
     {
-        RotateAim();
+        if (InputHelper.GamePadConnected()) RotateAim();
 
-        if (InputHelper.FireButtonPressed(m_Player.GetPlayerNum()) && !m_IsFiring)
+        if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && !m_IsFiring)
         {
             InvokeRepeating("Fire", 0.00001f, m_FiringRate);
             m_IsFiring = true;
         }
-        if (InputHelper.FireButtonReleased(m_Player.GetPlayerNum()))
+        if (InputHelper.FireButtonReleased(m_Player.PlayerNum))
         {
             CancelInvoke("Fire");
             m_IsFiring = false;
@@ -57,8 +60,8 @@ public class Gun : MonoBehaviour {
 
     private void RotateAim()
     {
-        float cos = Input.GetAxis("RightAxisX" + m_Player.GetPlayerInputString());
-        float sin = Input.GetAxis("RightAxisY" + m_Player.GetPlayerInputString());
+        float cos = InputHelper.GetRightStickX(m_Player.PlayerNum);
+        float sin = InputHelper.GetRightStickY(m_Player.PlayerNum);
         float rotationAmount = Mathf.Atan2(cos, sin) * Mathf.Rad2Deg;
 
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotationAmount, transform.eulerAngles.z);
@@ -66,7 +69,7 @@ public class Gun : MonoBehaviour {
 
     private void Fire()
     {
-        OnGunFired(m_Player.GetPlayerNum());
+        OnGunFired(m_Player.PlayerNum);
         m_CurrentAmmo--;
         Vector3 spawnPos = transform.position + (2.5f * transform.forward);
         Instantiate(m_LaserPrefab, spawnPos, transform.rotation);

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,24 +28,41 @@ public class Collector : MonoBehaviour
     private void Awake()
     {
         Collectible.OnCollectiblePickup += OnCollectiblePickup;
+        PlayerController.OnPlayerRespawn += OnResetPlusCount;
         m_Player = GetComponent<PlayerController>();
     }
 
     private void OnCollectiblePickup(Collectible.Type type, int playerNum)
     {
         // Make sure this Player is the one who collected
-        if (playerNum != m_Player.GetPlayerNum()) return;
+        if (playerNum != m_Player.PlayerNum) return;
 
         switch (type)
         {
             case Collectible.Type.PLUS:
                 m_NumPluses++;
+                CheckForPlusBonus();
                 break;
             case Collectible.Type.PI:
                 m_NumPis++;
-                if (m_NumPis >= GameManager.MAX_NUM_PIS) OnAllPisCollected(m_Player.GetPlayerNum());
+                if (m_NumPis >= GameManager.MAX_NUM_PIS)
+                {
+                    OnAllPisCollected(m_Player.PlayerNum);
+                }
                 break;
         }
     }
 
+    private void OnResetPlusCount(int playerNum)
+    {
+        if (m_Player.PlayerNum == playerNum)
+        {
+            m_NumPluses = 0;
+        }
+    }
+
+    private void CheckForPlusBonus()
+    {
+        
+    }
 }

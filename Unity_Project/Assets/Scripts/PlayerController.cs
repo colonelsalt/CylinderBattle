@@ -21,8 +21,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float m_BackFlipHeight = 8f;
 
-    // Identifier for Input
-    [SerializeField] private string m_PlayerInputString = "_P1";
+    [SerializeField] private int m_PlayerNum;
 
     // After struck by an explosion, how long Player will remain immobile
     [SerializeField] private float m_ExplosionDazeTime;
@@ -36,65 +35,72 @@ public class PlayerController : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private Rigidbody m_Body;
+    public int PlayerNum
+    {
+        get
+        {
+            return m_PlayerNum;
+        }
+    }
+
+    private Rigidbody m_RigidBody;
 
     private Animator m_Animator;
 
     // The charactercontroller of the player
-    CharacterController m_CharacterController;
+    private CharacterController m_CharacterController;
 
     // The current movement direction in x & z.
-    Vector3 m_MovementDirection = Vector3.zero;
+    private Vector3 m_MovementDirection = Vector3.zero;
 
     // The current movement speed
-    float m_MovementSpeed = 0.0f;
+    private float m_MovementSpeed = 0.0f;
 
     // The current vertical / falling speed
-    float m_VerticalSpeed = 0.0f;
+    private float m_VerticalSpeed = 0.0f;
 
     // The current movement offset
-    Vector3 m_CurrentMovementOffset = Vector3.zero;
+    private Vector3 m_CurrentMovementOffset = Vector3.zero;
 
     // The starting position of the player
-    Vector3 m_SpawningPosition = Vector3.zero;
+    private Vector3 m_SpawningPosition = Vector3.zero;
 
     // Whether the player is alive or not
-    bool m_IsAlive = true;
+    private bool m_IsAlive = true;
 
-    bool m_IsCrouching = false;
+    private bool m_IsCrouching = false;
 
     // The time it takes to respawn
-    const float MAX_RESPAWN_TIME = 1.0f;
-    float m_RespawnTime = MAX_RESPAWN_TIME;
+    private const float MAX_RESPAWN_TIME = 1.0f;
+    private float m_RespawnTime = MAX_RESPAWN_TIME;
 
     // --------------------------------------------------------------
 
-    void Awake()
+    private void Awake()
     {
         m_CharacterController = GetComponent<CharacterController>();
-        m_Body = GetComponent<Rigidbody>();
+        m_RigidBody = GetComponent<Rigidbody>();
         m_Animator = GetComponentInChildren<Animator>();
     }
 
-    // Use this for initialization
-    void Start()
+    private void Start()
     {
         m_SpawningPosition = transform.position;
     }
 
-    void Jump()
+    private void Jump()
     {
         m_VerticalSpeed = Mathf.Sqrt(m_JumpHeight * m_Gravity);
     }
 
-    void BackFlip()
+    private void BackFlip()
     {
         m_VerticalSpeed = Mathf.Sqrt(m_BackFlipHeight * m_Gravity);
         m_Animator.SetBool("IsBackflipping", true);
         GetUp();
     }
 
-    void ApplyGravity()
+    private void ApplyGravity()
     {
         // Apply gravity
         m_VerticalSpeed -= m_Gravity * Time.deltaTime;
@@ -104,11 +110,11 @@ public class PlayerController : MonoBehaviour
         m_VerticalSpeed = Mathf.Min(m_VerticalSpeed, m_MaxFallSpeed);
     }
 
-    void UpdateMovementState()
+    private void UpdateMovementState()
     {
         // Get Player's movement input and determine direction and set run speed
-        float horizontalInput = Input.GetAxisRaw("Horizontal" + m_PlayerInputString);
-        float verticalInput = Input.GetAxisRaw("Vertical" + m_PlayerInputString);
+        float horizontalInput = InputHelper.GetMovementX(m_PlayerNum);
+        float verticalInput = InputHelper.GetMovementY(m_PlayerNum);
 
         m_MovementDirection = new Vector3(horizontalInput, 0, verticalInput);
         m_MovementSpeed = m_RunSpeed;
@@ -122,7 +128,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Character can jump when standing on the ground (and when not affected by Bomb explosion)
-        if (Input.GetButtonDown("Jump" + m_PlayerInputString) && m_CharacterController.isGrounded)
+        if (InputHelper.JumpButtonPressed(m_PlayerNum) && m_CharacterController.isGrounded)
         {
             if (m_IsCrouching)
             {
@@ -136,11 +142,11 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateCrouchState()
     {
-        if (InputHelper.CrouchButtonPressed(GetPlayerNum()) && m_CharacterController.isGrounded && !m_IsCrouching)
+        if (InputHelper.CrouchButtonPressed(m_PlayerNum) && m_CharacterController.isGrounded && !m_IsCrouching)
         {
             Crouch();
         }
-        if (InputHelper.CrouchButtonRealeased(GetPlayerNum()) && m_IsCrouching)
+        if (InputHelper.CrouchButtonRealeased(m_PlayerNum) && m_IsCrouching)
         {
             GetUp();
         }
@@ -148,6 +154,7 @@ public class PlayerController : MonoBehaviour
 
     private void Crouch()
     {
+        transform.Translate(0f, -0.5f, 0f);
         transform.Rotate(90f, 0f, 0f);
         m_IsCrouching = true;
     }
@@ -155,11 +162,11 @@ public class PlayerController : MonoBehaviour
     private void GetUp()
     {
         transform.Rotate(-90f, 0f, 0f);
+        transform.Translate(0f, 0.5f, 0f);
         m_IsCrouching = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // If the player is dead update the respawn timer and exit update loop
         if(!m_IsAlive)
@@ -179,7 +186,7 @@ public class PlayerController : MonoBehaviour
         // Calculate actual motion
         m_CurrentMovementOffset = (m_MovementDirection * m_MovementSpeed + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;
 
-        if (m_Body.isKinematic && !m_IsCrouching)
+        if (m_RigidBody.isKinematic && !m_IsCrouching)
         {
             // Move character
             m_CharacterController.Move(m_CurrentMovementOffset);
@@ -194,7 +201,7 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    void RotateCharacter(Vector3 movementDirection)
+    private void RotateCharacter(Vector3 movementDirection)
     {
         Quaternion lookRotation = Quaternion.LookRotation(movementDirection);
         if (transform.rotation != lookRotation)
@@ -203,28 +210,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public int GetPlayerNum()
-    {
-        if(m_PlayerInputString == "_P1")
-        {
-            return 1;
-        }
-        else if (m_PlayerInputString == "_P2")
-        {
-            return 2;
-        }
-
-        return 0;
-    }
-
-    public string GetPlayerInputString()
-    {
-        return m_PlayerInputString;
-    }
-
     public void ActivatePhysicsReactions()
     {
-        m_Body.isKinematic = false;
+        m_RigidBody.isKinematic = false;
         m_CharacterController.enabled = false;
         Invoke("DeactivatePhysicsReactions", m_ExplosionDazeTime);
     }
@@ -232,21 +220,22 @@ public class PlayerController : MonoBehaviour
     private void DeactivatePhysicsReactions()
     {
         m_CharacterController.enabled = true;
-        m_Body.isKinematic = true;
+        m_RigidBody.isKinematic = true;
     }
 
     public void Die()
     {
         m_IsAlive = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
-        GetComponentInChildren<Renderer>().enabled = false;
+
+        GetComponentInChildren<Renderer>().enabled = false; // TEMPORARY!!!
 
         // TODO: Trigger death animation
 
         //OnPlayerDeath(GetPlayerNum());
     }
 
-    void UpdateRespawnTime()
+    private void UpdateRespawnTime()
     {
         m_RespawnTime -= Time.deltaTime;
         if (m_RespawnTime < 0.0f)
@@ -255,12 +244,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Respawn()
+    private void Respawn()
     {
         GetComponentInChildren<Renderer>().enabled = true; // TEMPORARY!!!
+
         m_IsAlive = true;
         transform.position = m_SpawningPosition;
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
-        OnPlayerRespawn(GetPlayerNum());
+        OnPlayerRespawn(m_PlayerNum);
     }
 }

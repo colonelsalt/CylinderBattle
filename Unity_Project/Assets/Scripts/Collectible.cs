@@ -24,14 +24,14 @@ public class Collectible : MonoBehaviour
         PlayerController capturedBy = other.GetComponent<PlayerController>();
         if (capturedBy != null)
         {
-            OnCollectiblePickup(type, capturedBy.GetPlayerNum());
+            OnCollectiblePickup(type, capturedBy.PlayerNum);
             Vanish();
         }
     }
 
     private void Vanish()
     {
-        // play vanish animation
+        // TODO: play vanish animation
         Destroy(gameObject);
     }
 }

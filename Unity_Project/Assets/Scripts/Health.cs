@@ -7,12 +7,10 @@ public class Health : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    [SerializeField]
-    private int m_StartHealth = 1;
+    [SerializeField] private int m_StartHealth = 1;
     
-    // After being damaged, how long Player will be invincible
-    [SerializeField]
-    private float m_InvincibilityTime = 2.5f;
+    // After being damaged, how long object will be invincible
+    [SerializeField] private float m_InvincibilityTime = 2.5f;
 
     // --------------------------------------------------------------
 
@@ -22,6 +20,7 @@ public class Health : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // If this object is a PlayerController, keep a reference to it
     private PlayerController m_Player;
 
     private Animator m_Animator;
@@ -47,7 +46,7 @@ public class Health : MonoBehaviour
 
         if (m_Player != null)
         {
-            OnPlayerHealthChange(m_Player.GetPlayerNum(), m_CurrentHealth);
+            OnPlayerHealthChange(m_Player.PlayerNum, m_CurrentHealth);
         }
 
         if (m_CurrentHealth <= 0)
@@ -58,8 +57,6 @@ public class Health : MonoBehaviour
         {
             m_IsInvincible = true;
             StartCoroutine(InvincibilityFlash());
-            //m_Animator.SetTrigger("InvincibilityTrigger");
-            //Invoke("DisableInvincibility", m_InvincibilityTime);
         }
     }
 

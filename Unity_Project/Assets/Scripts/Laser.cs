@@ -40,7 +40,7 @@ public class Laser : MonoBehaviour
             if (playerHit != null)
             {
                 // Do not damage Player who fired laser
-                if (playerHit.GetPlayerNum() == m_FiredByPlayer)
+                if (playerHit.PlayerNum == m_FiredByPlayer)
                 {
                     Vanish();
                     return;
