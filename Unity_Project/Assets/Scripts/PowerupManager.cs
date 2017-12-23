@@ -38,7 +38,7 @@ public class PowerupManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1" + m_Player.GetPlayerInputString()))
+        if (Input.GetButtonDown("Fire1" + m_Player.GetPlayerInputString()) || Input.GetAxisRaw("TriggerAxis" + m_Player.GetPlayerInputString()) > 0)
         {
             ActivatePowerup();
         }
@@ -59,9 +59,8 @@ public class PowerupManager : MonoBehaviour
                 m_PowerupIsRunning = false;
                 break;
             case Powerup.GUN:
-                // Spawn gun 80cm in front of Player, and child it to the Player's Transform
+                // Spawn gun and child it to the Player's Transform
                 GameObject gun = Instantiate(m_GunPrefab, transform) as GameObject;
-                gun.transform.position += (transform.forward * 0.8f);
                 gun.GetComponent<Gun>().AttachToPlayer(m_Player);
                 break;
             case Powerup.BOXING_GLOVES:

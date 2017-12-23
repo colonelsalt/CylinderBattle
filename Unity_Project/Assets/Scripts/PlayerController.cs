@@ -2,6 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -37,6 +38,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody m_Body;
 
+    private Animator m_Animator;
+
     // The charactercontroller of the player
     CharacterController m_CharacterController;
 
@@ -70,6 +73,7 @@ public class PlayerController : MonoBehaviour
     {
         m_CharacterController = GetComponent<CharacterController>();
         m_Body = GetComponent<Rigidbody>();
+        m_Animator = GetComponentInChildren<Animator>();
     }
 
     // Use this for initialization
@@ -86,6 +90,7 @@ public class PlayerController : MonoBehaviour
     void BackFlip()
     {
         m_VerticalSpeed = Mathf.Sqrt(m_BackFlipHeight * m_Gravity);
+        m_Animator.SetBool("IsBackflipping", true);
         GetUp();
     }
 
@@ -111,6 +116,11 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateJumpState()
     {
+        if (m_CharacterController.isGrounded)
+        {
+            m_Animator.SetBool("IsBackflipping", false);
+        }
+
         // Character can jump when standing on the ground (and when not affected by Bomb explosion)
         if (Input.GetButtonDown("Jump" + m_PlayerInputString) && m_CharacterController.isGrounded)
         {
@@ -229,9 +239,9 @@ public class PlayerController : MonoBehaviour
     {
         m_IsAlive = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
+        GetComponentInChildren<Renderer>().enabled = false;
 
         // TODO: Trigger death animation
-        GetComponent<Renderer>().enabled = false; // TEMPORARY!!!
 
         //OnPlayerDeath(GetPlayerNum());
     }
@@ -247,7 +257,7 @@ public class PlayerController : MonoBehaviour
 
     void Respawn()
     {
-        GetComponent<Renderer>().enabled = true; // TEMPORARY!!!
+        GetComponentInChildren<Renderer>().enabled = true; // TEMPORARY!!!
         m_IsAlive = true;
         transform.position = m_SpawningPosition;
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
