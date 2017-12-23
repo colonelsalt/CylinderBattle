@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputHelper : MonoBehaviour
+public static class InputHelper
 {
     public const string PLAYER1_INPUT_STRING = "_P1";
     public const string PLAYER2_INPUT_STRING = "_P2";
@@ -34,18 +34,18 @@ public class InputHelper : MonoBehaviour
 
     public static bool FireButtonPressed(int playerNum)
     {
-        if (Input.GetAxisRaw("TriggerAxis" + PlayerString(playerNum)) > 0)
+        if (GamePadConnected())
         {
-            return true;
+            return (Input.GetAxis("RightTriggerAxis" + PlayerString(playerNum)) > 0.5f);
         }
         return Input.GetButtonDown("Fire1" + PlayerString(playerNum));
     }
 
     public static bool FireButtonReleased(int playerNum)
     {
-        if (Input.GetAxisRaw("TriggerAxis") <= 0 && Input.GetJoystickNames().Length > 0)
+        if (GamePadConnected())
         {
-            return true;
+            return (Input.GetAxis("RightTriggerAxis" + PlayerString(playerNum)) <= 0.5f);
         }
         return Input.GetButtonUp("Fire1" + PlayerString(playerNum));
     }
@@ -62,11 +62,19 @@ public class InputHelper : MonoBehaviour
 
     public static bool CrouchButtonPressed(int playerNum)
     {
+        if (GamePadConnected())
+        {
+            return (Input.GetAxis("LeftTriggerAxis" + PlayerString(playerNum)) > 0.8f);
+        }
         return Input.GetButtonDown("Crouch" + PlayerString(playerNum));
     }
 
     public static bool CrouchButtonRealeased(int playerNum)
     {
+        if (GamePadConnected())
+        {
+            return (Input.GetAxis("LeftTriggerAxis" + PlayerString(playerNum)) <= 0.8f);
+        }
         return Input.GetButtonUp("Crouch" + PlayerString(playerNum));
     }
 

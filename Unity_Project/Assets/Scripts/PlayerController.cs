@@ -136,11 +136,11 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateCrouchState()
     {
-        if (Input.GetButtonDown("Crouch" + m_PlayerInputString) && m_CharacterController.isGrounded && !m_IsCrouching)
+        if (InputHelper.CrouchButtonPressed(GetPlayerNum()) && m_CharacterController.isGrounded && !m_IsCrouching)
         {
             Crouch();
         }
-        if (Input.GetButtonUp("Crouch" + m_PlayerInputString) && m_IsCrouching)
+        if (InputHelper.CrouchButtonRealeased(GetPlayerNum()) && m_IsCrouching)
         {
             GetUp();
         }

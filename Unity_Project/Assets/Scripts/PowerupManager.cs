@@ -38,7 +38,9 @@ public class PowerupManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("Fire1" + m_Player.GetPlayerInputString()) || Input.GetAxisRaw("TriggerAxis" + m_Player.GetPlayerInputString()) > 0)
+        Debug.Log("RightTriggerAxis: " + Input.GetAxis("RightTriggerAxis" + m_Player.GetPlayerInputString()));
+
+        if (InputHelper.FireButtonPressed(m_Player.GetPlayerNum()))
         {
             ActivatePowerup();
         }

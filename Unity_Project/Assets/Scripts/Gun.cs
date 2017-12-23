@@ -23,6 +23,8 @@ public class Gun : MonoBehaviour {
 
     private int m_CurrentAmmo;
 
+    private bool m_IsFiring = false;
+
     private PlayerController m_Player;
     
     // --------------------------------------------------------------
@@ -41,23 +43,23 @@ public class Gun : MonoBehaviour {
     {
         RotateAim();
 
-        if (Input.GetButtonDown("Fire1" + m_Player.GetPlayerInputString()))
+        if (InputHelper.FireButtonPressed(m_Player.GetPlayerNum()) && !m_IsFiring)
         {
             InvokeRepeating("Fire", 0.00001f, m_FiringRate);
+            m_IsFiring = true;
         }
-        if (Input.GetButtonUp("Fire1" + m_Player.GetPlayerInputString()))
+        if (InputHelper.FireButtonReleased(m_Player.GetPlayerNum()))
         {
             CancelInvoke("Fire");
+            m_IsFiring = false;
         }
     }
 
     private void RotateAim()
     {
-        Debug.Log("RightAxisX: " + Input.GetAxis("RightAxisX" + m_Player.GetPlayerInputString()) + ", RightAxisY: " + Input.GetAxis("RightAxisY" + m_Player.GetPlayerInputString()));
-
-        float xRotation = Input.GetAxis("RightAxisX" + m_Player.GetPlayerInputString());
-        float yRotation = Input.GetAxis("RightAxisY" + m_Player.GetPlayerInputString());
-        float rotationAmount = Mathf.Atan2(xRotation, yRotation) * Mathf.Rad2Deg;
+        float cos = Input.GetAxis("RightAxisX" + m_Player.GetPlayerInputString());
+        float sin = Input.GetAxis("RightAxisY" + m_Player.GetPlayerInputString());
+        float rotationAmount = Mathf.Atan2(cos, sin) * Mathf.Rad2Deg;
 
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotationAmount, transform.eulerAngles.z);
     }
