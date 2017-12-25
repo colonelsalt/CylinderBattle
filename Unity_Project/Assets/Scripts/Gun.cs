@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour {
-
+public class Gun : MonoBehaviour
+{
     // --------------------------------------------------------------
 
+    // Laser prefab to spawn when Player fires Gun
     [SerializeField] private GameObject m_LaserPrefab;
 
     // How many seconds delay between consecutive shots
@@ -56,12 +57,15 @@ public class Gun : MonoBehaviour {
         }
     }
 
+    // Send off OnGunFired event and spawn Laser Prefab 2.5m in front of root object
     private void Fire()
     {
         OnGunFired(m_Player.PlayerNum);
         m_CurrentAmmo--;
         Vector3 spawnPos = transform.position + (2.5f * transform.forward);
         Instantiate(m_LaserPrefab, spawnPos, transform.rotation);
+
+        // If ran out of ammo, remove Gun
         if (m_CurrentAmmo <= 0)
         {
             m_Player.GetComponent<PowerupManager>().DisablePowerup();

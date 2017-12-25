@@ -63,11 +63,9 @@ public class Health : MonoBehaviour
     private IEnumerator InvincibilityFlash()
     {
         Renderer rend = GetComponentInChildren<Renderer>();
-        bool visible = false;
         for (float i = 0; i < m_InvincibilityTime; i += 0.10f)
         {
-            rend.enabled = visible;
-            visible = !visible;
+            rend.enabled = !rend.enabled;
             yield return new WaitForSeconds(0.10f);
         }
         rend.enabled = true;
