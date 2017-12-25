@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 public class BoxingGlove : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -16,19 +17,16 @@ public class BoxingGlove : MonoBehaviour
 
     private Animator m_Animator;
 
+    private int m_NumPunches = 0;
+
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_Animator = GetComponent<Animator>();
-    }
-
-    public void AttachToPlayer(PlayerController player)
-    {
-        m_Player = player;
+        m_Player = GetComponentInParent<PlayerController>();
     }
     
-
     private void Update()
     {
         if (InputHelper.FireButtonPressed(m_Player.PlayerNum))

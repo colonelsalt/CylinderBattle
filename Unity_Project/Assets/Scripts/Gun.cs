@@ -36,11 +36,7 @@ public class Gun : MonoBehaviour
     private void Awake()
     {
         m_CurrentAmmo = MAX_AMMO;
-    }
-
-    public void AttachToPlayer(PlayerController player)
-    {
-        m_Player = player;
+        m_Player = GetComponentInParent<PlayerController>();
     }
 
     private void Update()

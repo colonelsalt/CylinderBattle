@@ -11,6 +11,8 @@ public class PowerupManager : MonoBehaviour
     [SerializeField] private GameObject m_BombPrefab;
 
     [SerializeField] private GameObject m_GunPrefab;
+
+    [SerializeField] private GameObject m_BoxingGlovesPrefab;
     
     // --------------------------------------------------------------
 
@@ -55,15 +57,16 @@ public class PowerupManager : MonoBehaviour
         {
             case Powerup.BOMB:
                 // Spawn bomb 1m in front of Player with fuse pointing up (x=-90 deg. angle)
-                Instantiate(m_BombPrefab, transform.position + transform.forward, Quaternion.Euler(-90f, 0, 0));
+                Instantiate(m_BombPrefab, transform.position + transform.forward, Quaternion.Euler(-90f, 0f, 0f));
                 m_PowerupIsRunning = false;
                 break;
             case Powerup.GUN:
                 // Spawn gun and child it to the Player's 'Body' Transform
-                GameObject gun = Instantiate(m_GunPrefab, transform.GetChild(0)) as GameObject;
-                gun.GetComponent<Gun>().AttachToPlayer(m_Player);
+                Instantiate(m_GunPrefab, transform.GetChild(0));
                 break;
             case Powerup.BOXING_GLOVES:
+                // Spawn boxing gloves and child them to the Player's 'Body' Transform
+                Instantiate(m_BoxingGlovesPrefab, transform.GetChild(0));
                 break;
         }
         m_HasPowerup = false;
