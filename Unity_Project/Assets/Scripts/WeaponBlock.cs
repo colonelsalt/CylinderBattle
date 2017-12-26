@@ -3,16 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponBlock : MonoBehaviour
-{   
+{
     // --------------------------------------------------------------
 
-    private void OnTriggerEnter(Collider other)
+    private float m_Radius;
+
+    // --------------------------------------------------------------
+
+    private void Awake()
     {
-        PowerupManager powerupManager = other.GetComponent<PowerupManager>();
+        m_Radius = GetComponent<MeshRenderer>().bounds.center.y;
+            
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        PowerupManager powerupManager = collision.gameObject.GetComponent<PowerupManager>();
         if (powerupManager != null)
         {
-            powerupManager.AddPowerup(PowerupGenerator.RandomWeapon());
-            Break();
+            if (powerupManager.GetComponentInChildren<MeshRenderer>().bounds.min.y >= GetComponent<MeshRenderer>().bounds.max.y)
+            {
+                powerupManager.AddPowerup(PowerupGenerator.RandomWeapon());
+                Break();
+            }
+            
         }
     }
 
