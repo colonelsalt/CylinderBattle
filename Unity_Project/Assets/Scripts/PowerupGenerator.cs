@@ -25,6 +25,6 @@ public static class PowerupGenerator
 
     public static Powerup RandomWeapon()
     {
-        return Powerup.BOXING_GLOVES;
+        return (Powerup)Random.Range(0, 3);
     }
 }

@@ -15,7 +15,7 @@ public class Health : MonoBehaviour
     // --------------------------------------------------------------
 
     // Events
-    public delegate void PlayerHealthEvent(int playerNum, int newHealth);
+    public delegate void PlayerHealthEvent(int playerNum, int healthChange);
     public static event PlayerHealthEvent OnPlayerHealthChange;
 
     // --------------------------------------------------------------
@@ -46,7 +46,7 @@ public class Health : MonoBehaviour
 
         if (m_Player != null)
         {
-            OnPlayerHealthChange(m_Player.PlayerNum, m_CurrentHealth);
+            OnPlayerHealthChange(m_Player.PlayerNum, -damage);
         }
 
         if (m_CurrentHealth <= 0)

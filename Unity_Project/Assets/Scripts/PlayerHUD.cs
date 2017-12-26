@@ -75,9 +75,10 @@ public class PlayerHUD : MonoBehaviour
         m_HealthText.text = "x" + m_Health;
     }
 
-    public void UpdateHealthDisplay(int newHealth)
+    public void UpdateHealthDisplay(int healthChange)
     {
-        m_HealthText.text = "x" + newHealth.ToString();
+        m_Health += healthChange;
+        m_HealthText.text = "x" + m_Health.ToString();
     }
 
     public void ShowPowerup(Powerup type)

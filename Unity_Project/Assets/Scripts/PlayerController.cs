@@ -270,6 +270,7 @@ public class PlayerController : MonoBehaviour
 
     private void Respawn()
     {
+        DeactivatePhysicsReactions();
         GetComponentInChildren<Renderer>().enabled = true; // TEMPORARY!!!
 
         m_IsAlive = true;

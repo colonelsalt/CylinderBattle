@@ -1,4 +1,4 @@
-﻿using System;
+﻿//using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +6,14 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerController))]
 public class Collector : MonoBehaviour
 {
+    // --------------------------------------------------------------
+
+    // Prefab to spawn when Player takes damage and drops a Pi
+    [SerializeField] private GameObject m_PiPrefab;
+
+    // When Player drops a Pi, how much force is it pushed away by
+    [SerializeField] private float m_DropForce;
+
     // --------------------------------------------------------------
 
     // Events
@@ -29,6 +37,7 @@ public class Collector : MonoBehaviour
     {
         Collectible.OnCollectiblePickup += OnCollectiblePickup;
         PlayerController.OnPlayerRespawn += OnResetPlusCount;
+        Health.OnPlayerHealthChange += OnCheckForPiDrop;
         m_Player = GetComponent<PlayerController>();
     }
 
@@ -61,8 +70,29 @@ public class Collector : MonoBehaviour
         }
     }
 
+    // If this Player took damage, drop one of their Pis
+    private void OnCheckForPiDrop(int playerNum, int healthChange)
+    {
+        if (playerNum == m_Player.PlayerNum && healthChange < 0)
+        {
+            DropPi();
+        }
+    }
+
+    // Instantiate Pi in random (upwards) direction
+    private void DropPi()
+    {
+        m_NumPis--;
+
+        Vector3 dropPosition = new Vector3();
+        Vector3 dropDirection = new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)).normalized; 
+
+        GameObject pi = Instantiate(m_PiPrefab, transform.position + (2f * transform.up), Quaternion.identity) as GameObject;
+        pi.GetComponent<Rigidbody>().AddForce(dropDirection * m_DropForce);
+    }
+
     private void CheckForPlusBonus()
     {
-        
+        // TODO
     }
 }

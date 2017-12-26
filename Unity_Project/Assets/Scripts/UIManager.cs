@@ -51,9 +51,9 @@ public class UIManager : MonoBehaviour
     }
 
     // Update and display new Player health
-    private void OnUpdateHealth(int playerNum, int newHealth)
+    private void OnUpdateHealth(int playerNum, int healthChange)
     {
-        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(newHealth);
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(healthChange);
     }
 
     // Display new powerup received

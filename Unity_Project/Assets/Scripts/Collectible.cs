@@ -11,6 +11,9 @@ public class Collectible : MonoBehaviour
 
     [SerializeField] private Type type;
 
+    // How long after Collectible has spawned until it can be collected
+    [SerializeField] private float m_CollectionWaitTime = 0f;
+
     // --------------------------------------------------------------
 
     // Events
@@ -19,10 +22,18 @@ public class Collectible : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    private void Update()
+    {
+        if (m_CollectionWaitTime > 0)
+        {
+            m_CollectionWaitTime -= Time.deltaTime;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         PlayerController capturedBy = other.GetComponent<PlayerController>();
-        if (capturedBy != null)
+        if (capturedBy != null && m_CollectionWaitTime <= 0)
         {
             OnCollectiblePickup(type, capturedBy.PlayerNum);
             Vanish();
