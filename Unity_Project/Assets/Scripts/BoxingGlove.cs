@@ -36,7 +36,12 @@ public class BoxingGlove : MonoBehaviour
         m_Animator = GetComponent<Animator>();
         m_Player = GetComponentInParent<PlayerController>();
     }
-    
+
+    private void Start()
+    {
+        Invoke("Deactivate", GameManager.POWERUP_DURATION);
+    }
+
     private void Update()
     {
         if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && !m_IsPunching)
@@ -107,8 +112,12 @@ public class BoxingGlove : MonoBehaviour
         {
             health.TakeDamage(m_Damage);
         }
+    }
 
-
+    private void Deactivate()
+    {
+        m_Player.GetComponent<PowerupManager>().DisablePowerup();
+        Destroy(gameObject);
     }
 
 }
