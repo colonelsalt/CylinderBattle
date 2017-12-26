@@ -277,4 +277,16 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
         OnPlayerRespawn(m_PlayerNum);
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        PlayerController otherPlayer = collision.gameObject.GetComponent<PlayerController>();
+        if (otherPlayer != null)
+        {
+            if (GetComponentInChildren<MeshRenderer>().bounds.min.y >= otherPlayer.GetComponentInChildren<MeshRenderer>().bounds.max.y)
+            {
+                otherPlayer.GetComponent<Health>().TakeDamage(1);
+            }
+        }
+    }
 }

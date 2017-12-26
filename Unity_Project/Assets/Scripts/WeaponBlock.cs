@@ -5,33 +5,27 @@ using UnityEngine;
 public class WeaponBlock : MonoBehaviour
 {
     // --------------------------------------------------------------
-
-    private float m_Radius;
-
     // --------------------------------------------------------------
 
-    private void Awake()
-    {
-        m_Radius = GetComponent<MeshRenderer>().bounds.center.y;
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    PowerupManager powerupManager = collision.gameObject.GetComponent<PowerupManager>();
+    //    if (powerupManager != null)
+    //    {
+    //        // If Player's lowest y-coordinate is higher than Block's highest y-coordinate, break Block
+    //        if (powerupManager.GetComponentInChildren<MeshRenderer>().bounds.min.y >= GetComponent<MeshRenderer>().bounds.max.y)
+    //        {
+    //            powerupManager.AddPowerup(PowerupGenerator.RandomWeapon());
+    //            Break();
+    //        }
             
-    }
+    //    }
+    //}
 
-    private void OnCollisionEnter(Collision collision)
+    public void Break(PowerupManager brokenBy)
     {
-        PowerupManager powerupManager = collision.gameObject.GetComponent<PowerupManager>();
-        if (powerupManager != null)
-        {
-            if (powerupManager.GetComponentInChildren<MeshRenderer>().bounds.min.y >= GetComponent<MeshRenderer>().bounds.max.y)
-            {
-                powerupManager.AddPowerup(PowerupGenerator.RandomWeapon());
-                Break();
-            }
-            
-        }
-    }
-
-    private void Break()
-    {
+        brokenBy.AddPowerup(PowerupGenerator.RandomWeapon());
+        
         // play break animation
         Destroy(gameObject);
     }
