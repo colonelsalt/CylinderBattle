@@ -10,6 +10,10 @@ public class BoxingGlove : MonoBehaviour
     // How much damage being struck by this glove deals
     [SerializeField] private int m_Damage;
 
+    // Strength of force applied to objects when punched 
+    [SerializeField] private float m_ImpactForce;
+
+    // When holding down Fire button, amount of time between consecutive punches
     [SerializeField] private float m_TimeBetweenPunches;
 
     // --------------------------------------------------------------
@@ -19,10 +23,11 @@ public class BoxingGlove : MonoBehaviour
 
     private Animator m_Animator;
 
+    // For animator to keep track of how many times Player has pressed Fire button in a row
     private int m_NumPunches = 0;
 
-    private bool m_PunchedThisFrame = false;
-
+    // Flag to keep track of whether Fire button held down
+    private bool m_IsPunching = false;
 
     // --------------------------------------------------------------
 
@@ -34,15 +39,16 @@ public class BoxingGlove : MonoBehaviour
     
     private void Update()
     {
-        if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && !m_PunchedThisFrame)
+        if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && !m_IsPunching)
         {
-            m_PunchedThisFrame = true;
+            m_IsPunching = true;
             InvokeRepeating("Punch", 0.00001f, m_TimeBetweenPunches);
         }
         if (InputHelper.FireButtonReleased(m_Player.PlayerNum))
         {
-            m_PunchedThisFrame = false;
+            m_IsPunching = false;
             CancelInvoke("Punch");
+            SetCollidersActive(false);
         }
     }
 
@@ -50,25 +56,59 @@ public class BoxingGlove : MonoBehaviour
     private void Punch()
     {
         m_NumPunches++;
+        SetCollidersActive(true);
         m_Animator.SetTrigger("PunchTrigger");
         m_Animator.SetInteger("NumPunches", m_NumPunches);
     }
 
-    // Called from the animator when final punch animation in sequence finishes
+    // Activates or deactivates colliders on each Glove
+    private void SetCollidersActive(bool enabled)
+    {
+        foreach (SphereCollider col in GetComponentsInChildren<SphereCollider>())
+        {
+            col.enabled = enabled;
+        }
+    }
+
+    // Called from Animator when final punch animation in sequence finishes
     private void ResetNumPunches()
     {
         m_NumPunches = 0;
         m_Animator.SetInteger("NumPunches", m_NumPunches);
     }
 
-    // When either glove strikes something, damage it
     private void OnCollisionEnter(Collision collision)
     {
-        Health objectStruck = collision.gameObject.GetComponent<Health>();
-        if (objectStruck != null)
+        PlayerController playerStruck = collision.gameObject.GetComponent<PlayerController>();
+        if (playerStruck != null)
         {
-            objectStruck.TakeDamage(m_Damage);
+            // Do nothing if we just collided with Player wearing gloves
+            if (playerStruck.PlayerNum == m_Player.PlayerNum)
+            {
+                return;
+            } 
+            else
+            {
+                // If struck other Player, activate their reaction to physics
+                playerStruck.ActivatePhysicsReactions();
+            }
         }
+
+        // If object struck has a Rigidbody, apply force to it
+        Rigidbody bodyStruck = collision.gameObject.GetComponent<Rigidbody>();
+        if (bodyStruck != null)
+        {
+            bodyStruck.AddForce(m_ImpactForce * transform.forward);
+        }
+
+        // If struck object has health, deal damage to it
+        Health health = collision.gameObject.GetComponent<Health>();
+        if (health != null)
+        {
+            health.TakeDamage(m_Damage);
+        }
+
+
     }
 
 }
