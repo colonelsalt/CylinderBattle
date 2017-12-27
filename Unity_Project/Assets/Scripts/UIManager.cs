@@ -24,8 +24,8 @@ public class UIManager : MonoBehaviour
         Gun.OnGunFired += OnUpdateAmmo;
         WeaponManager.OnWeaponActivated += OnDisplayWeapon;
         WeaponManager.OnWeaponDisabled += OnHideWeapon;
-        Health.OnPlayerHealthChange += OnUpdateHealth;
-        PlayerController.OnPlayerRespawn += OnResetDisplay;
+        PlayerHealth.OnPlayerHealthChange += OnUpdateHealth;
+        PlayerHealth.OnPlayerRespawn += OnResetDisplay;
 
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
         {
@@ -73,7 +73,7 @@ public class UIManager : MonoBehaviour
     }
 
     // Reset HUD after Player death
-    private void OnResetDisplay(int playerNum)
+    private void OnResetDisplay(int playerNum, int healthChange)
     {
         m_PlayerHUDs[playerNum - 1].DeathReset();
     }
@@ -87,8 +87,8 @@ public class UIManager : MonoBehaviour
         Gun.OnGunFired -= OnUpdateAmmo;
         WeaponManager.OnWeaponActivated -= OnDisplayWeapon;
         WeaponManager.OnWeaponDisabled -= OnHideWeapon;
-        Health.OnPlayerHealthChange -= OnUpdateHealth;
-        PlayerController.OnPlayerRespawn -= OnResetDisplay;
+        PlayerHealth.OnPlayerHealthChange -= OnUpdateHealth;
+        PlayerHealth.OnPlayerRespawn -= OnResetDisplay;
 
         m_GameOverTitle.enabled = true;
         m_GameOverTitle.text += "\nPlayer " + numOfWinner + " wins!";

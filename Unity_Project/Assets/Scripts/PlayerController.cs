@@ -27,13 +27,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_ExplosionDazeTime;
 
     // --------------------------------------------------------------
-    
-    // Events
-    public delegate void PlayerEvent(int playerNum);
-    public static event PlayerEvent OnPlayerDeath;
-    public static event PlayerEvent OnPlayerRespawn;
-
-    // --------------------------------------------------------------
 
     public int PlayerNum
     {
@@ -65,14 +58,7 @@ public class PlayerController : MonoBehaviour
     // The starting position of the player
     private Vector3 m_SpawningPosition = Vector3.zero;
 
-    // Whether the player is alive or not
-    private bool m_IsAlive = true;
-
     private bool m_IsCrouching = false;
-
-    // The time it takes to respawn
-    private const float MAX_RESPAWN_TIME = 1.0f;
-    private float m_RespawnTime = MAX_RESPAWN_TIME;
 
     // --------------------------------------------------------------
 
@@ -168,13 +154,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // If the player is dead update the respawn timer and exit update loop
-        if(!m_IsAlive)
-        {
-            UpdateRespawnTime();
-            return;
-        }
-
         // Update movement input
         UpdateMovementState();
 
@@ -241,54 +220,10 @@ public class PlayerController : MonoBehaviour
         Invoke("DeactivatePhysicsReactions", m_ExplosionDazeTime);
     }
 
-    private void DeactivatePhysicsReactions()
+    public void DeactivatePhysicsReactions()
     {
         m_CharacterController.enabled = true;
         m_RigidBody.constraints = RigidbodyConstraints.None;
         m_RigidBody.isKinematic = true;
-    }
-
-    public void Die()
-    {
-        m_IsAlive = false;
-        m_RespawnTime = MAX_RESPAWN_TIME;
-
-        GetComponentInChildren<Renderer>().enabled = false; // TEMPORARY!!!
-
-        // TODO: Trigger death animation
-
-        //OnPlayerDeath(GetPlayerNum());
-    }
-
-    private void UpdateRespawnTime()
-    {
-        m_RespawnTime -= Time.deltaTime;
-        if (m_RespawnTime < 0.0f)
-        {
-            Respawn();
-        }
-    }
-
-    private void Respawn()
-    {
-        DeactivatePhysicsReactions();
-        GetComponentInChildren<Renderer>().enabled = true; // TEMPORARY!!!
-
-        m_IsAlive = true;
-        transform.position = m_SpawningPosition;
-        transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
-        OnPlayerRespawn(m_PlayerNum);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        PlayerController otherPlayer = collision.gameObject.GetComponent<PlayerController>();
-        if (otherPlayer != null)
-        {
-            if (GetComponentInChildren<MeshRenderer>().bounds.min.y >= otherPlayer.GetComponentInChildren<MeshRenderer>().bounds.max.y)
-            {
-                otherPlayer.GetComponent<Health>().TakeDamage(1);
-            }
-        }
     }
 }

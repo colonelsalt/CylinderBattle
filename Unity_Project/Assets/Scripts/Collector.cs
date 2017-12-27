@@ -22,6 +22,7 @@ public class Collector : MonoBehaviour
     public static event CollectibleEvent OnPiDrop;
     public static event CollectibleEvent OnPlusPickup;
     public static event CollectibleEvent OnAllPisCollected;
+    public static event CollectibleEvent OnExtraLife;
 
     // --------------------------------------------------------------
     
@@ -33,15 +34,28 @@ public class Collector : MonoBehaviour
 
     private PlayerController m_Player;
 
+    private const float TIME_BETWEEN_PI_DROPS = 1f;
+
+    private float m_TimeSinceLastPiDrop = 0f;
+
     // --------------------------------------------------------------
 
 
     private void Awake()
     {
-        PlayerController.OnPlayerRespawn += OnResetPlusCount;
-        Health.OnPlayerHealthChange += OnCheckForPiDrop;
+        PlayerHealth.OnPlayerRespawn += OnResetPlusCount;
+        PlayerHealth.OnPlayerDeath += OnCheckForPiDrop;
+        PlayerHealth.OnPlayerHealthChange += OnCheckForPiDrop;
 
         m_Player = GetComponent<PlayerController>();
+    }
+
+    private void Update()
+    {
+        if (m_TimeSinceLastPiDrop < TIME_BETWEEN_PI_DROPS)
+        {
+            m_TimeSinceLastPiDrop += Time.deltaTime;
+        }
     }
 
     public void PickupCollectible(Collectible.Type type)
@@ -64,7 +78,7 @@ public class Collector : MonoBehaviour
         }
     }
 
-    private void OnResetPlusCount(int playerNum)
+    private void OnResetPlusCount(int playerNum, int healthChange)
     {
         if (m_Player.PlayerNum == playerNum)
         {
@@ -72,7 +86,7 @@ public class Collector : MonoBehaviour
         }
     }
 
-    // If this Player took damage, drop one of their Pis
+    // If this Player died or took damage, drop one of their Pis
     private void OnCheckForPiDrop(int playerNum, int healthChange)
     {
         if (playerNum != m_Player.PlayerNum) return;
@@ -86,6 +100,9 @@ public class Collector : MonoBehaviour
     // Instantiate Pi in random (upwards) direction
     private void DropPi()
     {
+        if (m_TimeSinceLastPiDrop < TIME_BETWEEN_PI_DROPS) return;
+        m_TimeSinceLastPiDrop = 0f;
+
         m_NumPis--;
 
         Vector3 dropDirection = new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)).normalized; 
@@ -97,6 +114,16 @@ public class Collector : MonoBehaviour
 
     private void CheckForPlusBonus()
     {
-        // TODO
+        switch (m_NumPluses)
+        {
+            case 5:
+                Debug.Log("Player got an extra life!");
+                //OnExtraLife(m_Player.PlayerNum);
+                break;
+            case 10:
+                break;
+            case 20:
+                break;
+        }
     }
 }

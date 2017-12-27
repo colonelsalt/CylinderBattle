@@ -47,7 +47,7 @@ public class Bomb : MonoBehaviour
             }
 
             // Deal damage to all objects with Health
-            Health beingHit = hit.GetComponent<Health>();
+            PlayerHealth beingHit = hit.GetComponent<PlayerHealth>();
             if (beingHit != null)
             {
                 beingHit.TakeDamage(m_Damage);

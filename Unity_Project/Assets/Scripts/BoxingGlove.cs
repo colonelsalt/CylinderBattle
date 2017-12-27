@@ -107,7 +107,7 @@ public class BoxingGlove : MonoBehaviour
         }
 
         // If struck object has health, deal damage to it
-        Health health = collision.gameObject.GetComponent<Health>();
+        PlayerHealth health = collision.gameObject.GetComponent<PlayerHealth>();
         if (health != null)
         {
             health.TakeDamage(m_Damage);

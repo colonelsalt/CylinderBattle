@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class DeathTrigger : MonoBehaviour
 {
-
     void OnTriggerEnter(Collider other)
     {
-            PlayerController playerController = other.GetComponent<PlayerController>();
-            if(playerController != null)
-            {
-                // Kill the player
-                playerController.Die();
-
-                other.GetComponent<Health>().Die();
-            }
+        PlayerHealth player = other.GetComponent<PlayerHealth>();
+        if (player != null)
+        {
+            // Kill the player
+            player.Die();
+        }
+        else if (other.GetComponent<PlayerFeet>() == null)
+        {
+            Destroy(other.gameObject);
+        }
     }
 }

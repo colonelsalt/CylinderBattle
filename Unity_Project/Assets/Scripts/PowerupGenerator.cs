@@ -11,6 +11,13 @@ public enum Weapon
     LIGHTNING = 4
 }
 
+public enum Powerup
+{
+    EXTRA_LIFE = 0,
+    QUICK_RUN_BOOTS = 1,
+    JETPACK = 2
+}
+
 public static class PowerupGenerator
 {
     public static Weapon[] ListAll()

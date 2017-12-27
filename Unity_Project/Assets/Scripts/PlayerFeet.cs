@@ -32,7 +32,7 @@ public class PlayerFeet : MonoBehaviour
         {
             if (otherPlayer.PlayerNum != m_Player.PlayerNum)
             {
-                otherPlayer.GetComponent<Health>().TakeDamage(1);
+                otherPlayer.GetComponent<PlayerHealth>().TakeDamage(1);
                 Bounce();
             }
         }
