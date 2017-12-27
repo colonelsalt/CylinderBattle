@@ -17,7 +17,9 @@ public class UIManager : MonoBehaviour
 
     void OnEnable()
     {
-        Collectible.OnCollectiblePickup += OnUpdateScore;
+        Collector.OnPiPickup += OnIncrementPis;
+        Collector.OnPiDrop += OnDecrementPis;
+        Collector.OnPlusPickup += OnIncrementPluses;
         Collector.OnAllPisCollected += OnGameOver;
         Gun.OnGunFired += OnUpdateAmmo;
         PowerupManager.OnPowerupActivated += OnDisplayPowerup;
@@ -31,17 +33,19 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnUpdateScore(Collectible.Type type, int playerNum)
+    private void OnIncrementPis(int playerNum)
     {
-        switch (type)
-        {
-            case Collectible.Type.PLUS:
-                m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePluses();
-                break;
-            case Collectible.Type.PI:
-                m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePis();
-                break;
-        }
+        m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePis();
+    }
+
+    private void OnDecrementPis(int playerNum)
+    {
+        m_PlayerHUDs[playerNum - 1].DecrementAndUpdatePis();
+    }
+
+    private void OnIncrementPluses(int playerNum)
+    {
+        m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePluses();
     }
 
     // Hide powerup images and text
@@ -76,7 +80,9 @@ public class UIManager : MonoBehaviour
 
     private void OnGameOver(int numOfWinner)
     {
-        Collectible.OnCollectiblePickup -= OnUpdateScore;
+        Collector.OnPiPickup -= OnIncrementPis;
+        Collector.OnPiDrop -= OnDecrementPis;
+        Collector.OnPlusPickup -= OnIncrementPluses;
         Collector.OnAllPisCollected -= OnGameOver;
         Gun.OnGunFired -= OnUpdateAmmo;
         PowerupManager.OnPowerupActivated -= OnDisplayPowerup;

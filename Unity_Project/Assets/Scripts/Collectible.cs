@@ -4,21 +4,14 @@ using UnityEngine;
 
 public class Collectible : MonoBehaviour
 {
-
     public enum Type { PLUS, PI };
 
     // --------------------------------------------------------------
 
-    [SerializeField] private Type type;
+    [SerializeField] private Type m_Type;
 
     // How long after Collectible has spawned until it can be collected
     [SerializeField] private float m_CollectionWaitTime = 0f;
-
-    // --------------------------------------------------------------
-
-    // Events
-    public delegate void CollectiblePickup(Type t, int playerNum);
-    public static event CollectiblePickup OnCollectiblePickup;
 
     // --------------------------------------------------------------
 
@@ -32,10 +25,10 @@ public class Collectible : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        PlayerController capturedBy = other.GetComponent<PlayerController>();
-        if (capturedBy != null && m_CollectionWaitTime <= 0)
+        Collector collector = other.GetComponent<Collector>();
+        if (collector != null && m_CollectionWaitTime <= 0)
         {
-            OnCollectiblePickup(type, capturedBy.PlayerNum);
+            collector.PickupCollectible(m_Type);
             Vanish();
         }
     }

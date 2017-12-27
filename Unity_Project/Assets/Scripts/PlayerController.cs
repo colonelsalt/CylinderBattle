@@ -88,9 +88,9 @@ public class PlayerController : MonoBehaviour
         m_SpawningPosition = transform.position;
     }
 
-    private void Jump()
+    public void Jump(float heightToJump)
     {
-        m_VerticalSpeed = Mathf.Sqrt(m_JumpHeight * m_Gravity);
+        m_VerticalSpeed = Mathf.Sqrt(heightToJump * m_Gravity);
     }
 
     private void BackFlip()
@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviour
                 BackFlip();
             } else
             {
-                Jump();
+                Jump(m_JumpHeight);
             }
         }
     }
@@ -244,6 +244,7 @@ public class PlayerController : MonoBehaviour
     private void DeactivatePhysicsReactions()
     {
         m_CharacterController.enabled = true;
+        m_RigidBody.constraints = RigidbodyConstraints.None;
         m_RigidBody.isKinematic = true;
     }
 

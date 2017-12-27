@@ -61,6 +61,12 @@ public class PlayerHUD : MonoBehaviour
         m_NumPisText.text = m_NumPis + "/" + GameManager.MAX_NUM_PIS;
     }
 
+    public void DecrementAndUpdatePis()
+    {
+        m_NumPis--;
+        m_NumPisText.text = m_NumPis + "/" + GameManager.MAX_NUM_PIS;
+    }
+
     public void IncrementAndUpdatePluses()
     {
         m_NumPluses++;

@@ -17,8 +17,11 @@ public class Collector : MonoBehaviour
     // --------------------------------------------------------------
 
     // Events
-    public delegate void AllPisCollectedEvent(int playerNum);
-    public static event AllPisCollectedEvent OnAllPisCollected;
+    public delegate void CollectibleEvent(int playerNum);
+    public static event CollectibleEvent OnPiPickup;
+    public static event CollectibleEvent OnPiDrop;
+    public static event CollectibleEvent OnPlusPickup;
+    public static event CollectibleEvent OnAllPisCollected;
 
     // --------------------------------------------------------------
     
@@ -35,24 +38,23 @@ public class Collector : MonoBehaviour
 
     private void Awake()
     {
-        Collectible.OnCollectiblePickup += OnCollectiblePickup;
         PlayerController.OnPlayerRespawn += OnResetPlusCount;
         Health.OnPlayerHealthChange += OnCheckForPiDrop;
+
         m_Player = GetComponent<PlayerController>();
     }
 
-    private void OnCollectiblePickup(Collectible.Type type, int playerNum)
+    public void PickupCollectible(Collectible.Type type)
     {
-        // Make sure this Player is the one who collected
-        if (playerNum != m_Player.PlayerNum) return;
-
         switch (type)
         {
             case Collectible.Type.PLUS:
+                OnPlusPickup(m_Player.PlayerNum);
                 m_NumPluses++;
                 CheckForPlusBonus();
                 break;
             case Collectible.Type.PI:
+                OnPiPickup(m_Player.PlayerNum);
                 m_NumPis++;
                 if (m_NumPis >= GameManager.MAX_NUM_PIS)
                 {
@@ -73,7 +75,9 @@ public class Collector : MonoBehaviour
     // If this Player took damage, drop one of their Pis
     private void OnCheckForPiDrop(int playerNum, int healthChange)
     {
-        if (playerNum == m_Player.PlayerNum && healthChange < 0)
+        if (playerNum != m_Player.PlayerNum) return;
+
+        if (healthChange < 0 && m_NumPis > 0)
         {
             DropPi();
         }
@@ -84,11 +88,11 @@ public class Collector : MonoBehaviour
     {
         m_NumPis--;
 
-        Vector3 dropPosition = new Vector3();
         Vector3 dropDirection = new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)).normalized; 
-
         GameObject pi = Instantiate(m_PiPrefab, transform.position + (2f * transform.up), Quaternion.identity) as GameObject;
         pi.GetComponent<Rigidbody>().AddForce(dropDirection * m_DropForce);
+
+        OnPiDrop(m_Player.PlayerNum);
     }
 
     private void CheckForPlusBonus()
