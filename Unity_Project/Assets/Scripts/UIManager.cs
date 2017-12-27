@@ -22,8 +22,8 @@ public class UIManager : MonoBehaviour
         Collector.OnPlusPickup += OnIncrementPluses;
         Collector.OnAllPisCollected += OnGameOver;
         Gun.OnGunFired += OnUpdateAmmo;
-        PowerupManager.OnPowerupActivated += OnDisplayPowerup;
-        PowerupManager.OnPowerupDisabled += OnHidePowerup;
+        WeaponManager.OnWeaponActivated += OnDisplayWeapon;
+        WeaponManager.OnWeaponDisabled += OnHideWeapon;
         Health.OnPlayerHealthChange += OnUpdateHealth;
         PlayerController.OnPlayerRespawn += OnResetDisplay;
 
@@ -48,10 +48,10 @@ public class UIManager : MonoBehaviour
         m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePluses();
     }
 
-    // Hide powerup images and text
-    private void OnHidePowerup(Powerup type, int playerNum)
+    // Hide weapon images and text
+    private void OnHideWeapon(Weapon type, int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].HidePowerup();
+        m_PlayerHUDs[playerNum - 1].HideWeapon();
     }
 
     // Update and display new Player health
@@ -60,10 +60,10 @@ public class UIManager : MonoBehaviour
         m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(healthChange);
     }
 
-    // Display new powerup received
-    private void OnDisplayPowerup(Powerup type, int playerNum)
+    // Display new weapon received
+    private void OnDisplayWeapon(Weapon type, int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].ShowPowerup(type);
+        m_PlayerHUDs[playerNum - 1].ShowWeapon(type);
     }
 
     // Update and display ammo change
@@ -85,8 +85,8 @@ public class UIManager : MonoBehaviour
         Collector.OnPlusPickup -= OnIncrementPluses;
         Collector.OnAllPisCollected -= OnGameOver;
         Gun.OnGunFired -= OnUpdateAmmo;
-        PowerupManager.OnPowerupActivated -= OnDisplayPowerup;
-        PowerupManager.OnPowerupDisabled -= OnHidePowerup;
+        WeaponManager.OnWeaponActivated -= OnDisplayWeapon;
+        WeaponManager.OnWeaponDisabled -= OnHideWeapon;
         Health.OnPlayerHealthChange -= OnUpdateHealth;
         PlayerController.OnPlayerRespawn -= OnResetDisplay;
 

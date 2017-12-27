@@ -69,11 +69,6 @@ public class Health : MonoBehaviour
             yield return new WaitForSeconds(0.10f);
         }
         rend.enabled = true;
-        DisableInvincibility();
-    }
-
-    private void DisableInvincibility()
-    {
         m_IsInvincible = false;
     }
 

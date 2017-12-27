@@ -17,9 +17,9 @@ public class PlayerHUD : MonoBehaviour
 
     [SerializeField] private Text m_HealthText;
 
-    [SerializeField] private Image m_PowerupImage;
+    [SerializeField] private Image m_WeaponImage;
 
-    [SerializeField] private Texture[] m_PowerupImages;
+    [SerializeField] private Texture[] m_WeaponImages;
 
     // --------------------------------------------------------------
 
@@ -87,18 +87,18 @@ public class PlayerHUD : MonoBehaviour
         m_HealthText.text = "x" + m_Health.ToString();
     }
 
-    public void ShowPowerup(Powerup type)
+    public void ShowWeapon(Weapon type)
     {
         switch (type)
         {
-            case Powerup.BOMB:
+            case Weapon.BOMB:
                 break;
-            case Powerup.GUN:
+            case Weapon.GUN:
                 m_Ammo = Gun.MAX_AMMO;
                 m_AmmoText.enabled = true;
                 m_AmmoText.text = m_Ammo.ToString();
                 break;
-            case Powerup.BOXING_GLOVES:
+            case Weapon.BOXING_GLOVES:
                 m_RemainingPowerupTime = GameManager.POWERUP_DURATION;
                 // TEMPORARY SOLUTION! (show timer with powerup text)
                 m_AmmoText.enabled = true;
@@ -107,13 +107,14 @@ public class PlayerHUD : MonoBehaviour
                 break;
         }
 
-        m_PowerupImage.enabled = true;
+        m_WeaponImage.enabled = true;
     }
 
-    public void HidePowerup()
+    public void HideWeapon()
     {
         m_AmmoText.enabled = false;
-        m_PowerupImage.enabled = false;
+        m_WeaponImage.enabled = false;
+        m_TimerActive = false;
     }
 
     public void UpdateAmmoDisplay()

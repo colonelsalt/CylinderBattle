@@ -22,9 +22,9 @@ public class WeaponBlock : MonoBehaviour
     //    }
     //}
 
-    public void Break(PowerupManager brokenBy)
+    public void Break(WeaponManager brokenBy)
     {
-        brokenBy.AddPowerup(PowerupGenerator.RandomWeapon());
+        brokenBy.AddWeapon(PowerupGenerator.RandomWeapon());
         
         // play break animation
         Destroy(gameObject);

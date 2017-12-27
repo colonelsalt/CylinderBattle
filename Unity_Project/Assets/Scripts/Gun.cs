@@ -64,7 +64,7 @@ public class Gun : MonoBehaviour
         // If ran out of ammo, remove Gun
         if (m_CurrentAmmo <= 0)
         {
-            m_Player.GetComponent<PowerupManager>().DisablePowerup();
+            m_Player.GetComponent<WeaponManager>().DisablePowerup();
             Destroy(gameObject);
         }
     }

@@ -2,29 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Powerup
+public enum Weapon
 {
     BOMB = 0,
     GUN = 1,
     BOXING_GLOVES = 2,
-    QUICK_BOOTS = 3,
-    EXTRA_LIFE = 4
+    PORTAL_GUN = 3,
+    LIGHTNING = 4
 }
 
 public static class PowerupGenerator
 {
-    public static Powerup[] ListAll()
+    public static Weapon[] ListAll()
     {
-        return new Powerup[] { Powerup.BOMB, Powerup.GUN, Powerup.BOXING_GLOVES };
+        return new Weapon[] { Weapon.BOMB, Weapon.GUN, Weapon.BOXING_GLOVES };
     }
 
-    public static Powerup GetRandom()
+    public static Weapon GetRandom()
     {
-        return (Powerup)Random.Range(0, 3);
+        return (Weapon)Random.Range(0, 3);
     }
 
-    public static Powerup RandomWeapon()
+    public static Weapon RandomWeapon()
     {
-        return (Powerup)Random.Range(0, 3);
+        return (Weapon)Random.Range(0, 3);
     }
 }

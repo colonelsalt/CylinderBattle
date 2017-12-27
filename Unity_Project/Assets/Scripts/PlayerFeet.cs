@@ -40,7 +40,7 @@ public class PlayerFeet : MonoBehaviour
         WeaponBlock weaponBlock = other.GetComponent<WeaponBlock>();
         if (weaponBlock != null)
         {
-            weaponBlock.Break(m_Player.GetComponent<PowerupManager>());
+            weaponBlock.Break(m_Player.GetComponent<WeaponManager>());
             Bounce();
         }
     }
