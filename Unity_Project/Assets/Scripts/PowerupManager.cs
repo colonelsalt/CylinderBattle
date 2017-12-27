@@ -61,11 +61,11 @@ public class PowerupManager : MonoBehaviour
                 m_PowerupIsRunning = false;
                 break;
             case Powerup.GUN:
-                // Spawn gun and child it to the Player's 'Body' Transform
+                // Spawn gun and child it to Player's 'Body' Transform
                 Instantiate(m_GunPrefab, transform.GetChild(0));
                 break;
             case Powerup.BOXING_GLOVES:
-                // Spawn boxing gloves and child them to the Player's 'Body' Transform
+                // Spawn boxing gloves and child them to Player's 'Body' Transform
                 Instantiate(m_BoxingGlovesPrefab, transform.GetChild(0));
                 break;
         }
