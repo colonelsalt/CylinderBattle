@@ -20,11 +20,6 @@ public static class PowerupGenerator
 
     public static Weapon GetRandom()
     {
-        return (Weapon)Random.Range(0, 3);
-    }
-
-    public static Weapon RandomWeapon()
-    {
-        return (Weapon)Random.Range(0, 3);
+        return (Weapon)Random.Range(0, 4);
     }
 }

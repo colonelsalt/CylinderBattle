@@ -24,7 +24,7 @@ public class WeaponBlock : MonoBehaviour
 
     public void Break(WeaponManager brokenBy)
     {
-        brokenBy.AddWeapon(PowerupGenerator.RandomWeapon());
+        brokenBy.PickupWeapon(PowerupGenerator.GetRandom());
         
         // play break animation
         Destroy(gameObject);

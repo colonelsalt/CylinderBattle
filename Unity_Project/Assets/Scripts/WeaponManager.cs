@@ -13,11 +13,14 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private GameObject m_GunPrefab;
 
     [SerializeField] private GameObject m_BoxingGlovesPrefab;
+
+    [SerializeField] private GameObject m_PortalGunPrefab;
     
     // --------------------------------------------------------------
 
     // Events
     public delegate void WeaponEvent (Weapon type, int playerNum);
+    public static event WeaponEvent OnWeaponPickup;
     public static event WeaponEvent OnWeaponActivated;
     public static event WeaponEvent OnWeaponDisabled;
 
@@ -68,20 +71,25 @@ public class WeaponManager : MonoBehaviour
                 // Spawn boxing gloves and child them to Player's 'Body' Transform
                 Instantiate(m_BoxingGlovesPrefab, transform.GetChild(0));
                 break;
+            case Weapon.PORTAL_GUN:
+                Instantiate(m_PortalGunPrefab, transform.GetChild(0));
+                break;
         }
         m_HasWeapon = false;
     }
 
-    public void AddWeapon(Weapon weapon)
+    public void PickupWeapon(Weapon weapon)
     {
         if (m_HasWeapon) return;
+
+        //OnWeaponPickup(weapon, m_Player.PlayerNum);
         
         m_HasWeapon = true;
         m_Weapon = weapon;
-        Debug.Log("Received powerup " + m_Weapon);
+        Debug.Log("Received weapon " + m_Weapon);
     }
 
-    public void DisablePowerup()
+    public void DisableWeapon()
     {
         m_WeaponIsActive = false;
         OnWeaponDisabled(m_Weapon, m_Player.PlayerNum);

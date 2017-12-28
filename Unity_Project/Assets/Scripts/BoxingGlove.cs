@@ -126,7 +126,7 @@ public class BoxingGlove : MonoBehaviour
     private void Deactivate()
     {
         PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
-        m_Player.GetComponent<WeaponManager>().DisablePowerup();
+        m_Player.GetComponent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
     }
 
