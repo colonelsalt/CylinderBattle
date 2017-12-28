@@ -35,6 +35,7 @@ public class Gun : MonoBehaviour
 
     private void Awake()
     {
+        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         m_CurrentAmmo = MAX_AMMO;
         m_Player = GetComponentInParent<PlayerController>();
     }
@@ -64,8 +65,22 @@ public class Gun : MonoBehaviour
         // If ran out of ammo, remove Gun
         if (m_CurrentAmmo <= 0)
         {
-            m_Player.GetComponent<WeaponManager>().DisablePowerup();
-            Destroy(gameObject);
+            Deactivate();
         }
+    }
+
+    private void OnPlayerDeath(int playerNum, int healthChange)
+    {
+        if (playerNum == m_Player.PlayerNum)
+        {
+            Deactivate();
+        }
+    }
+
+    private void Deactivate()
+    {
+        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
+        m_Player.GetComponent<WeaponManager>().DisablePowerup();
+        Destroy(gameObject);
     }
 }

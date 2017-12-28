@@ -7,8 +7,10 @@ public class PlayerController : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    [SerializeField] private float m_WalkSpeed = 5f;
+
     // The character's running speed
-    [SerializeField] private float m_RunSpeed = 5.0f;
+    [SerializeField] private float m_RunSpeed = 10f;
 
     // The gravity strength
     [SerializeField] private float m_Gravity = 60.0f;
@@ -26,6 +28,9 @@ public class PlayerController : MonoBehaviour
     // After struck by an explosion, how long Player will remain immobile
     [SerializeField] private float m_ExplosionDazeTime;
 
+    // How long Player can sprint for before recharge needed
+    [SerializeField] private float m_MaxSprintTime;
+
     // --------------------------------------------------------------
 
     public int PlayerNum
@@ -39,6 +44,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody m_RigidBody;
 
     private Animator m_Animator;
+
+    private PowerupManager m_PowerupManager;
 
     // The charactercontroller of the player
     private CharacterController m_CharacterController;
@@ -60,6 +67,10 @@ public class PlayerController : MonoBehaviour
 
     private bool m_IsCrouching = false;
 
+    private float m_RemainingSprintTime;
+
+    private bool m_HasStamina = true;
+
     // --------------------------------------------------------------
 
     private void Awake()
@@ -67,6 +78,9 @@ public class PlayerController : MonoBehaviour
         m_CharacterController = GetComponent<CharacterController>();
         m_RigidBody = GetComponent<Rigidbody>();
         m_Animator = GetComponentInChildren<Animator>();
+        m_PowerupManager = GetComponent<PowerupManager>();
+
+        m_RemainingSprintTime = m_MaxSprintTime;
     }
 
     private void Start()
@@ -103,7 +117,32 @@ public class PlayerController : MonoBehaviour
         float verticalInput = InputHelper.GetMovementY(m_PlayerNum);
 
         m_MovementDirection = new Vector3(horizontalInput, 0, verticalInput);
-        m_MovementSpeed = m_RunSpeed;
+
+        if (m_PowerupManager.IsSprinting())
+        {
+            if (m_RemainingSprintTime > 0f && m_HasStamina)
+            {
+                m_MovementSpeed = m_RunSpeed;
+                m_RemainingSprintTime -= Time.deltaTime;
+            }
+            else
+            {
+                m_HasStamina = false;
+                m_MovementSpeed = 0f;
+            }
+        }
+        else
+        {
+            m_MovementSpeed = m_WalkSpeed;
+            if (m_RemainingSprintTime < m_MaxSprintTime)
+            {
+                m_RemainingSprintTime += Time.deltaTime;
+            }
+            else
+            {
+                m_HasStamina = true;
+            }
+        }
     }
 
     private void UpdateJumpState()

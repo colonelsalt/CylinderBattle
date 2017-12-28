@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(PlayerHealth))]
 public class Collector : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -22,7 +23,6 @@ public class Collector : MonoBehaviour
     public static event CollectibleEvent OnPiDrop;
     public static event CollectibleEvent OnPlusPickup;
     public static event CollectibleEvent OnAllPisCollected;
-    public static event CollectibleEvent OnExtraLife;
 
     // --------------------------------------------------------------
     
@@ -33,6 +33,8 @@ public class Collector : MonoBehaviour
     private int m_NumPis = 0;
 
     private PlayerController m_Player;
+
+    private PowerupManager m_PowerupManager;
 
     private const float TIME_BETWEEN_PI_DROPS = 1f;
 
@@ -48,6 +50,7 @@ public class Collector : MonoBehaviour
         PlayerHealth.OnPlayerHealthChange += OnCheckForPiDrop;
 
         m_Player = GetComponent<PlayerController>();
+        m_PowerupManager = GetComponent<PowerupManager>();
     }
 
     private void Update()
@@ -65,7 +68,7 @@ public class Collector : MonoBehaviour
             case Collectible.Type.PLUS:
                 OnPlusPickup(m_Player.PlayerNum);
                 m_NumPluses++;
-                CheckForPlusBonus();
+                m_PowerupManager.CheckForPlusBonus(m_NumPluses);
                 break;
             case Collectible.Type.PI:
                 OnPiPickup(m_Player.PlayerNum);
@@ -110,20 +113,5 @@ public class Collector : MonoBehaviour
         pi.GetComponent<Rigidbody>().AddForce(dropDirection * m_DropForce);
 
         OnPiDrop(m_Player.PlayerNum);
-    }
-
-    private void CheckForPlusBonus()
-    {
-        switch (m_NumPluses)
-        {
-            case 5:
-                Debug.Log("Player got an extra life!");
-                //OnExtraLife(m_Player.PlayerNum);
-                break;
-            case 10:
-                break;
-            case 20:
-                break;
-        }
     }
 }

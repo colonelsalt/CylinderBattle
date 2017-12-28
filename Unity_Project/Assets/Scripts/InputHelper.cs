@@ -120,6 +120,18 @@ public static class InputHelper
         }
     }
 
+    public static bool SprintButtonPressed(int playerNum)
+    {
+        if (GamePadConnected(playerNum))
+        {
+            return XCI.GetButton(XboxButton.X, (XboxController)playerNum);
+        }
+        else
+        {
+            return Input.GetButton("Sprint" + PlayerString(playerNum));
+        }
+    }
+
 
     private static string PlayerString(int playerNum)
     {

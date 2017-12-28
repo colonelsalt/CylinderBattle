@@ -33,6 +33,7 @@ public class BoxingGlove : MonoBehaviour
 
     private void Awake()
     {
+        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         m_Animator = GetComponent<Animator>();
         m_Player = GetComponentInParent<PlayerController>();
     }
@@ -114,8 +115,17 @@ public class BoxingGlove : MonoBehaviour
         }
     }
 
+    private void OnPlayerDeath(int playerNum, int healthChange)
+    {
+        if (playerNum == m_Player.PlayerNum)
+        {
+            Deactivate();
+        }
+    }
+
     private void Deactivate()
     {
+        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
         m_Player.GetComponent<WeaponManager>().DisablePowerup();
         Destroy(gameObject);
     }

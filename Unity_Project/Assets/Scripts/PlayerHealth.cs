@@ -57,6 +57,12 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
+    public void GetExtraLife()
+    {
+        m_CurrentHealth++;
+        OnPlayerHealthChange(m_Player.PlayerNum, 1);
+    }
+
     public void TakeDamage(int damage)
     {
         if (m_IsInvincible) return;
