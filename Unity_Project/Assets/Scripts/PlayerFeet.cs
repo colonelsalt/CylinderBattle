@@ -47,7 +47,6 @@ public class PlayerFeet : MonoBehaviour
 
     private void Bounce()
     {
-        Vector3 bounceDirection = new Vector3(Random.Range(-0.8f, 0.8f), 1f, Random.Range(-0.8f, 0.8f)).normalized;
         m_Player.Jump(m_BounceHeight);
     }
 }

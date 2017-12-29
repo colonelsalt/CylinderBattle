@@ -16,7 +16,7 @@ public class PowerupManager : MonoBehaviour
 
     [SerializeField] private GameObject m_QuickRunBootsPrefab;
 
-    [SerializeField] private GameObject m_JetPackPrefab;
+    [SerializeField] private GameObject m_JetpackPrefab;
 
     // --------------------------------------------------------------
 
@@ -28,8 +28,23 @@ public class PowerupManager : MonoBehaviour
 
     private GameObject m_Jetpack;
 
-    private bool m_HasQuickRunBoots = false;
-    private bool m_HasJetPack = false;
+    // --------------------------------------------------------------
+
+    public bool HasJetpack
+    {
+        get
+        {
+            return m_Jetpack != null;
+        }
+    }
+
+    public bool HasQuickRunBoots
+    {
+        get
+        {
+            return m_QuickRunBoots != null;
+        }
+    }
 
     // --------------------------------------------------------------
 
@@ -42,34 +57,37 @@ public class PowerupManager : MonoBehaviour
 
     public void CheckForPlusBonus(int numPluses)
     {
+        if (numPluses % 5 != 0) return;
+
         switch (numPluses)
         {
             case 5:
-            case 15:
+                Debug.Log("Player received Jetpack!");
+                m_Jetpack = Instantiate(m_JetpackPrefab, transform.GetChild(0)) as GameObject;
+                break;
+            case 10:
+                break;
+            case 20:
+                Debug.Log("Player received Quick-Run boots!");
+                m_QuickRunBoots = Instantiate(m_QuickRunBootsPrefab, transform.GetChild(0)) as GameObject;
+                break;
+            default:
                 Debug.Log("Player got an extra life!");
                 m_Health.GetExtraLife();
                 break;
-            case 10:
-                Debug.Log("Player received Quick-Run boots!");
-                m_QuickRunBoots = Instantiate(m_QuickRunBootsPrefab, transform.GetChild(0)) as GameObject;
-                m_HasQuickRunBoots = true;
-                break;
-            case 20:
-                break;
         }
-    }
-
-    public bool IsSprinting()
-    {
-        return InputHelper.SprintButtonPressed(m_Player.PlayerNum) && m_HasQuickRunBoots;
     }
 
     private void OnRemovePowerups(int playerNum, int healthChange)
     {
         if (playerNum != m_Player.PlayerNum) return;
 
-        m_HasJetPack = m_HasQuickRunBoots = false;
         Destroy(m_QuickRunBoots);
         Destroy(m_Jetpack);
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.OnPlayerDeath -= OnRemovePowerups;
     }
 }
