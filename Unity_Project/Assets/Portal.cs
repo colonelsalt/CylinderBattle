@@ -20,11 +20,28 @@ public class Portal : MonoBehaviour {
 
     // --------------------------------------------------------------
 
+    private void Awake()
+    {
+        if (m_Type == Type.GREEN_PORTAL)
+        {
+            // Destroy all previously fired portals in scene
+            foreach (Portal portal in FindObjectsOfType<Portal>())
+            {
+                if (portal != this) portal.Deactivate();
+            }
+        }
+    }
+
 
     public void AttachToPortal(Transform otherPortal)
     {
         m_OtherPortal = otherPortal;
         m_PortalActivated = true;
+    }
+
+    public void Deactivate()
+    {
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
