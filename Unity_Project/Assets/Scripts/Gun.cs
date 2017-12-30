@@ -26,17 +26,25 @@ public class Gun : MonoBehaviour
     // The Player this Gun belongs to
     private PlayerController m_Player;
 
-    private int m_CurrentAmmo;
+    private int m_RemainingAmmo;
 
     // Flag to keep track of whether Gun is currently firing
     private bool m_IsFiring = false;
     
     // --------------------------------------------------------------
 
+    public int RemainingAmmo
+    {
+        get
+        {
+            return m_RemainingAmmo;
+        }
+    }
+
     private void Awake()
     {
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
-        m_CurrentAmmo = MAX_AMMO;
+        m_RemainingAmmo = MAX_AMMO;
         m_Player = GetComponentInParent<PlayerController>();
     }
 
@@ -58,18 +66,18 @@ public class Gun : MonoBehaviour
     private void Fire()
     {
         OnGunFired(m_Player.PlayerNum);
-        m_CurrentAmmo--;
+        m_RemainingAmmo--;
         Vector3 spawnPos = transform.position + (2.5f * transform.forward);
         Instantiate(m_LaserPrefab, spawnPos, transform.rotation);
 
         // If ran out of ammo, remove Gun
-        if (m_CurrentAmmo <= 0)
+        if (m_RemainingAmmo <= 0)
         {
             Deactivate();
         }
     }
 
-    private void OnPlayerDeath(int playerNum, int healthChange)
+    private void OnPlayerDeath(int playerNum)
     {
         if (playerNum == m_Player.PlayerNum)
         {

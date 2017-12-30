@@ -104,7 +104,7 @@ public class PortalGun : MonoBehaviour
         }
     }
 
-    private void OnPlayerDeath(int playerNum, int healthChange)
+    private void OnPlayerDeath(int playerNum)
     {
         if (playerNum != m_Player.PlayerNum) return;
 

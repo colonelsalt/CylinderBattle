@@ -54,7 +54,6 @@ public class WeaponManager : MonoBehaviour
         if (!m_HasWeapon || m_WeaponIsActive) return;
 
         m_WeaponIsActive = true;
-        OnWeaponActivated(m_Weapon, m_Player.PlayerNum);
 
         switch (m_Weapon)
         {
@@ -75,17 +74,19 @@ public class WeaponManager : MonoBehaviour
                 Instantiate(m_PortalGunPrefab, transform.GetChild(0));
                 break;
         }
+
+        OnWeaponActivated(m_Weapon, m_Player.PlayerNum);
         m_HasWeapon = false;
     }
 
     public void PickupWeapon(Weapon weapon)
     {
         if (m_HasWeapon) return;
-
-        //OnWeaponPickup(weapon, m_Player.PlayerNum);
         
         m_HasWeapon = true;
         m_Weapon = weapon;
+
+        // OnWeaponPickup(weapon, m_Player.PlayerNum);
         Debug.Log("Received weapon " + m_Weapon);
     }
 

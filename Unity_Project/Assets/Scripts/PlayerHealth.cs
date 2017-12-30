@@ -18,8 +18,9 @@ public class PlayerHealth : MonoBehaviour
     // --------------------------------------------------------------
 
     // Events
-    public delegate void PlayerHealthEvent(int playerNum, int healthChange);
-    public static event PlayerHealthEvent OnPlayerHealthChange;
+    public delegate void PlayerHealthEvent(int playerNum);
+    public static event PlayerHealthEvent OnPlayerDamaged;
+    public static event PlayerHealthEvent OnPlayerExtraLife;
     public static event PlayerHealthEvent OnPlayerDeath;
     public static event PlayerHealthEvent OnPlayerRespawn;
 
@@ -38,6 +39,16 @@ public class PlayerHealth : MonoBehaviour
     // The time it takes to respawn
     private const float MAX_RESPAWN_TIME = 1.0f;
     private float m_RespawnTime = MAX_RESPAWN_TIME;
+
+    // --------------------------------------------------------------
+
+    public int Health
+    {
+        get
+        {
+            return m_CurrentHealth;
+        }
+    }
 
     // --------------------------------------------------------------
 
@@ -60,7 +71,7 @@ public class PlayerHealth : MonoBehaviour
     public void GetExtraLife()
     {
         m_CurrentHealth++;
-        OnPlayerHealthChange(m_Player.PlayerNum, 1);
+        OnPlayerExtraLife(m_Player.PlayerNum);
     }
 
     public void TakeDamage(int damage)
@@ -69,10 +80,11 @@ public class PlayerHealth : MonoBehaviour
 
         m_CurrentHealth -= damage;
 
-        OnPlayerHealthChange(m_Player.PlayerNum, -damage);
+        OnPlayerDamaged(m_Player.PlayerNum);
 
         if (m_CurrentHealth <= 0)
         {
+            m_CurrentHealth = Mathf.Max(m_CurrentHealth, 0);
             Die();
         }
         else
@@ -105,19 +117,19 @@ public class PlayerHealth : MonoBehaviour
 
     private void Respawn()
     {
+        m_CurrentHealth = GameManager.PLAYER_HEALTH;
+
         m_Player.DeactivatePhysicsReactions();
         GetComponentInChildren<Renderer>().enabled = true; // TEMPORARY!!!
 
         m_IsAlive = true;
         transform.position = m_SpawningPosition;
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
-        OnPlayerRespawn(m_Player.PlayerNum, 0);
+        OnPlayerRespawn(m_Player.PlayerNum);
     }
 
     public void Die()
     {
-        m_CurrentHealth = GameManager.PLAYER_HEALTH;
-
         m_IsAlive = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
 
@@ -125,6 +137,6 @@ public class PlayerHealth : MonoBehaviour
 
         // TODO: Trigger death animation
 
-        OnPlayerDeath(m_Player.PlayerNum, -1);
+        OnPlayerDeath(m_Player.PlayerNum);
     }
 }

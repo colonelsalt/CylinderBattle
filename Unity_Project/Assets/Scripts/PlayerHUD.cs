@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(ScoreKeeper))]
 public class PlayerHUD : MonoBehaviour
 {
-
     // --------------------------------------------------------------
 
     [SerializeField] private Text m_NumPisText;
@@ -23,15 +23,7 @@ public class PlayerHUD : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private float m_RemainingPowerupTime;
-
-    private int m_NumPis = 0;
-
-    private int m_NumPluses = 0;
-
-    private int m_Health;
-
-    private int m_Ammo;
+    private ScoreKeeper m_Score;
 
     private bool m_TimerActive = false;
 
@@ -39,52 +31,38 @@ public class PlayerHUD : MonoBehaviour
 
     private void Awake()
     {
-        m_Health = GameManager.PLAYER_HEALTH;
-
-        m_NumPisText.text = m_NumPis + "/" + GameManager.MAX_NUM_PIS;
-        m_NumPlusesText.text = "0";
-        m_HealthText.text = "x" + m_Health;
+        m_Score = GetComponent<ScoreKeeper>();
+        UpdateAll();
     }
 
     private void Update()
     {
         if (m_TimerActive)
         {
-            m_RemainingPowerupTime -= Time.deltaTime;
-            m_AmmoText.text = m_RemainingPowerupTime.ToString();
+            m_AmmoText.text = m_Score.BoxingTimeRemaining.ToString();
         }
     }
 
-    public void IncrementAndUpdatePis()
+    public void UpdateAll()
     {
-        m_NumPis++;
-        m_NumPisText.text = m_NumPis + "/" + GameManager.MAX_NUM_PIS;
+        UpdatePis();
+        UpdatePluses();
+        UpdateHealthDisplay();
     }
 
-    public void DecrementAndUpdatePis()
+    public void UpdatePis()
     {
-        m_NumPis--;
-        m_NumPisText.text = m_NumPis + "/" + GameManager.MAX_NUM_PIS;
+        m_NumPisText.text = m_Score.NumPis + "/" + GameManager.MAX_NUM_PIS;
     }
 
-    public void IncrementAndUpdatePluses()
+    public void UpdatePluses()
     {
-        m_NumPluses++;
-        m_NumPlusesText.text = m_NumPluses.ToString();
+        m_NumPlusesText.text = m_Score.NumPluses.ToString();
     }
 
-    public void DeathReset()
+    public void UpdateHealthDisplay()
     {
-        m_NumPluses = 0;
-        m_Health = GameManager.PLAYER_HEALTH;
-        m_NumPlusesText.text = m_NumPluses.ToString();
-        m_HealthText.text = "x" + m_Health;
-    }
-
-    public void UpdateHealthDisplay(int healthChange)
-    {
-        m_Health += healthChange;
-        m_HealthText.text = "x" + m_Health.ToString();
+        m_HealthText.text = "x" + m_Score.Health.ToString();
     }
 
     public void ShowWeapon(Weapon type)
@@ -94,15 +72,13 @@ public class PlayerHUD : MonoBehaviour
             case Weapon.BOMB:
                 break;
             case Weapon.GUN:
-                m_Ammo = Gun.MAX_AMMO;
                 m_AmmoText.enabled = true;
-                m_AmmoText.text = m_Ammo.ToString();
+                m_AmmoText.text = m_Score.RemainingAmmo.ToString();
                 break;
             case Weapon.BOXING_GLOVES:
-                m_RemainingPowerupTime = GameManager.POWERUP_DURATION;
                 // TEMPORARY SOLUTION! (show timer with powerup text)
                 m_AmmoText.enabled = true;
-                m_AmmoText.text = m_RemainingPowerupTime.ToString();
+                m_AmmoText.text = m_Score.BoxingTimeRemaining.ToString();
                 m_TimerActive = true;
                 break;
         }
@@ -119,7 +95,6 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdateAmmoDisplay()
     {
-        m_Ammo--;
-        m_AmmoText.text = m_Ammo.ToString();
+        m_AmmoText.text = m_Score.RemainingAmmo.ToString();
     }
 }

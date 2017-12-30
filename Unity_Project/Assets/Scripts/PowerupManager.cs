@@ -78,7 +78,7 @@ public class PowerupManager : MonoBehaviour
         }
     }
 
-    private void OnRemovePowerups(int playerNum, int healthChange)
+    private void OnRemovePowerups(int playerNum)
     {
         if (playerNum != m_Player.PlayerNum) return;
 

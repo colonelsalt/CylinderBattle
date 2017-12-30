@@ -29,18 +29,24 @@ public class BoxingGlove : MonoBehaviour
     // Flag to keep track of whether Fire button held down
     private bool m_IsPunching = false;
 
+    private float m_TimeRemaining;
+
     // --------------------------------------------------------------
+
+    public float TimeRemaining
+    {
+        get
+        {
+            return m_TimeRemaining;
+        }
+    }
 
     private void Awake()
     {
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         m_Animator = GetComponent<Animator>();
         m_Player = GetComponentInParent<PlayerController>();
-    }
-
-    private void Start()
-    {
-        Invoke("Deactivate", GameManager.POWERUP_DURATION);
+        m_TimeRemaining = GameManager.POWERUP_DURATION;
     }
 
     private void Update()
@@ -56,6 +62,13 @@ public class BoxingGlove : MonoBehaviour
             CancelInvoke("Punch");
             SetCollidersActive(false);
         }
+
+        m_TimeRemaining -= Time.deltaTime;
+        if (m_TimeRemaining <= 0f)
+        {
+            Deactivate();
+        }
+
     }
 
     // Trigger Animator to thrust gloves forward
@@ -115,7 +128,7 @@ public class BoxingGlove : MonoBehaviour
         }
     }
 
-    private void OnPlayerDeath(int playerNum, int healthChange)
+    private void OnPlayerDeath(int playerNum)
     {
         if (playerNum == m_Player.PlayerNum)
         {

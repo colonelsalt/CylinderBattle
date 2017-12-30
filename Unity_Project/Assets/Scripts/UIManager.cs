@@ -17,14 +17,15 @@ public class UIManager : MonoBehaviour
 
     void OnEnable()
     {
-        Collector.OnPiPickup += OnIncrementPis;
-        Collector.OnPiDrop += OnDecrementPis;
-        Collector.OnPlusPickup += OnIncrementPluses;
+        Collector.OnPiPickup += OnUpdatePis;
+        Collector.OnPiDrop += OnUpdatePis;
+        Collector.OnPlusPickup += OnUpdatePluses;
         Collector.OnAllPisCollected += OnGameOver;
         Gun.OnGunFired += OnUpdateAmmo;
         WeaponManager.OnWeaponActivated += OnDisplayWeapon;
         WeaponManager.OnWeaponDisabled += OnHideWeapon;
-        PlayerHealth.OnPlayerHealthChange += OnUpdateHealth;
+        PlayerHealth.OnPlayerDamaged += OnUpdateHealth;
+        PlayerHealth.OnPlayerExtraLife += OnUpdateHealth;
         PlayerHealth.OnPlayerRespawn += OnResetDisplay;
 
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
@@ -33,19 +34,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnIncrementPis(int playerNum)
+    private void OnUpdatePis(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePis();
+        m_PlayerHUDs[playerNum - 1].UpdatePis();
     }
 
-    private void OnDecrementPis(int playerNum)
+    private void OnUpdatePluses(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].DecrementAndUpdatePis();
-    }
-
-    private void OnIncrementPluses(int playerNum)
-    {
-        m_PlayerHUDs[playerNum - 1].IncrementAndUpdatePluses();
+        m_PlayerHUDs[playerNum - 1].UpdatePluses();
     }
 
     // Hide weapon images and text
@@ -55,9 +51,9 @@ public class UIManager : MonoBehaviour
     }
 
     // Update and display new Player health
-    private void OnUpdateHealth(int playerNum, int healthChange)
+    private void OnUpdateHealth(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(healthChange);
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay();
     }
 
     // Display new weapon received
@@ -73,21 +69,22 @@ public class UIManager : MonoBehaviour
     }
 
     // Reset HUD after Player death
-    private void OnResetDisplay(int playerNum, int healthChange)
+    private void OnResetDisplay(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].DeathReset();
+        m_PlayerHUDs[playerNum - 1].UpdateAll();
     }
 
     private void OnGameOver(int numOfWinner)
     {
-        Collector.OnPiPickup -= OnIncrementPis;
-        Collector.OnPiDrop -= OnDecrementPis;
-        Collector.OnPlusPickup -= OnIncrementPluses;
+        Collector.OnPiPickup -= OnUpdatePis;
+        Collector.OnPiDrop -= OnUpdatePis;
+        Collector.OnPlusPickup -= OnUpdatePluses;
         Collector.OnAllPisCollected -= OnGameOver;
         Gun.OnGunFired -= OnUpdateAmmo;
         WeaponManager.OnWeaponActivated -= OnDisplayWeapon;
         WeaponManager.OnWeaponDisabled -= OnHideWeapon;
-        PlayerHealth.OnPlayerHealthChange -= OnUpdateHealth;
+        PlayerHealth.OnPlayerDamaged -= OnUpdateHealth;
+        PlayerHealth.OnPlayerExtraLife -= OnUpdateHealth;
         PlayerHealth.OnPlayerRespawn -= OnResetDisplay;
 
         m_GameOverTitle.enabled = true;

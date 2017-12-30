@@ -42,12 +42,30 @@ public class Collector : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    public int NumPis
+    {
+        get
+        {
+            return m_NumPis;
+        }
+    }
+
+    public int NumPluses
+    {
+        get
+        {
+            return m_NumPluses;
+        }
+    }
+
+    // --------------------------------------------------------------
+
 
     private void Awake()
     {
         PlayerHealth.OnPlayerRespawn += OnResetPlusCount;
         PlayerHealth.OnPlayerDeath += OnCheckForPiDrop;
-        PlayerHealth.OnPlayerHealthChange += OnCheckForPiDrop;
+        PlayerHealth.OnPlayerDamaged += OnCheckForPiDrop;
 
         m_Player = GetComponent<PlayerController>();
         m_PowerupManager = GetComponent<PowerupManager>();
@@ -66,13 +84,13 @@ public class Collector : MonoBehaviour
         switch (type)
         {
             case Collectible.Type.PLUS:
-                OnPlusPickup(m_Player.PlayerNum);
                 m_NumPluses++;
+                OnPlusPickup(m_Player.PlayerNum);
                 m_PowerupManager.CheckForPlusBonus(m_NumPluses);
                 break;
             case Collectible.Type.PI:
-                OnPiPickup(m_Player.PlayerNum);
                 m_NumPis++;
+                OnPiPickup(m_Player.PlayerNum);
                 if (m_NumPis >= GameManager.MAX_NUM_PIS)
                 {
                     OnAllPisCollected(m_Player.PlayerNum);
@@ -81,7 +99,7 @@ public class Collector : MonoBehaviour
         }
     }
 
-    private void OnResetPlusCount(int playerNum, int healthChange)
+    private void OnResetPlusCount(int playerNum)
     {
         if (m_Player.PlayerNum == playerNum)
         {
@@ -90,11 +108,9 @@ public class Collector : MonoBehaviour
     }
 
     // If this Player died or took damage, drop one of their Pis
-    private void OnCheckForPiDrop(int playerNum, int healthChange)
+    private void OnCheckForPiDrop(int playerNum)
     {
-        if (playerNum != m_Player.PlayerNum) return;
-
-        if (healthChange < 0 && m_NumPis > 0)
+        if (playerNum == m_Player.PlayerNum && m_NumPis > 0)
         {
             DropPi();
         }
