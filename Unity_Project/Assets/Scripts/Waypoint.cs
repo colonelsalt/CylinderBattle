@@ -12,6 +12,8 @@ public class Waypoint : MonoBehaviour {
 
     private List<Waypoint> m_WaypointsInRange;
 
+    private bool m_ChasingPlayer = false;
+
     // --------------------------------------------------------------
 
     private void OnDrawGizmos()
@@ -28,7 +30,7 @@ public class Waypoint : MonoBehaviour {
         foreach (Waypoint waypoint in FindObjectsOfType<Waypoint>())
         {
             // If this waypoint is within range, add it to list of reachable waypoints
-            if ((Vector3.Distance(transform.position, waypoint.transform.position) <= m_ConnectivityRadius) && waypoint != this)
+            if ((Vector3.Distance(transform.position, waypoint.transform.position) <= 2 * m_ConnectivityRadius) && waypoint != this)
             {
                 m_WaypointsInRange.Add(waypoint);
             }

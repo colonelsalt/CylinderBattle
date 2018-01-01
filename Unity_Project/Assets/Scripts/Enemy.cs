@@ -8,10 +8,17 @@ public class Enemy : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    // How long agent waits between checking for a new destination
-    [SerializeField] private float m_TimeBetweenDestinationUpdates = 1f;
+    public enum Type { PLAYER_CHASER, PLAYER_ATTACKER }
 
-    [SerializeField] private Waypoint m_StartingWaypoint;
+    // --------------------------------------------------------------
+
+    [SerializeField] private Type m_EnemyType;
+
+    // How long agent waits between checking if Player spotted
+    [SerializeField] private float m_TimeBetweenPlayerSearches = 1f;
+
+    // Item to spawn when enemy knocked out
+    [SerializeField] private GameObject m_DropItemPrefab;
 
     // --------------------------------------------------------------
 
@@ -20,6 +27,8 @@ public class Enemy : MonoBehaviour
     private Waypoint m_CurrentWaypoint;
 
     private Waypoint m_LastVisitedWaypoint;
+
+    private bool m_PlayerInSight = false;
 
     private PlayerController[] m_Players;
 
@@ -35,14 +44,42 @@ public class Enemy : MonoBehaviour
         m_Camera = GetComponentInChildren<Camera>();
         m_Players = FindObjectsOfType<PlayerController>();
 
-        m_CurrentWaypoint = m_StartingWaypoint;
+        FindStartingWaypoint();
+        StartCoroutine(LookForPlayer());
+    }
+
+    private void FindStartingWaypoint()
+    {
+        float shortestDistance = float.MaxValue;
+
+        foreach (Waypoint waypoint in FindObjectsOfType<Waypoint>())
+        {
+            float distanceToWaypoint = Vector3.Distance(transform.position, waypoint.transform.position);
+            if (distanceToWaypoint < shortestDistance)
+            {
+                shortestDistance = distanceToWaypoint;
+                m_CurrentWaypoint = waypoint;
+            }
+        }
+        if (m_CurrentWaypoint == null)
+        {
+            Debug.LogError("Failed to find a starting Waypoint for " + name);
+        }
     }
 
     private void Update()
     {
-        if (IsPlayerInSight())
+        if (m_PlayerInSight)
         {
-            m_NavMeshAgent.destination = m_LastSeenPlayer.transform.position;
+            switch (m_EnemyType)
+            {
+                case Type.PLAYER_ATTACKER:
+                    LaunchAttack(m_LastSeenPlayer.transform.position);
+                    break;
+                case Type.PLAYER_CHASER:
+                    m_NavMeshAgent.destination = m_LastSeenPlayer.transform.position;
+                    break;
+            }
         }
         else if (m_NavMeshAgent.remainingDistance <= 0.5f)
         {
@@ -59,19 +96,34 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private bool IsPlayerInSight()
+    private IEnumerator LookForPlayer()
     {
         Plane[] planesInView = GeometryUtility.CalculateFrustumPlanes(m_Camera);
+        bool spottedPlayer = false;
         foreach (PlayerController player in m_Players)
         {
             if (GeometryUtility.TestPlanesAABB(planesInView, player.GetComponent<Collider>().bounds))
             {
-                Debug.Log("Player" + player.PlayerNum + " spotted by " + name + "!");
+                Debug.Log("Player " + player.PlayerNum + " spotted by " + name + "!");
                 m_LastSeenPlayer = player;
-                return true;
+                spottedPlayer = true;
             }
         }
-        return false;
+        m_PlayerInSight = spottedPlayer;
+
+        yield return new WaitForSeconds(m_TimeBetweenPlayerSearches);
+        StartCoroutine(LookForPlayer());
+    }
+
+    private void LaunchAttack(Vector3 target)
+    {
+        
+    }
+
+    public void Die()
+    {
+        Instantiate(m_DropItemPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 
 }
