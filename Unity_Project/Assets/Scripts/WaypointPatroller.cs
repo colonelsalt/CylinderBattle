@@ -4,15 +4,10 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Enemy : MonoBehaviour
+[RequireComponent(typeof(Rigidbody))]
+public class WaypointPatroller : MonoBehaviour
 {
     // --------------------------------------------------------------
-
-    public enum Type { PLAYER_CHASER, PLAYER_ATTACKER }
-
-    // --------------------------------------------------------------
-
-    [SerializeField] private Type m_EnemyType;
 
     // How long agent waits between checking if Player spotted
     [SerializeField] private float m_TimeBetweenPlayerSearches = 1f;
@@ -36,11 +31,33 @@ public class Enemy : MonoBehaviour
 
     private Camera m_Camera;
 
+    private EnemyBehaviour m_EnemyBehaviour;
+
+    // --------------------------------------------------------------
+
+    public bool PlayerInSight
+    {
+        get
+        {
+            return m_PlayerInSight;
+        }
+    }
+
+    public Vector3 PlayerPos
+    {
+        get
+        {
+            return m_LastSeenPlayer.transform.position;
+        }
+    }
+
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
+        m_EnemyBehaviour = GetComponent<EnemyBehaviour>();
+
         m_Camera = GetComponentInChildren<Camera>();
         m_Players = FindObjectsOfType<PlayerController>();
 
@@ -71,15 +88,7 @@ public class Enemy : MonoBehaviour
     {
         if (m_PlayerInSight)
         {
-            switch (m_EnemyType)
-            {
-                case Type.PLAYER_ATTACKER:
-                    LaunchAttack(m_LastSeenPlayer.transform.position);
-                    break;
-                case Type.PLAYER_CHASER:
-                    m_NavMeshAgent.destination = m_LastSeenPlayer.transform.position;
-                    break;
-            }
+            m_EnemyBehaviour.Execute();
         }
         else if (m_NavMeshAgent.remainingDistance <= 0.5f)
         {
@@ -113,11 +122,6 @@ public class Enemy : MonoBehaviour
 
         yield return new WaitForSeconds(m_TimeBetweenPlayerSearches);
         StartCoroutine(LookForPlayer());
-    }
-
-    private void LaunchAttack(Vector3 target)
-    {
-        
     }
 
     public void Die()

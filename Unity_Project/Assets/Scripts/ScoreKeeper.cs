@@ -24,24 +24,6 @@ public class ScoreKeeper : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private void Awake()
-    {
-        m_PlayerController = m_Player.GetComponent<PlayerController>();
-        m_PlayerHealth = m_Player.GetComponent<PlayerHealth>();
-        m_PowerupManager = m_Player.GetComponent<PowerupManager>();
-        m_Collector = m_Player.GetComponent<Collector>();
-    }
-
-    private void GetGun()
-    {
-        m_Gun = m_Player.GetComponentInChildren<Gun>();
-    }
-
-    private void GetBoxingGloves()
-    {
-        m_BoxingGloves = m_Player.GetComponentInChildren<BoxingGlove>();
-    }
-
     public int NumPis
     {
         get
@@ -86,4 +68,23 @@ public class ScoreKeeper : MonoBehaviour
         }
     }
 
+    // --------------------------------------------------------------
+
+    private void Awake()
+    {
+        m_PlayerController = m_Player.GetComponent<PlayerController>();
+        m_PlayerHealth = m_Player.GetComponent<PlayerHealth>();
+        m_PowerupManager = m_Player.GetComponent<PowerupManager>();
+        m_Collector = m_Player.GetComponent<Collector>();
+    }
+
+    private void GetGun()
+    {
+        m_Gun = m_Player.GetComponentInChildren<Gun>();
+    }
+
+    private void GetBoxingGloves()
+    {
+        m_BoxingGloves = m_Player.GetComponentInChildren<BoxingGlove>();
+    }
 }
