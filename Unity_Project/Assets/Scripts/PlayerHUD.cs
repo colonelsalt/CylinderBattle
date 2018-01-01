@@ -29,7 +29,7 @@ public class PlayerHUD : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private void Awake()
+    private void Start()
     {
         m_Score = GetComponent<ScoreKeeper>();
         UpdateAll();

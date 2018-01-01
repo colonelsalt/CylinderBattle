@@ -28,6 +28,8 @@ public class PortalGun : MonoBehaviour
 
     private GameObject m_PurplePortal;
 
+    private bool m_IsFiring = false;
+
     // --------------------------------------------------------------
 
     private void Awake()
@@ -42,9 +44,15 @@ public class PortalGun : MonoBehaviour
     {
         UpdateAimTarget();
         UpdateAimLine();
-        if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && m_TargetTag == "Wall")
+
+        if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && m_TargetTag == "Wall" && !m_IsFiring)
         {
+            m_IsFiring = true;
             FirePortal();
+        }
+        if (InputHelper.FireButtonReleased(m_Player.PlayerNum))
+        {
+            m_IsFiring = false;
         }
     }
 

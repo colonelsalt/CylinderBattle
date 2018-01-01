@@ -65,8 +65,8 @@ public class Gun : MonoBehaviour
     // Send off OnGunFired event and spawn Laser Prefab 2.5m in front of root object
     private void Fire()
     {
-        OnGunFired(m_Player.PlayerNum);
         m_RemainingAmmo--;
+        OnGunFired(m_Player.PlayerNum);
         Vector3 spawnPos = transform.position + (2.5f * transform.forward);
         Instantiate(m_LaserPrefab, spawnPos, transform.rotation);
 
