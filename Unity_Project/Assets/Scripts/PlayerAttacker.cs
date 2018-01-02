@@ -52,7 +52,6 @@ public class PlayerAttacker : EnemyBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Enemy triggered against " + other.gameObject.name);
         PlayerController player = other.GetComponent<PlayerController>();
         if (player != null)
         {

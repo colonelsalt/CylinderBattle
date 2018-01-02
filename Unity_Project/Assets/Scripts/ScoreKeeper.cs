@@ -54,7 +54,7 @@ public class ScoreKeeper : MonoBehaviour
     {
         get
         {
-            return m_PlayerHealth.Health;
+            return m_PlayerHealth.RemainingHealth;
         }
     }
 

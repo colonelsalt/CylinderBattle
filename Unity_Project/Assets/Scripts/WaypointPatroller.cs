@@ -130,11 +130,11 @@ public class WaypointPatroller : MonoBehaviour
         StartCoroutine(LookForPlayer());
     }
 
-    public void Die()
+    private void OnDestroy()
     {
+        Debug.Log(name + " dying...");
         StopAllCoroutines();
         Instantiate(m_DropItemPrefab, transform.position, Quaternion.identity);
-        Destroy(gameObject);
     }
 
 }

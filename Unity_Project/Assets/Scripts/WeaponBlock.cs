@@ -2,29 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Weapon
+{
+    BOMB = 0,
+    GUN = 1,
+    BOXING_GLOVES = 2,
+    PORTAL_GUN = 3,
+    LIGHTNING = 4
+}
+
 public class WeaponBlock : MonoBehaviour
 {
     // --------------------------------------------------------------
-    // --------------------------------------------------------------
 
-    //private void OnCollisionEnter(Collision collision)
-    //{
-    //    PowerupManager powerupManager = collision.gameObject.GetComponent<PowerupManager>();
-    //    if (powerupManager != null)
-    //    {
-    //        // If Player's lowest y-coordinate is higher than Block's highest y-coordinate, break Block
-    //        if (powerupManager.GetComponentInChildren<MeshRenderer>().bounds.min.y >= GetComponent<MeshRenderer>().bounds.max.y)
-    //        {
-    //            powerupManager.AddPowerup(PowerupGenerator.RandomWeapon());
-    //            Break();
-    //        }
-            
-    //    }
-    //}
+    private static Weapon RandomWeapon()
+    {
+        return (Weapon)Random.Range(0, 4);
+    }
 
     public void Break(WeaponManager brokenBy)
     {
-        brokenBy.PickupWeapon(PowerupGenerator.GetRandom());
+        brokenBy.PickupWeapon(RandomWeapon());
         
         // play break animation
         Destroy(gameObject);

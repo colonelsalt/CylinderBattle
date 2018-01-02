@@ -1,0 +1,206 @@
+fileFormatVersion: 2
+guid: ce36701dac5e0fb45aa38fc5db89d8e5
+timeCreated: 1514925195
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Box02
+    100002: Box13
+    100004: Box14
+    100006: Box15
+    100008: Camera01
+    100010: Camera01.Target
+    100012: ground plane
+    100014: Object001
+    100016: Sky001
+    100018: spike
+    100020: spike001
+    100022: spike002
+    100024: spike003
+    100026: spike004
+    100028: spike005
+    100030: spike006
+    100032: spike007
+    100034: spike008
+    100036: spike009
+    100038: spike010
+    100040: spike011
+    100042: //RootNode
+    100044: tile
+    100046: VRayLight01
+    400000: Box02
+    400002: Box13
+    400004: Box14
+    400006: Box15
+    400008: Camera01
+    400010: Camera01.Target
+    400012: ground plane
+    400014: Object001
+    400016: Sky001
+    400018: spike
+    400020: spike001
+    400022: spike002
+    400024: spike003
+    400026: spike004
+    400028: spike005
+    400030: spike006
+    400032: spike007
+    400034: spike008
+    400036: spike009
+    400038: spike010
+    400040: spike011
+    400042: //RootNode
+    400044: tile
+    400046: VRayLight01
+    2000000: Camera01
+    2300000: Box02
+    2300002: Box13
+    2300004: Box14
+    2300006: Box15
+    2300008: ground plane
+    2300010: spike
+    2300012: spike001
+    2300014: spike002
+    2300016: spike003
+    2300018: spike004
+    2300020: spike005
+    2300022: spike006
+    2300024: spike007
+    2300026: spike008
+    2300028: spike009
+    2300030: spike010
+    2300032: spike011
+    2300034: tile
+    3300000: Box02
+    3300002: Box13
+    3300004: Box14
+    3300006: Box15
+    3300008: ground plane
+    3300010: spike
+    3300012: spike001
+    3300014: spike002
+    3300016: spike003
+    3300018: spike004
+    3300020: spike005
+    3300022: spike006
+    3300024: spike007
+    3300026: spike008
+    3300028: spike009
+    3300030: spike010
+    3300032: spike011
+    3300034: tile
+    4300000: Box02
+    4300002: Box13
+    4300004: Box14
+    4300006: ground plane
+    4300008: Box15
+    4300010: tile
+    4300012: spike
+    4300014: spike001
+    4300016: spike002
+    4300018: spike003
+    4300020: spike004
+    4300022: spike005
+    4300024: spike006
+    4300026: spike007
+    4300028: spike008
+    4300030: spike009
+    4300032: spike010
+    4300034: spike011
+    7400000: Take 001
+    9500000: //RootNode
+    10800000: Sky001
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 2 - Default
+    second: {fileID: 2100000, guid: 7b357477ce6d61740aec08016e12f257, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 'Material #3765'
+    second: {fileID: 2100000, guid: 22e255dd14d24754e882e7bd00a3ee67, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: spike_trap_material
+    second: {fileID: 2100000, guid: 2693dcb1bb45b3344997ca3a170a878c, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

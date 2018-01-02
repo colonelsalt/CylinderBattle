@@ -4,11 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerController))]
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : Health
 {
     // --------------------------------------------------------------
-
-    [SerializeField] private int m_StartHealth = 1;
     
     // After being damaged, how long object will be invincible
     [SerializeField] private float m_InvincibilityTime = 2.5f;
@@ -30,8 +28,6 @@ public class PlayerHealth : MonoBehaviour
 
     private Animator m_Animator;
 
-    private int m_CurrentHealth;
-
     private bool m_IsInvincible = false;
 
     private bool m_IsAlive = true;
@@ -42,19 +38,8 @@ public class PlayerHealth : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    public int Health
-    {
-        get
-        {
-            return m_CurrentHealth;
-        }
-    }
-
-    // --------------------------------------------------------------
-
     private void Awake()
     {
-        m_CurrentHealth = m_StartHealth;
         m_Player = GetComponent<PlayerController>();
         m_Animator = GetComponent<Animator>();
     }
@@ -68,26 +53,21 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    public void GetExtraLife()
+    public override void GetExtraLife()
     {
-        m_CurrentHealth++;
+        base.GetExtraLife();
         OnPlayerExtraLife(m_Player.PlayerNum);
     }
 
-    public void TakeDamage(int damage)
+    public override void TakeDamage(int damage)
     {
         if (m_IsInvincible) return;
 
-        m_CurrentHealth -= damage;
+        base.TakeDamage(damage);
 
         OnPlayerDamaged(m_Player.PlayerNum);
 
-        if (m_CurrentHealth <= 0)
-        {
-            m_CurrentHealth = Mathf.Max(m_CurrentHealth, 0);
-            Die();
-        }
-        else
+        if (m_IsAlive)
         {
             m_IsInvincible = true;
             StartCoroutine(InvincibilityFlash());
@@ -117,18 +97,18 @@ public class PlayerHealth : MonoBehaviour
 
     private void Respawn()
     {
-        m_CurrentHealth = GameManager.PLAYER_HEALTH;
+        ResetHealth();
+        m_IsAlive = true;
 
         m_Player.DeactivatePhysicsReactions();
         GetComponentInChildren<Renderer>().enabled = true; // TEMPORARY!!!
 
-        m_IsAlive = true;
         transform.position = m_SpawningPosition;
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
         OnPlayerRespawn(m_Player.PlayerNum);
     }
 
-    public void Die()
+    public override void Die()
     {
         m_IsAlive = false;
         m_RespawnTime = MAX_RESPAWN_TIME;

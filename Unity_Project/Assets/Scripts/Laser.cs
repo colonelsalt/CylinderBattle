@@ -33,7 +33,7 @@ public class Laser : MonoBehaviour
         m_TriggeredThisFrame = true;
 
         // If we hit an object that has Health
-        PlayerHealth otherHealth = other.GetComponent<PlayerHealth>();
+        Health otherHealth = other.GetComponent<Health>();
         if (otherHealth != null)
         {
             PlayerController playerHit = other.GetComponent<PlayerController>();

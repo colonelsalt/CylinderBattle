@@ -13,7 +13,7 @@ public class PlayerFeet : MonoBehaviour
 
     private PlayerController m_Player;
 
-    private Rigidbody m_Body;
+    private Collider m_Collider;
 
     // --------------------------------------------------------------
 
@@ -21,27 +21,27 @@ public class PlayerFeet : MonoBehaviour
     private void Awake()
     {
         m_Player = GetComponentInParent<PlayerController>();
-        m_Body = GetComponentInParent<Rigidbody>();
+        m_Collider = GetComponentInParent<Collider>();
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
-        PlayerController otherPlayer = other.GetComponent<PlayerController>();
-        if (otherPlayer != null)
+        if (m_Collider.bounds.min.y > other.bounds.center.y)
         {
-            if (otherPlayer.PlayerNum != m_Player.PlayerNum)
+            Health otherHealth = other.GetComponent<Health>();
+            if (otherHealth != null)
             {
-                otherPlayer.GetComponent<PlayerHealth>().TakeDamage(1);
+                otherHealth.TakeDamage(1);
                 Bounce();
             }
-        }
 
-        WeaponBlock weaponBlock = other.GetComponent<WeaponBlock>();
-        if (weaponBlock != null)
-        {
-            weaponBlock.Break(m_Player.GetComponent<WeaponManager>());
-            Bounce();
+            WeaponBlock weaponBlock = other.GetComponent<WeaponBlock>();
+            if (weaponBlock != null)
+            {
+                weaponBlock.Break(m_Player.GetComponent<WeaponManager>());
+                Bounce();
+            }
         }
     }
 
