@@ -27,7 +27,7 @@ public class PlayerAttacker : EnemyBehaviour
     {
         if (!m_IsAttacking)
         {
-            StartCoroutine(Attack(m_Patrol.PlayerPos));
+            StartCoroutine(Attack(m_Patrol.PlayerPos + (2 * transform.forward)));
         }
     }
 
@@ -50,20 +50,23 @@ public class PlayerAttacker : EnemyBehaviour
         m_IsAttacking = false;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Enemy collided with " + collision.gameObject.name);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Enemy triggered against " + other.gameObject.name);
         PlayerController player = other.GetComponent<PlayerController>();
         if (player != null)
         {
-            player.ActivatePhysicsReactions();
-            player.GetComponent<Rigidbody>().AddForce(transform.forward * m_ImpactForce);
+            if (m_IsAttacking)
+            {
+                player.ActivatePhysicsReactions();
+                player.GetComponent<Rigidbody>().AddForce(transform.forward * m_ImpactForce);
+            }
             player.GetComponent<PlayerHealth>().TakeDamage(1);
         }
+    }
+
+    private void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 }

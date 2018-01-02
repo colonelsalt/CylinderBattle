@@ -1,0 +1,407 @@
+fileFormatVersion: 2
+guid: d60e98f9ebe907d41b932963151bdd68
+timeCreated: 1514914616
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: vCell1
+    100002: vCell12
+    100004: vCell14
+    100006: vCell17
+    100008: vCell21
+    100010: vCell24
+    100012: vCell28
+    100014: vCell4
+    100016: vCell45
+    100018: vCell46
+    100020: vCell47
+    100022: vCell48
+    100024: vCell49
+    100026: vCell50
+    100028: vCell52
+    100030: vCell53
+    100032: vCell54
+    100034: vCell55
+    100036: vCell60
+    100038: vCell62
+    100040: vCell65
+    100042: vCell68
+    100044: vCell69
+    100046: vCell72
+    100048: vCell73
+    100050: vCell74
+    100052: vCell75
+    100054: vCell76
+    100056: vCell77
+    100058: vCell78
+    100060: vCell79
+    100062: vCell8
+    100064: //RootNode
+    400000: vCell1
+    400002: vCell12
+    400004: vCell14
+    400006: vCell17
+    400008: vCell21
+    400010: vCell24
+    400012: vCell28
+    400014: vCell4
+    400016: vCell45
+    400018: vCell46
+    400020: vCell47
+    400022: vCell48
+    400024: vCell49
+    400026: vCell50
+    400028: vCell52
+    400030: vCell53
+    400032: vCell54
+    400034: vCell55
+    400036: vCell60
+    400038: vCell62
+    400040: vCell65
+    400042: vCell68
+    400044: vCell69
+    400046: vCell72
+    400048: vCell73
+    400050: vCell74
+    400052: vCell75
+    400054: vCell76
+    400056: vCell77
+    400058: vCell78
+    400060: vCell79
+    400062: vCell8
+    400064: //RootNode
+    2300000: vCell1
+    2300002: vCell12
+    2300004: vCell14
+    2300006: vCell17
+    2300008: vCell21
+    2300010: vCell24
+    2300012: vCell28
+    2300014: vCell4
+    2300016: vCell45
+    2300018: vCell46
+    2300020: vCell47
+    2300022: vCell48
+    2300024: vCell49
+    2300026: vCell50
+    2300028: vCell52
+    2300030: vCell53
+    2300032: vCell54
+    2300034: vCell55
+    2300036: vCell60
+    2300038: vCell62
+    2300040: vCell65
+    2300042: vCell68
+    2300044: vCell69
+    2300046: vCell72
+    2300048: vCell73
+    2300050: vCell74
+    2300052: vCell75
+    2300054: vCell76
+    2300056: vCell77
+    2300058: vCell78
+    2300060: vCell79
+    2300062: vCell8
+    3300000: vCell1
+    3300002: vCell12
+    3300004: vCell14
+    3300006: vCell17
+    3300008: vCell21
+    3300010: vCell24
+    3300012: vCell28
+    3300014: vCell4
+    3300016: vCell45
+    3300018: vCell46
+    3300020: vCell47
+    3300022: vCell48
+    3300024: vCell49
+    3300026: vCell50
+    3300028: vCell52
+    3300030: vCell53
+    3300032: vCell54
+    3300034: vCell55
+    3300036: vCell60
+    3300038: vCell62
+    3300040: vCell65
+    3300042: vCell68
+    3300044: vCell69
+    3300046: vCell72
+    3300048: vCell73
+    3300050: vCell74
+    3300052: vCell75
+    3300054: vCell76
+    3300056: vCell77
+    3300058: vCell78
+    3300060: vCell79
+    3300062: vCell8
+    4300000: vCell1
+    4300002: vCell12
+    4300004: vCell14
+    4300006: vCell17
+    4300008: vCell21
+    4300010: vCell24
+    4300012: vCell28
+    4300014: vCell4
+    4300016: vCell45
+    4300018: vCell46
+    4300020: vCell47
+    4300022: vCell48
+    4300024: vCell49
+    4300026: vCell50
+    4300028: vCell52
+    4300030: vCell53
+    4300032: vCell54
+    4300034: vCell55
+    4300036: vCell60
+    4300038: vCell62
+    4300040: vCell65
+    4300042: vCell68
+    4300044: vCell69
+    4300046: vCell72
+    4300048: vCell73
+    4300050: vCell74
+    4300052: vCell75
+    4300054: vCell76
+    4300056: vCell77
+    4300058: vCell78
+    4300060: vCell79
+    4300062: vCell8
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell12Mat
+    second: {fileID: 2100000, guid: ba125aeeff9e42e45b1c07064005d2fd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell14Mat
+    second: {fileID: 2100000, guid: 3277ff1534faf974882441b419eb37fe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell17Mat
+    second: {fileID: 2100000, guid: 6e3a5f03a56ca624e983c61219a49673, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell1Mat
+    second: {fileID: 2100000, guid: b76806ee897b29743a41f09d530f1d7a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell21Mat
+    second: {fileID: 2100000, guid: dfa3d4118e18cb24896ba805c57e7501, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell24Mat
+    second: {fileID: 2100000, guid: 1bac67119fadd7742b58eb7779ae141c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell28Mat
+    second: {fileID: 2100000, guid: 6a1574c6280b63745814c784e0c0b38d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell45Mat
+    second: {fileID: 2100000, guid: b718fc598c6b0194bba8cd1c2c16617d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell46Mat
+    second: {fileID: 2100000, guid: 3f79397e6fd365c4981aa51ffc5ddf93, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell47Mat
+    second: {fileID: 2100000, guid: ebcebaefff05af14fbbe4e7e55dfc0f7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell48Mat
+    second: {fileID: 2100000, guid: d448706678bc8a742a6a41e1a8b9abec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell49Mat
+    second: {fileID: 2100000, guid: 57914d4478539464a94220ec66c1b7d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell4Mat
+    second: {fileID: 2100000, guid: 6c2d93e0e2c770d498c554c8df930b77, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell50Mat
+    second: {fileID: 2100000, guid: 35300248dae4f53439619c80233e4dae, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell52Mat
+    second: {fileID: 2100000, guid: ea12bb11f9fe56f40bbe82515405aa1c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell53Mat
+    second: {fileID: 2100000, guid: cd390c5dcf7ac7546a3485cbe5bac0b4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell54Mat
+    second: {fileID: 2100000, guid: 08ef7eb527b17b545b7928a6746ac75d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell55Mat
+    second: {fileID: 2100000, guid: 2ff4884c7d1e73e4eadeb3d62d0257b2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell60Mat
+    second: {fileID: 2100000, guid: 354ec913b22b647469d0254efe70f806, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell62Mat
+    second: {fileID: 2100000, guid: 34a9e19e338ec724a9ab4d1b6610d45e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell65Mat
+    second: {fileID: 2100000, guid: 41ab0de2f93263143911e72cddd5e7e2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell68Mat
+    second: {fileID: 2100000, guid: febc2ad717d857247b63b8a101575449, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell69Mat
+    second: {fileID: 2100000, guid: 1da189876dbd989489daf706e27aa091, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell72Mat
+    second: {fileID: 2100000, guid: c29b7373c065b5d4eae309793268f790, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell73Mat
+    second: {fileID: 2100000, guid: 515b4f3822bddb845b46c217eac9207b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell74Mat
+    second: {fileID: 2100000, guid: 1d642db260a3d55409f15d90f7ea7700, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell75Mat
+    second: {fileID: 2100000, guid: 0da2b476771702148b8310e55ebea5b0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell76Mat
+    second: {fileID: 2100000, guid: 03b1078ba19a1f047bc0692f04b24ccb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell77Mat
+    second: {fileID: 2100000, guid: c73a8446e2ca2f147aac4addf6dfc864, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell78Mat
+    second: {fileID: 2100000, guid: 5060c3d5944e5a742ad603a1612f1a2a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell79Mat
+    second: {fileID: 2100000, guid: f722e5dcf078a274cab3445b2bbadf97, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: vCell8Mat
+    second: {fileID: 2100000, guid: 0567a00528b748f4e823cf72705d0d04, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

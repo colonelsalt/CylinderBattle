@@ -23,4 +23,12 @@ public class ChildCollider : MonoBehaviour
         SendMessageUpwards("OnCollisionEnter", collision);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (m_CollidedThisFrame) return;
+
+        m_CollidedThisFrame = true;
+        SendMessageUpwards("OnTriggerEnter", other);
+    }
+
 }

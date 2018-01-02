@@ -8,6 +8,8 @@ public class Waypoint : MonoBehaviour {
 
     [SerializeField] private float m_ConnectivityRadius = 10f;
 
+    [SerializeField] private Color m_GizmoColour;
+
     // --------------------------------------------------------------
 
     private List<Waypoint> m_WaypointsInRange;
@@ -19,20 +21,20 @@ public class Waypoint : MonoBehaviour {
     private void OnDrawGizmos()
     {
         // Visualise reach of this waypoint
-        Gizmos.color = Color.blue;
+        Gizmos.color = m_GizmoColour;
         Gizmos.DrawWireSphere(transform.position, m_ConnectivityRadius);
     }
 
-    private void Awake()
+    protected void Awake()
     {
         m_WaypointsInRange = new List<Waypoint>();
 
-        foreach (Waypoint waypoint in FindObjectsOfType<Waypoint>())
+        foreach (GameObject waypoint in GameObject.FindGameObjectsWithTag(tag))
         {
             // If this waypoint is within range, add it to list of reachable waypoints
             if ((Vector3.Distance(transform.position, waypoint.transform.position) <= 2 * m_ConnectivityRadius) && waypoint != this)
             {
-                m_WaypointsInRange.Add(waypoint);
+                m_WaypointsInRange.Add(waypoint.GetComponent<Waypoint>());
             }
         }
 
@@ -62,15 +64,4 @@ public class Waypoint : MonoBehaviour {
             return nextWaypoint;
         }
     }
-
-    public static Waypoint GetRandom()
-    {
-        Waypoint[] allWayPointsInScene = FindObjectsOfType<Waypoint>();
-        if (allWayPointsInScene.Length <= 0)
-        {
-            Debug.LogError("No Waypoints found in scene!");
-        }
-        return allWayPointsInScene[Random.Range(0, allWayPointsInScene.Length)];
-    }
-
 }

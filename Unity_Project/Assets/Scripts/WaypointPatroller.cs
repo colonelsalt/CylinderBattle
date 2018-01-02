@@ -23,6 +23,8 @@ public class WaypointPatroller : MonoBehaviour
 
     private Waypoint m_LastVisitedWaypoint;
 
+    private float m_WalkSpeed;
+
     private bool m_PlayerInSight = false;
 
     private PlayerController[] m_Players;
@@ -61,6 +63,8 @@ public class WaypointPatroller : MonoBehaviour
         m_Camera = GetComponentInChildren<Camera>();
         m_Players = FindObjectsOfType<PlayerController>();
 
+        m_WalkSpeed = m_NavMeshAgent.speed;
+
         FindStartingWaypoint();
         StartCoroutine(LookForPlayer());
     }
@@ -69,13 +73,13 @@ public class WaypointPatroller : MonoBehaviour
     {
         float shortestDistance = float.MaxValue;
 
-        foreach (Waypoint waypoint in FindObjectsOfType<Waypoint>())
+        foreach (GameObject waypoint in GameObject.FindGameObjectsWithTag(tag + "Waypoint"))
         {
             float distanceToWaypoint = Vector3.Distance(transform.position, waypoint.transform.position);
             if (distanceToWaypoint < shortestDistance)
             {
                 shortestDistance = distanceToWaypoint;
-                m_CurrentWaypoint = waypoint;
+                m_CurrentWaypoint = waypoint.GetComponent<Waypoint>();
             }
         }
         if (m_CurrentWaypoint == null)
@@ -92,6 +96,8 @@ public class WaypointPatroller : MonoBehaviour
         }
         else if (m_NavMeshAgent.remainingDistance <= 0.5f)
         {
+            m_NavMeshAgent.speed = m_WalkSpeed;
+
             Waypoint nextWayPoint = m_CurrentWaypoint.GetNextWaypoint(m_LastVisitedWaypoint);
             m_LastVisitedWaypoint = m_CurrentWaypoint;
 
@@ -126,6 +132,7 @@ public class WaypointPatroller : MonoBehaviour
 
     public void Die()
     {
+        StopAllCoroutines();
         Instantiate(m_DropItemPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
