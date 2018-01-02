@@ -50,8 +50,14 @@ public class PlayerAttacker : EnemyBehaviour
         m_IsAttacking = false;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Enemy collided with " + collision.gameObject.name);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Enemy triggered against " + other.gameObject.name);
         PlayerController player = other.GetComponent<PlayerController>();
         if (player != null)
         {

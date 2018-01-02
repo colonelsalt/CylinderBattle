@@ -19,7 +19,7 @@ public class Waypoint : MonoBehaviour {
     private void OnDrawGizmos()
     {
         // Visualise reach of this waypoint
-        Gizmos.color = Color.cyan;
+        Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, m_ConnectivityRadius);
     }
 
