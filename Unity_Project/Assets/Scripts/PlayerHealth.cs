@@ -32,7 +32,7 @@ public class PlayerHealth : Health
 
     private bool m_IsAlive = true;
 
-    // The time it takes to respawn
+    // time it takes to respawn
     private const float MAX_RESPAWN_TIME = 1.0f;
     private float m_RespawnTime = MAX_RESPAWN_TIME;
 
@@ -46,7 +46,7 @@ public class PlayerHealth : Health
 
     private void Update()
     {
-        // If the player is dead update the respawn timer and exit update loop
+        // If Player is dead, update respawn timer
         if (!m_IsAlive)
         {
             UpdateRespawnTime();

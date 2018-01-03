@@ -58,12 +58,14 @@ public class PortalGun : MonoBehaviour
 
     private void UpdateAimLine()
     {
+        // If Aiming at nothing, don't show AimLine
         if (!m_IsAimingAtObject)
         {
             m_AimLine.enabled = false;
             return;
         }
 
+        // Otherwise, draw line between tip of Portal Gun and object Player is aiming at
         m_AimLine.enabled = true;
         m_AimLine.SetPosition(0, transform.position + (1.5f * transform.forward));
         m_AimLine.SetPosition(1, m_TargetPos);
@@ -78,6 +80,7 @@ public class PortalGun : MonoBehaviour
         }
     }
 
+    // Determine what Player is aiming at
     private void UpdateAimTarget()
     {
         RaycastHit hit;

@@ -19,20 +19,26 @@ public class WaypointPatroller : MonoBehaviour
 
     private NavMeshAgent m_NavMeshAgent;
 
+    // Waypoint Enemy is currently walking towards
     private Waypoint m_CurrentWaypoint;
 
+    // Waypoint Enemy last visited
     private Waypoint m_LastVisitedWaypoint;
 
+    // Default speed as set in NavMeshAgent (might be modified by EnemyBehaviour later)
     private float m_WalkSpeed;
 
+    // Whether Enemy can currently see Player
     private bool m_PlayerInSight = false;
 
+    // Reference to each Player in scene
     private PlayerController[] m_Players;
 
     private PlayerController m_LastSeenPlayer;
 
     private Camera m_Camera;
 
+    // Behaviour to execute once Enemy spots Player
     private EnemyBehaviour m_EnemyBehaviour;
 
     // --------------------------------------------------------------
@@ -69,10 +75,12 @@ public class WaypointPatroller : MonoBehaviour
         StartCoroutine(LookForPlayer());
     }
 
+    // Determine which Waypoint in scene is closest, and go to that one first
     private void FindStartingWaypoint()
     {
         float shortestDistance = float.MaxValue;
 
+        // Find all waypoints corresponding to this Enemy type
         foreach (GameObject waypoint in GameObject.FindGameObjectsWithTag(tag + "Waypoint"))
         {
             float distanceToWaypoint = Vector3.Distance(transform.position, waypoint.transform.position);
@@ -96,6 +104,7 @@ public class WaypointPatroller : MonoBehaviour
         }
         else if (m_NavMeshAgent.remainingDistance <= 0.5f)
         {
+            // If we've reached our destination Waypoint, find the next one
             m_NavMeshAgent.speed = m_WalkSpeed;
 
             Waypoint nextWayPoint = m_CurrentWaypoint.GetNextWaypoint(m_LastVisitedWaypoint);
@@ -107,10 +116,12 @@ public class WaypointPatroller : MonoBehaviour
         }
         else
         {
+            m_NavMeshAgent.speed = m_WalkSpeed;
             m_NavMeshAgent.destination = m_CurrentWaypoint.transform.position;
         }
     }
 
+    // Check if Player is within view frustum of Enemy's camera
     private IEnumerator LookForPlayer()
     {
         Plane[] planesInView = GeometryUtility.CalculateFrustumPlanes(m_Camera);
@@ -126,6 +137,7 @@ public class WaypointPatroller : MonoBehaviour
         }
         m_PlayerInSight = spottedPlayer;
 
+        // Only update occasionally to prevent performance hit
         yield return new WaitForSeconds(m_TimeBetweenPlayerSearches);
         StartCoroutine(LookForPlayer());
     }

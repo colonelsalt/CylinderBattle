@@ -99,6 +99,7 @@ public class Collector : MonoBehaviour
         }
     }
 
+    // Reset Plus count when Player dies
     private void OnResetPlusCount(int playerNum)
     {
         if (m_Player.PlayerNum == playerNum)

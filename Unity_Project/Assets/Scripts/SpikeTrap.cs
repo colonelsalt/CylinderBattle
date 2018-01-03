@@ -7,8 +7,10 @@ public class SpikeTrap : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    // How long after stepping on Trap until it activates
     [SerializeField] private float m_ActivationTime = 1f;
 
+    // How strongly object on top of trap is knocked backwards
     [SerializeField] private float m_KnockBackForce = 15f;
 
     // --------------------------------------------------------------
@@ -49,11 +51,13 @@ public class SpikeTrap : MonoBehaviour
     {
         if (!m_TrapActivated)
         {
+            // Activate trap first time tile stepped on
             m_TrapActivated = true;
             StartTrap();
         }
         else
         {
+            // If stepped on after spikes extended, damage and knock object backwards
             PlayerController player = other.GetComponent<PlayerController>();
             if (player != null)
             {

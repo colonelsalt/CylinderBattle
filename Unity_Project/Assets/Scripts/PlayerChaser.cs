@@ -27,6 +27,7 @@ public class PlayerChaser : EnemyBehaviour
 
     public override void Execute()
     {
+        // Follow Player around once spotted
         m_NavMeshAgent.speed = m_ChaseSpeed;
         m_NavMeshAgent.destination = m_Patrol.PlayerPos;  
     }

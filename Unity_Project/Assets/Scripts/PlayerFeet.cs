@@ -27,8 +27,10 @@ public class PlayerFeet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // If Player is on top of object
         if (m_Collider.bounds.min.y > other.bounds.center.y)
         {
+            // Damage other Health object
             Health otherHealth = other.GetComponent<Health>();
             if (otherHealth != null)
             {
@@ -36,6 +38,7 @@ public class PlayerFeet : MonoBehaviour
                 Bounce();
             }
 
+            // Break Weapon Block
             WeaponBlock weaponBlock = other.GetComponent<WeaponBlock>();
             if (weaponBlock != null)
             {
