@@ -284,18 +284,4 @@ public class PlayerController : MonoBehaviour
         // Rotate player by this angle around the y-axis
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotationAngle, transform.eulerAngles.z);
     }
-
-    public void ActivatePhysicsReactions()
-    {
-        m_RigidBody.isKinematic = false;
-        m_CharacterController.enabled = false;
-        Invoke("DeactivatePhysicsReactions", m_ExplosionDazeTime);
-    }
-
-    public void DeactivatePhysicsReactions()
-    {
-        m_CharacterController.enabled = true;
-        m_RigidBody.constraints = RigidbodyConstraints.None;
-        m_RigidBody.isKinematic = true;
-    }
 }

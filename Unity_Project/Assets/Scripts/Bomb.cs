@@ -32,11 +32,11 @@ public class Bomb : MonoBehaviour
         Collider[] collidersStruck = Physics.OverlapSphere(transform.position, m_ExplosionRadius);
         foreach (Collider hit in collidersStruck)
         {
-            // If struck a Player object, trigger them to be affected by physics
-            PlayerController playerHit = hit.GetComponent<PlayerController>();
-            if (playerHit != null)
+            // If struck kinematic Rigidbody, make it temporarily be affected by physics
+            PhysicsSwitch manualMovedObject = hit.GetComponent<PhysicsSwitch>();
+            if (manualMovedObject != null)
             {
-                playerHit.ActivatePhysicsReactions();
+                manualMovedObject.ActivatePhysicsReactions();
             }
 
             // Apply explosion force to each Rigidbody hit
@@ -47,10 +47,10 @@ public class Bomb : MonoBehaviour
             }
 
             // Deal damage to all objects with Health
-            Health beingHit = hit.GetComponent<Health>();
-            if (beingHit != null)
+            Health health = hit.GetComponent<Health>();
+            if (health != null)
             {
-                beingHit.TakeDamage(m_Damage);
+                health.TakeDamage(m_Damage);
             }
 
         }

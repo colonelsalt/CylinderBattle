@@ -16,6 +16,8 @@ public class PlayerChaser : EnemyBehaviour
 
     private WaypointPatroller m_Patrol;
 
+    private bool m_TouchingPlayer = false;
+
     // --------------------------------------------------------------
 
 
@@ -27,17 +29,33 @@ public class PlayerChaser : EnemyBehaviour
 
     public override void Execute()
     {
-        // Follow Player around once spotted
-        m_NavMeshAgent.speed = m_ChaseSpeed;
-        m_NavMeshAgent.destination = m_Patrol.PlayerPos;  
+        if (!m_TouchingPlayer)
+        {
+            // Follow Player around once spotted
+            m_NavMeshAgent.speed = m_ChaseSpeed;
+            m_NavMeshAgent.destination = m_Patrol.PlayerPos;
+        }
+        else
+        {
+            m_NavMeshAgent.destination = transform.position;
+        }
+        
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         PlayerHealth player = other.GetComponent<PlayerHealth>();
-        if (player != null)
+        if (player != null && !m_TouchingPlayer)
         {
+            m_TouchingPlayer = true;
+
             player.TakeDamage(1);
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        m_TouchingPlayer = false;
     }
 }

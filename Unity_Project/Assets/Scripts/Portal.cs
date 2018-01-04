@@ -51,6 +51,7 @@ public class Portal : MonoBehaviour {
         if (other.gameObject.tag != "Wall")
         {
             other.transform.position = m_OtherPortal.transform.position + m_OtherPortal.transform.forward;
+            other.transform.rotation = m_OtherPortal.transform.rotation;
         }
     }
 }

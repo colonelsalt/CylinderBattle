@@ -100,7 +100,6 @@ public class PlayerHealth : Health
         ResetHealth();
         m_IsAlive = true;
 
-        m_Player.DeactivatePhysicsReactions();
         GetComponentInChildren<Renderer>().enabled = true; // TEMPORARY!!!
 
         transform.position = m_SpawningPosition;

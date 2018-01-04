@@ -98,22 +98,18 @@ public class BoxingGlove : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        PlayerController playerStruck = collision.gameObject.GetComponent<PlayerController>();
-        if (playerStruck != null)
+
+        // Do nothing if we just collided with ourselves
+        if (collision.gameObject == gameObject) return;
+
+        // If struck a Kinematic Rigidbody, make it temporarily affected by physics
+        PhysicsSwitch manualMovedObject = collision.gameObject.GetComponent<PhysicsSwitch>();
+        if (manualMovedObject != null)
         {
-            // Do nothing if we just collided with Player wearing gloves
-            if (playerStruck.PlayerNum == m_Player.PlayerNum)
-            {
-                return;
-            } 
-            else
-            {
-                // If struck other Player, activate their reaction to physics
-                playerStruck.ActivatePhysicsReactions();
-            }
+            manualMovedObject.ActivatePhysicsReactions();
         }
 
-        // If object struck has a Rigidbody, apply force to it
+        // If object struck has Rigidbody, apply force to it
         Rigidbody bodyStruck = collision.gameObject.GetComponent<Rigidbody>();
         if (bodyStruck != null)
         {
@@ -122,6 +118,16 @@ public class BoxingGlove : MonoBehaviour
 
         // If struck object has health, deal damage to it
         Health health = collision.gameObject.GetComponent<Health>();
+        if (health != null)
+        {
+            health.TakeDamage(m_Damage);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // If struck object has health, deal damage to it
+        Health health = other.GetComponent<Health>();
         if (health != null)
         {
             health.TakeDamage(m_Damage);

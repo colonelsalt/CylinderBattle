@@ -9,6 +9,8 @@ public class PlayerFeet : MonoBehaviour
     // After striking an Enemy/Player/WeaponBlock, how strongly does Player bounce up
     [SerializeField] private float m_BounceHeight;
 
+    [SerializeField] private float m_Epsilon = 0.1f;
+
     // --------------------------------------------------------------
 
     private PlayerController m_Player;
@@ -28,7 +30,7 @@ public class PlayerFeet : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // If Player is on top of object
-        if (m_Collider.bounds.min.y > other.bounds.center.y)
+        if (Mathf.Abs(m_Collider.bounds.min.y - other.bounds.max.y) <= m_Epsilon)
         {
             // Damage other Health object
             Health otherHealth = other.GetComponent<Health>();

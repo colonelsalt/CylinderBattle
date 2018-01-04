@@ -63,7 +63,7 @@ public class Collector : MonoBehaviour
 
     private void Awake()
     {
-        PlayerHealth.OnPlayerRespawn += OnResetPlusCount;
+        PlayerHealth.OnPlayerDeath += OnResetPlusCount;
         PlayerHealth.OnPlayerDeath += OnCheckForPiDrop;
         PlayerHealth.OnPlayerDamaged += OnCheckForPiDrop;
 

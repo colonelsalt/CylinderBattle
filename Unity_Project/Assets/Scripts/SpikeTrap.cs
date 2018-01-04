@@ -56,15 +56,23 @@ public class SpikeTrap : MonoBehaviour
             StartTrap();
         }
         else
-        {
-            // If stepped on after spikes extended, damage and knock object backwards
-            PlayerController player = other.GetComponent<PlayerController>();
-            if (player != null)
+        {   // If stepped on after spikes extended, damage and knock object backwards
+
+            // If kinematic Rigidbody, temporarily activate its reactions to ohysics
+            PhysicsSwitch manualMovedObject = other.GetComponent<PhysicsSwitch>();
+            if (manualMovedObject != null)
             {
-                player.ActivatePhysicsReactions();
-                player.GetComponent<Rigidbody>().AddForce(-player.transform.forward * m_KnockBackForce);
+                manualMovedObject.ActivatePhysicsReactions();
             }
 
+            // Apply knockback force
+            Rigidbody body = other.GetComponent<Rigidbody>();
+            if (body != null)
+            {
+                body.AddForce(-body.transform.forward * m_KnockBackForce);
+            }
+
+            // Damage objects with Health
             Health otherHealth = other.GetComponent<Health>();
             if (otherHealth != null)
             {

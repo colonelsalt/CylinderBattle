@@ -52,12 +52,19 @@ public class PlayerAttacker : EnemyBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // If struck kinematic Rigidbody, make it temporarily affected by physics
+        PhysicsSwitch manualMovedObject = GetComponent<PhysicsSwitch>();
+        if (manualMovedObject != null)
+        {
+            manualMovedObject.ActivatePhysicsReactions();
+        }
+
+
         PlayerController player = other.GetComponent<PlayerController>();
         if (player != null)
         {
             if (m_IsAttacking)
             {
-                player.ActivatePhysicsReactions();
                 player.GetComponent<Rigidbody>().AddForce(transform.forward * m_ImpactForce);
             }
             player.GetComponent<PlayerHealth>().TakeDamage(1);

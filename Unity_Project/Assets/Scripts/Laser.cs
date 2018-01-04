@@ -24,10 +24,13 @@ public class Laser : MonoBehaviour
     private void Update()
     {
         transform.Translate(Vector3.forward * m_Speed * Time.deltaTime);
+        m_TriggeredThisFrame = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+
+        Debug.Log("Laser beam triggered against " + other.gameObject.name);
         // Ensure only one trigger event per frame
         if (m_TriggeredThisFrame) return;
         m_TriggeredThisFrame = true;
@@ -50,7 +53,12 @@ public class Laser : MonoBehaviour
             // Damage hit object
             otherHealth.TakeDamage(m_Damage);
         }
-        Vanish();
+
+        // Unless collided with a Portal, laser beam vanishes
+        if (other.GetComponent<Portal>() == null)
+        {
+            Vanish();
+        }
     }
 
     private void Vanish()
