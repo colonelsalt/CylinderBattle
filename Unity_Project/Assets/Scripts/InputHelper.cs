@@ -132,6 +132,11 @@ public static class InputHelper
         }
     }
 
+    public static bool PauseButtonPressed()
+    {
+        return XCI.GetButton(XboxButton.Start) || Input.GetButton("Cancel");
+    }
+
 
     private static string PlayerString(int playerNum)
     {

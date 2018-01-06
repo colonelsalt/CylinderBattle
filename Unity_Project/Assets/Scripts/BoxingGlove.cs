@@ -98,10 +98,13 @@ public class BoxingGlove : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-
         // Do nothing if we just collided with ourselves
-        if (collision.gameObject == gameObject) return;
-
+        PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+        if (player != null)
+        {
+            if (player.PlayerNum == m_Player.PlayerNum) return;
+        }
+        
         // If struck a Kinematic Rigidbody, make it temporarily affected by physics
         PhysicsSwitch manualMovedObject = collision.gameObject.GetComponent<PhysicsSwitch>();
         if (manualMovedObject != null)
