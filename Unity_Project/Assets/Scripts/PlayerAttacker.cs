@@ -56,7 +56,10 @@ public class PlayerAttacker : EnemyBehaviour
         PhysicsSwitch manualMovedObject = GetComponent<PhysicsSwitch>();
         if (manualMovedObject != null)
         {
-            manualMovedObject.ActivatePhysicsReactions();
+            if (manualMovedObject.GetComponent<PlayerAttacker>() != this)
+            {
+                manualMovedObject.ActivatePhysicsReactions();
+            }
         }
 
 

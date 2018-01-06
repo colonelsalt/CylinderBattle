@@ -11,7 +11,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float m_MinTimeBetweenSpawns;
 
     [SerializeField] private float m_MaxTimeBetweenSpawns;
-    
+
     // Max. number of allowed objects of this type in this level
     [SerializeField] private int m_MaxNumObjects;
 
@@ -23,7 +23,7 @@ public class Spawner : MonoBehaviour
     private float m_NextSpawnTime;
 
     private float m_TimeSinceLastSpawn = 0f;
-    
+
     // --------------------------------------------------------------
 
     private void Awake()
@@ -73,7 +73,7 @@ public class Spawner : MonoBehaviour
         }
         while (IsOccupied(spawnPoint));
 
-        Instantiate(m_ObjectToSpawn, spawnPoint);
+        GameObject objectSpawned = Instantiate(m_ObjectToSpawn, spawnPoint) as GameObject;
     }
 
     private bool IsOccupied(Transform t) 

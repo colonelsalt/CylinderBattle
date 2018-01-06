@@ -6,8 +6,6 @@ public class DeathTrigger : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("DeathTrigger killing " + other.gameObject.name);
-
         PlayerHealth player = other.GetComponent<PlayerHealth>();
         if (player != null)
         {
