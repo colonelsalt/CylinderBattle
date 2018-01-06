@@ -165,7 +165,8 @@ public class PlayerController : MonoBehaviour
             if (m_IsCrouching)
             {
                 BackFlip();
-            } else
+            }
+            else
             {
                 Jump(m_JumpHeight);
             }

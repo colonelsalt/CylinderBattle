@@ -29,6 +29,7 @@ public class Waypoint : MonoBehaviour {
     {
         m_WaypointsInRange = new List<Waypoint>();
 
+        // Find all Waypoints in scene of same type as us
         foreach (GameObject waypoint in GameObject.FindGameObjectsWithTag(tag))
         {
             // If this waypoint is within range, add it to list of reachable waypoints

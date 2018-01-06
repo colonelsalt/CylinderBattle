@@ -80,7 +80,7 @@ public class WaypointPatroller : MonoBehaviour
     {
         float shortestDistance = float.MaxValue;
 
-        // Find all waypoints corresponding to this Enemy type
+        // Find all waypoints belonging to this Enemy
         foreach (GameObject waypoint in GameObject.FindGameObjectsWithTag(tag + "Waypoint"))
         {
             float distanceToWaypoint = Vector3.Distance(transform.position, waypoint.transform.position);
@@ -137,7 +137,7 @@ public class WaypointPatroller : MonoBehaviour
         }
         m_PlayerInSight = spottedPlayer;
 
-        // Only update occasionally to prevent performance hit
+        // Only update occasionally to prevent performance hit (and to make Enemy a little dumber)
         yield return new WaitForSeconds(m_TimeBetweenPlayerSearches);
         StartCoroutine(LookForPlayer());
     }
