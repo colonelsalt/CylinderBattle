@@ -8,7 +8,7 @@ public class PlayerHealth : Health
 {
     // --------------------------------------------------------------
     
-    // After being damaged, how long object will be invincible
+    // After being damaged, how long Player will be invincible
     [SerializeField] private float m_InvincibilityTime = 2.5f;
 
     [SerializeField] private Vector3 m_SpawningPosition;
@@ -28,12 +28,14 @@ public class PlayerHealth : Health
 
     private Animator m_Animator;
 
+    private Renderer[] m_Renderers;
+
     private bool m_IsInvincible = false;
 
     private bool m_IsAlive = true;
 
-    // time it takes to respawn
-    private const float MAX_RESPAWN_TIME = 1.0f;
+    // Time it takes to respawn
+    private const float MAX_RESPAWN_TIME = 3.0f;
     private float m_RespawnTime = MAX_RESPAWN_TIME;
 
     // --------------------------------------------------------------
@@ -41,16 +43,8 @@ public class PlayerHealth : Health
     private void Awake()
     {
         m_Player = GetComponent<PlayerController>();
-        m_Animator = GetComponent<Animator>();
-    }
-
-    private void Update()
-    {
-        // If Player is dead, update respawn timer
-        if (!m_IsAlive)
-        {
-            UpdateRespawnTime();
-        }
+        m_Animator = GetComponentInChildren<Animator>();
+        m_Renderers = GetComponentsInChildren<Renderer>();
     }
 
     public override void GetExtraLife()
@@ -76,6 +70,8 @@ public class PlayerHealth : Health
 
     private IEnumerator InvincibilityFlash()
     {
+
+        yield return new WaitForSeconds(1);
         Renderer rend = GetComponentInChildren<Renderer>();
         for (float i = 0; i < m_InvincibilityTime; i += 0.10f)
         {
@@ -86,12 +82,33 @@ public class PlayerHealth : Health
         m_IsInvincible = false;
     }
 
-    private void UpdateRespawnTime()
+    private IEnumerator MoveToSpawnPos()
     {
-        m_RespawnTime -= Time.deltaTime;
-        if (m_RespawnTime < 0.0f)
+        yield return new WaitForSeconds(1f);
+
+        Vector3 startPosition = transform.position;
+        float distanceToTarget = Vector3.Distance(startPosition, m_SpawningPosition);
+        float startTime = Time.time;
+        float speed = Vector3.Distance(transform.position, m_SpawningPosition) / (m_RespawnTime - 1f);
+        float distanceCovered = 0f;
+
+        while (distanceToTarget - distanceCovered > 0.1f)
         {
-            Respawn();
+            distanceCovered = (Time.time - startTime) * speed;
+            transform.position = Vector3.Lerp(startPosition, m_SpawningPosition, distanceCovered / distanceToTarget);
+            yield return new WaitForEndOfFrame();
+        }
+        m_Animator.SetTrigger("RespawnTrigger");
+        SetVisibility(true);
+        yield return new WaitForSeconds(0.45f);
+        Respawn();
+    }
+
+    private void SetVisibility(bool visible)
+    {
+        foreach (Renderer rend in m_Renderers)
+        {
+            rend.enabled = visible;
         }
     }
 
@@ -99,8 +116,7 @@ public class PlayerHealth : Health
     {
         ResetHealth();
         m_IsAlive = true;
-
-        GetComponentInChildren<Renderer>().enabled = true; // TEMPORARY!!!
+        m_Player.enabled = true;
 
         transform.position = m_SpawningPosition;
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
@@ -110,12 +126,14 @@ public class PlayerHealth : Health
     public override void Die()
     {
         m_IsAlive = false;
+        m_Player.enabled = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
 
-        GetComponentInChildren<Renderer>().enabled = false; // TEMPORARY!!!
+        SetVisibility(false);
 
         // TODO: Trigger death animation
 
         OnPlayerDeath(m_Player.PlayerNum);
+        StartCoroutine(MoveToSpawnPos());
     }
 }

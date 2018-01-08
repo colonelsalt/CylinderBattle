@@ -36,14 +36,6 @@ public class PlayerController : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    public int PlayerNum
-    {
-        get
-        {
-            return m_PlayerNum;
-        }
-    }
-
     private Rigidbody m_RigidBody;
 
     private Animator m_Animator;
@@ -76,7 +68,19 @@ public class PlayerController : MonoBehaviour
 
     private bool m_IsFloating = false;
 
+    private bool m_IsBackFlipping = false;
+
     private float m_RemainingFloatTime;
+
+    // --------------------------------------------------------------
+
+    public int PlayerNum
+    {
+        get
+        {
+            return m_PlayerNum;
+        }
+    }
 
     // --------------------------------------------------------------
 
@@ -103,7 +107,7 @@ public class PlayerController : MonoBehaviour
     private void BackFlip()
     {
         m_VerticalSpeed = Mathf.Sqrt(m_BackFlipHeight * m_Gravity);
-        m_Animator.SetBool("IsBackflipping", true);
+        m_IsBackFlipping = true;
         GetUp();
     }
 
@@ -156,7 +160,7 @@ public class PlayerController : MonoBehaviour
     {
         if (m_CharacterController.isGrounded || m_IsFloating)
         {
-            m_Animator.SetBool("IsBackflipping", false);
+            m_IsBackFlipping = false;
         }
 
         // Character can jump when standing on the ground
@@ -225,6 +229,8 @@ public class PlayerController : MonoBehaviour
         UpdateJumpState();
         UpdateFloatState();
 
+        UpdateAnimationState();
+
         if (m_IsFloating)
         {
             m_RemainingFloatTime -= Time.deltaTime;
@@ -254,8 +260,6 @@ public class PlayerController : MonoBehaviour
                 RotateCharacter(m_MovementDirection);
             }
         }
-
-        
     }
 
     private void RotateCharacter(Vector3 movementDirection)
@@ -284,5 +288,13 @@ public class PlayerController : MonoBehaviour
 
         // Rotate player by this angle around the y-axis
         transform.eulerAngles = new Vector3(transform.eulerAngles.x, rotationAngle, transform.eulerAngles.z);
+    }
+
+    private void UpdateAnimationState()
+    {
+        m_Animator.SetBool("IsBackflipping", m_IsBackFlipping);
+
+        bool isWalking = (m_MovementDirection != Vector3.zero);
+        m_Animator.SetBool("IsWalking", isWalking);
     }
 }
