@@ -15,6 +15,15 @@ public class Collectible : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    private Animator m_Animator;
+
+    // --------------------------------------------------------------
+
+    private void Awake()
+    {
+        m_Animator = GetComponent<Animator>();
+    }
+
     private void Update()
     {
         if (m_CollectionWaitTime > 0)
@@ -35,7 +44,7 @@ public class Collectible : MonoBehaviour
 
     private void Vanish()
     {
-        // TODO: play vanish animation
-        Destroy(gameObject);
+        m_Animator.SetTrigger("VanishTrigger");
+        Destroy(gameObject, 0.5f);
     }
 }

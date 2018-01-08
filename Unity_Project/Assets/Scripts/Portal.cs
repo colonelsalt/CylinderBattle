@@ -14,6 +14,7 @@ public class Portal : MonoBehaviour {
 
     // --------------------------------------------------------------
 
+    // Reference to Trasform of Portal this one connects to
     private Transform m_OtherPortal;
 
     private bool m_PortalActivated = false;
@@ -48,7 +49,7 @@ public class Portal : MonoBehaviour {
     {
         if (!m_PortalActivated) return;
 
-        if (other.gameObject.tag != "Wall")
+        if (other.gameObject.tag != "Wall" && other.gameObject.GetComponent<PlayerFeet>() == null)
         {
             other.transform.position = m_OtherPortal.transform.position + m_OtherPortal.transform.forward;
             other.transform.rotation = m_OtherPortal.transform.rotation;

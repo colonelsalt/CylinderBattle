@@ -98,6 +98,8 @@ public class PlayerHealth : Health
             transform.position = Vector3.Lerp(startPosition, m_SpawningPosition, distanceCovered / distanceToTarget);
             yield return new WaitForEndOfFrame();
         }
+        transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+
         m_Animator.SetTrigger("RespawnTrigger");
         SetVisibility(true);
         yield return new WaitForSeconds(0.45f);
@@ -118,8 +120,6 @@ public class PlayerHealth : Health
         m_IsAlive = true;
         m_Player.enabled = true;
 
-        transform.position = m_SpawningPosition;
-        transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
         OnPlayerRespawn(m_Player.PlayerNum);
     }
 

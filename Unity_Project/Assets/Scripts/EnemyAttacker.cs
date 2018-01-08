@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttacker : EnemyBehaviour
+public class EnemyAttacker : EnemyBehaviour
 {
     // --------------------------------------------------------------
 
@@ -56,7 +56,7 @@ public class PlayerAttacker : EnemyBehaviour
         PhysicsSwitch manualMovedObject = GetComponent<PhysicsSwitch>();
         if (manualMovedObject != null)
         {
-            if (manualMovedObject.GetComponent<PlayerAttacker>() != this)
+            if (manualMovedObject.GetComponent<EnemyAttacker>() != this)
             {
                 manualMovedObject.ActivatePhysicsReactions();
             }

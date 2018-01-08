@@ -12,6 +12,8 @@ public class Health : MonoBehaviour
 
     private int m_CurrentHealth = 3;
 
+    private Collider m_Collider;
+
     // --------------------------------------------------------------
 
     public int RemainingHealth
@@ -26,6 +28,7 @@ public class Health : MonoBehaviour
 
     private void Awake()
     {
+        m_Collider = GetComponentInChildren<Collider>();
         ResetHealth();
     }
 
@@ -50,6 +53,9 @@ public class Health : MonoBehaviour
 
     public virtual void Die()
     {
+        // Disable collider on death
+        m_Collider.enabled = false;
+
         Destroy(gameObject);
     }
 
