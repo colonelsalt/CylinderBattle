@@ -15,6 +15,15 @@ public class WeaponBlock : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    private Animator m_Animator;
+
+    // --------------------------------------------------------------
+
+    private void Awake()
+    {
+        m_Animator = GetComponent<Animator>();
+    }
+
     private static Weapon RandomWeapon()
     {
         return (Weapon)Random.Range(0, 4);
@@ -23,8 +32,9 @@ public class WeaponBlock : MonoBehaviour
     public void Break(WeaponManager brokenBy)
     {
         brokenBy.PickupWeapon(RandomWeapon());
+
+        m_Animator.SetTrigger("BreakTrigger");
         
-        // play break animation
-        Destroy(gameObject);
+        Destroy(gameObject, 0.3f);
     }
 }
