@@ -29,7 +29,11 @@ public class BoxingGlove : MonoBehaviour
     // Flag to keep track of whether Fire button held down
     private bool m_IsPunching = false;
 
+    private ParticleSystem[] m_Sparks;
+
     private float m_TimeRemaining;
+
+    private Collider[] m_GloveColliders;
 
     // --------------------------------------------------------------
 
@@ -41,12 +45,17 @@ public class BoxingGlove : MonoBehaviour
         }
     }
 
+    // --------------------------------------------------------------
+
     private void Awake()
     {
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         m_Animator = GetComponent<Animator>();
         m_Player = GetComponentInParent<PlayerController>();
+        m_GloveColliders = GetComponentsInChildren<Collider>();
+        m_Sparks = GetComponentsInChildren<ParticleSystem>();
         m_TimeRemaining = GameManager.POWERUP_DURATION;
+        SetCollidersActive(false);
     }
 
     private void Update()
@@ -83,7 +92,7 @@ public class BoxingGlove : MonoBehaviour
     // Activates or deactivates colliders on each Glove
     private void SetCollidersActive(bool enabled)
     {
-        foreach (SphereCollider col in GetComponentsInChildren<SphereCollider>())
+        foreach (Collider col in m_GloveColliders)
         {
             col.enabled = enabled;
         }
@@ -116,6 +125,7 @@ public class BoxingGlove : MonoBehaviour
         Rigidbody bodyStruck = collision.gameObject.GetComponent<Rigidbody>();
         if (bodyStruck != null)
         {
+            ShowSparks(collision.contacts[0].point);
             bodyStruck.AddForce(m_ImpactForce * transform.forward);
         }
 
@@ -134,6 +144,15 @@ public class BoxingGlove : MonoBehaviour
         if (health != null)
         {
             health.TakeDamage(m_Damage);
+        }
+    }
+
+    private void ShowSparks(Vector3 atPosition)
+    {
+        foreach (ParticleSystem spark in m_Sparks)
+        {
+            spark.transform.position = atPosition;
+            spark.Play();
         }
     }
 
