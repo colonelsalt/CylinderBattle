@@ -70,8 +70,6 @@ public class PlayerHealth : Health
 
     private IEnumerator InvincibilityFlash()
     {
-
-        yield return new WaitForSeconds(1);
         Renderer rend = GetComponentInChildren<Renderer>();
         for (float i = 0; i < m_InvincibilityTime; i += 0.10f)
         {

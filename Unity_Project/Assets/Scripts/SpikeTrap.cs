@@ -32,6 +32,7 @@ public class SpikeTrap : MonoBehaviour
     private void StartTrap()
     {
         m_Collider.enabled = false;
+        m_Animator.SetTrigger("ActivationTrigger");
         Invoke("ExtendSpikes", m_ActivationTime);
     }
 

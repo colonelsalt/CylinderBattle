@@ -19,18 +19,28 @@ public class Laser : MonoBehaviour
     // Flag to prevent multiple trigger events in one frame
     private bool m_TriggeredThisFrame = false;
 
+    private Animator m_Animator;
+
+    private bool m_HasVanished = false;
+
     // --------------------------------------------------------------
+
+    private void Awake()
+    {
+        m_Animator = GetComponent<Animator>();
+    }
 
     private void Update()
     {
-        transform.Translate(Vector3.forward * m_Speed * Time.deltaTime);
+        if (!m_HasVanished)
+        {
+            transform.Translate(Vector3.forward * m_Speed * Time.deltaTime);
+        }
         m_TriggeredThisFrame = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-
-        Debug.Log("Laser beam triggered against " + other.gameObject.name);
         // Ensure only one trigger event per frame
         if (m_TriggeredThisFrame) return;
         m_TriggeredThisFrame = true;
@@ -63,6 +73,8 @@ public class Laser : MonoBehaviour
 
     private void Vanish()
     {
-        Destroy(gameObject);
+        m_HasVanished = true;
+        m_Animator.SetTrigger("VanishTrigger");
+        Destroy(gameObject, 0.5f);
     }
 }
