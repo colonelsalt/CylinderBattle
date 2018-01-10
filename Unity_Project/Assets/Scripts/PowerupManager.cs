@@ -28,6 +28,10 @@ public class PowerupManager : MonoBehaviour
 
     private GameObject m_Jetpack;
 
+    private Animator m_JetpackAnimator;
+
+    private Animator m_QuickRunBootsAnimator;
+
     // --------------------------------------------------------------
 
     public bool HasJetpack
@@ -64,17 +68,36 @@ public class PowerupManager : MonoBehaviour
             case 5:
                 Debug.Log("Player received Jetpack!");
                 m_Jetpack = Instantiate(m_JetpackPrefab, transform.GetChild(0)) as GameObject;
+                m_JetpackAnimator = m_Jetpack.GetComponent<Animator>();
                 break;
             case 10:
                 break;
             case 20:
                 Debug.Log("Player received Quick-Run boots!");
                 m_QuickRunBoots = Instantiate(m_QuickRunBootsPrefab, transform.GetChild(0)) as GameObject;
+                m_QuickRunBootsAnimator = m_QuickRunBoots.GetComponent<Animator>();
                 break;
             default:
                 Debug.Log("Player got an extra life!");
                 m_Health.GetExtraLife();
                 break;
+        }
+    }
+
+    public void SetJetpackActive(bool active)
+    {
+        if (m_JetpackAnimator != null)
+        {
+            m_JetpackAnimator.SetBool("IsFloating", active);
+        }
+       
+    }
+
+    public void SetQuickRunBootsActive(bool active)
+    {
+        if (m_QuickRunBootsAnimator != null)
+        {
+            m_QuickRunBootsAnimator.SetBool("IsSprinting", active);
         }
     }
 

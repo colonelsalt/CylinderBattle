@@ -195,6 +195,7 @@ public class PlayerController : MonoBehaviour
             && !m_CharacterController.isGrounded && m_RemainingFloatTime > 0f)
         {
             m_IsFloating = true;
+            m_PowerupManager.SetJetpackActive(true);
 
             // Make sure there is no extra movement along y-axis
             m_VerticalSpeed = 0f;
@@ -202,6 +203,7 @@ public class PlayerController : MonoBehaviour
         else if (InputHelper.JumpButtonReleased(m_PlayerNum) || m_RemainingFloatTime <= 0f)
         {
            m_IsFloating = false;
+            m_PowerupManager.SetJetpackActive(false);
         } 
     }
 
