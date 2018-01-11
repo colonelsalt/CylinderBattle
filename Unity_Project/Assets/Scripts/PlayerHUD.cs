@@ -62,7 +62,7 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdateHealthDisplay()
     {
-        m_HealthText.text = "x" + m_Score.Health.ToString();
+        m_HealthText.text = m_Score.Health.ToString();
     }
 
     public void ShowWeapon(Weapon type)

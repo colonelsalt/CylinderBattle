@@ -54,6 +54,11 @@ public class EnemyChaser : EnemyBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        OnTriggerEnter(collision.collider);
+    }
+
     private void OnTriggerExit(Collider other)
     {
         m_TouchingPlayer = false;
