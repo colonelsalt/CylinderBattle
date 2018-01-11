@@ -41,6 +41,8 @@ public class WaypointPatroller : MonoBehaviour
     // Behaviour to execute once Enemy spots Player
     private EnemyBehaviour m_EnemyBehaviour;
 
+    private ParticleSystem m_Exclamation;
+
     // --------------------------------------------------------------
 
     public bool PlayerInSight
@@ -67,6 +69,7 @@ public class WaypointPatroller : MonoBehaviour
         m_EnemyBehaviour = GetComponent<EnemyBehaviour>();
 
         m_Camera = GetComponentInChildren<Camera>();
+        m_Exclamation = GetComponentInChildren<ParticleSystem>();
         m_Players = FindObjectsOfType<PlayerController>();
 
         m_WalkSpeed = m_NavMeshAgent.speed;
@@ -133,18 +136,32 @@ public class WaypointPatroller : MonoBehaviour
                 Debug.Log("Player " + player.PlayerNum + " spotted by " + name + "!");
                 m_LastSeenPlayer = player;
                 spottedPlayer = true;
+                break;
             }
         }
         m_PlayerInSight = spottedPlayer;
+        if (spottedPlayer)
+        {
+            ShowExclamation();
+        }
 
         // Only update occasionally to prevent performance hit (and to make Enemy a little dumber)
         yield return new WaitForSeconds(m_TimeBetweenPlayerSearches);
         StartCoroutine(LookForPlayer());
     }
 
+    public void StandStill()
+    {
+        m_NavMeshAgent.destination = transform.position;
+    }
+
+    private void ShowExclamation()
+    {
+        m_Exclamation.Play();
+    }
+
     private void OnDestroy()
     {
-        Debug.Log(name + " dying...");
         StopAllCoroutines();
         Instantiate(m_DropItemPrefab, transform.position, Quaternion.identity);
     }

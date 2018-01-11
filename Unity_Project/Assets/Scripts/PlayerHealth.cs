@@ -101,6 +101,7 @@ public class PlayerHealth : Health
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
 
         m_Animator.SetTrigger("RespawnTrigger");
+        yield return new WaitForSeconds(0.2f);
         SetVisibility(true);
         yield return new WaitForSeconds(0.45f);
         Respawn();
@@ -126,13 +127,11 @@ public class PlayerHealth : Health
     public override void Die()
     {
         Instantiate(m_DeathExplosionEffect, transform.position, Quaternion.identity);
+        SetVisibility(false);
+
         m_IsAlive = false;
         m_Player.enabled = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
-
-        SetVisibility(false);
-
-        // TODO: Trigger death animation
 
         OnPlayerDeath(m_Player.PlayerNum);
         StartCoroutine(MoveToSpawnPos());

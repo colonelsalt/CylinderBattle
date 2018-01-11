@@ -16,24 +16,32 @@ public class EnemyAttacker : EnemyBehaviour
 
     private WaypointPatroller m_Patrol;
 
+    private Animator m_Animator;
+
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_Patrol = GetComponent<WaypointPatroller>();
+        m_Animator = GetComponent<Animator>();
     }
 
     public override void Execute()
     {
         if (!m_IsAttacking)
         {
-            StartCoroutine(Attack(m_Patrol.PlayerPos + (2 * transform.forward)));
+            StartCoroutine(Attack(m_Patrol.PlayerPos + (3 * transform.forward)));
         }
     }
 
     private IEnumerator Attack(Vector3 target)
     {
+        yield return new WaitForSeconds(0.2f);
         m_IsAttacking = true;
+        m_Animator.SetBool("isAttacking", true);
+        transform.LookAt(target);
+
+        yield return new WaitForSeconds(0.3f);
 
         Vector3 startPosition = transform.position;
         float distanceToTarget = Vector3.Distance(startPosition, target);
@@ -47,14 +55,24 @@ public class EnemyAttacker : EnemyBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        // Stand still for 0.5 seconds right after attack finished
+        float loiterTime = 0f;
+        while (loiterTime < 0.5f)
+        {
+            loiterTime += Time.deltaTime;
+            m_Patrol.StandStill();
+            yield return new WaitForEndOfFrame();
+        }
+
         m_IsAttacking = false;
+        m_Animator.SetBool("isAttacking", false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         // If struck kinematic Rigidbody, make it temporarily affected by physics
         PhysicsSwitch manualMovedObject = other.GetComponent<PhysicsSwitch>();
-        if (manualMovedObject != null)
+        if (manualMovedObject != null && m_IsAttacking)
         {
             manualMovedObject.ActivatePhysicsReactions();
         }
