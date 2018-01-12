@@ -22,7 +22,8 @@ public class UIManager : MonoBehaviour
         Collector.OnPlusPickup += OnUpdatePluses;
         Collector.OnAllPisCollected += OnGameOver;
         Gun.OnGunFired += OnUpdateAmmo;
-        WeaponManager.OnWeaponActivated += OnDisplayWeapon;
+        WeaponManager.OnWeaponPickup += OnDisplayWeapon;
+        WeaponManager.OnWeaponActivated += OnActivateWeapon;
         WeaponManager.OnWeaponDisabled += OnHideWeapon;
         PlayerHealth.OnPlayerDamaged += OnUpdateHealth;
         PlayerHealth.OnPlayerExtraLife += OnUpdateHealth;
@@ -60,6 +61,11 @@ public class UIManager : MonoBehaviour
     private void OnDisplayWeapon(Weapon type, int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].ShowWeapon(type);
+    }
+
+    private void OnActivateWeapon(Weapon type, int playerNum)
+    {
+        m_PlayerHUDs[playerNum - 1].ActivateWeapon(type);
     }
 
     // Update and display ammo change

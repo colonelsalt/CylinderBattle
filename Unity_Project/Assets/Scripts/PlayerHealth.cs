@@ -72,7 +72,7 @@ public class PlayerHealth : Health
 
     private IEnumerator InvincibilityFlash()
     {
-        Renderer rend = GetComponentInChildren<Renderer>();
+        Renderer rend = m_Renderers[0];
         for (float i = 0; i < m_InvincibilityTime; i += 0.10f)
         {
             rend.enabled = !rend.enabled;
@@ -84,6 +84,7 @@ public class PlayerHealth : Health
 
     private IEnumerator MoveToSpawnPos()
     {
+        SetVisibility(false);
         yield return new WaitForSeconds(1f);
 
         Vector3 startPosition = transform.position;
@@ -127,7 +128,6 @@ public class PlayerHealth : Health
     public override void Die()
     {
         Instantiate(m_DeathExplosionEffect, transform.position, Quaternion.identity);
-        SetVisibility(false);
 
         m_IsAlive = false;
         m_Player.enabled = false;

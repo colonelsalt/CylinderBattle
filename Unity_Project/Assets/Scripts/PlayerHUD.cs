@@ -19,7 +19,7 @@ public class PlayerHUD : MonoBehaviour
 
     [SerializeField] private Image m_WeaponImage;
 
-    [SerializeField] private Texture[] m_WeaponImages;
+    [SerializeField] private Sprite[] m_WeaponSprites;
 
     // --------------------------------------------------------------
 
@@ -67,9 +67,16 @@ public class PlayerHUD : MonoBehaviour
 
     public void ShowWeapon(Weapon type)
     {
+        m_WeaponImage.sprite = m_WeaponSprites[(int)type];
+        m_WeaponImage.enabled = true;
+    }
+
+    public void ActivateWeapon(Weapon type)
+    {
         switch (type)
         {
             case Weapon.BOMB:
+                HideWeapon();
                 break;
             case Weapon.GUN:
                 m_AmmoText.enabled = true;
@@ -82,8 +89,6 @@ public class PlayerHUD : MonoBehaviour
                 m_TimerActive = true;
                 break;
         }
-
-        m_WeaponImage.enabled = true;
     }
 
     public void HideWeapon()

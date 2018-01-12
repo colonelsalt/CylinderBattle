@@ -81,13 +81,12 @@ public class WeaponManager : MonoBehaviour
 
     public void PickupWeapon(Weapon weapon)
     {
-        if (m_HasWeapon) return;
+        if (m_HasWeapon || m_WeaponIsActive) return;
         
         m_HasWeapon = true;
         m_Weapon = weapon;
 
-        // OnWeaponPickup(weapon, m_Player.PlayerNum);
-        Debug.Log("Received weapon " + m_Weapon);
+        OnWeaponPickup(weapon, m_Player.PlayerNum);
     }
 
     public void DisableWeapon()
