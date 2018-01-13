@@ -118,7 +118,7 @@ public class BoxingGlove : MonoBehaviour
         PhysicsSwitch manualMovedObject = collision.gameObject.GetComponent<PhysicsSwitch>();
         if (manualMovedObject != null)
         {
-            manualMovedObject.ActivatePhysicsReactions();
+            manualMovedObject.ActivatePhysicsReactions(true);
         }
 
         // If object struck has Rigidbody, apply force to it

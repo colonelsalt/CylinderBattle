@@ -28,7 +28,7 @@ public class PlayerHealth : Health
 
     private PlayerController m_Player;
 
-    private Animator m_Animator;
+    private Animator m_PlayerAnim;
 
     private Renderer[] m_Renderers;
 
@@ -45,7 +45,7 @@ public class PlayerHealth : Health
     private void Awake()
     {
         m_Player = GetComponent<PlayerController>();
-        m_Animator = GetComponentInChildren<Animator>();
+        m_PlayerAnim = GetComponentInChildren<Animator>();
         m_Renderers = GetComponentsInChildren<Renderer>();
     }
 
@@ -101,7 +101,7 @@ public class PlayerHealth : Health
         }
         transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
 
-        m_Animator.SetTrigger("RespawnTrigger");
+        m_PlayerAnim.SetTrigger("RespawnTrigger");
         yield return new WaitForSeconds(0.2f);
         SetVisibility(true);
         yield return new WaitForSeconds(0.45f);

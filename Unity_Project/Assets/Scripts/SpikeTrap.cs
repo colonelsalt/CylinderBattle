@@ -63,7 +63,7 @@ public class SpikeTrap : MonoBehaviour
             PhysicsSwitch manualMovedObject = other.GetComponent<PhysicsSwitch>();
             if (manualMovedObject != null)
             {
-                manualMovedObject.ActivatePhysicsReactions();
+                manualMovedObject.ActivatePhysicsReactions(true);
             }
 
             // Apply knockback force

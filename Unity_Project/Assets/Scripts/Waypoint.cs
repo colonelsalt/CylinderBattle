@@ -14,8 +14,6 @@ public class Waypoint : MonoBehaviour {
 
     private List<Waypoint> m_WaypointsInRange;
 
-    private bool m_ChasingPlayer = false;
-
     // --------------------------------------------------------------
 
     private void OnDrawGizmos()

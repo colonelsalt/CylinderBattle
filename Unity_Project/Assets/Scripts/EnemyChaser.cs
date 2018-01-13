@@ -63,4 +63,19 @@ public class EnemyChaser : EnemyBehaviour
     {
         m_TouchingPlayer = false;
     }
+
+    private void BreakToPieces()
+    {
+        PhysicsSwitch physicsSwitch = GetComponent<PhysicsSwitch>();
+        if (physicsSwitch != null)
+        {
+            physicsSwitch.ActivatePhysicsReactions(false);
+        }
+
+        foreach (Rigidbody body in GetComponentsInChildren<Rigidbody>())
+        {
+            body.isKinematic = false;
+        }
+    }
+
 }

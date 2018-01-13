@@ -12,9 +12,6 @@ public class WaypointPatroller : MonoBehaviour
     // How long agent waits between checking if Player spotted
     [SerializeField] private float m_TimeBetweenPlayerSearches = 1f;
 
-    // Item to spawn when enemy knocked out
-    [SerializeField] private GameObject m_DropItemPrefab;
-
     // --------------------------------------------------------------
 
     private NavMeshAgent m_NavMeshAgent;
@@ -101,6 +98,8 @@ public class WaypointPatroller : MonoBehaviour
 
     private void Update()
     {
+        if (!m_NavMeshAgent.enabled) return;
+
         if (m_PlayerInSight)
         {
             m_EnemyBehaviour.Execute();
@@ -133,7 +132,6 @@ public class WaypointPatroller : MonoBehaviour
         {
             if (GeometryUtility.TestPlanesAABB(planesInView, player.GetComponent<Collider>().bounds))
             {
-                Debug.Log("Player " + player.PlayerNum + " spotted by " + name + "!");
                 m_LastSeenPlayer = player;
                 spottedPlayer = true;
                 break;
@@ -160,10 +158,16 @@ public class WaypointPatroller : MonoBehaviour
         m_Exclamation.Play();
     }
 
+    // Handler for Health component's 'OnDeath' message
+    private void OnDeath()
+    {
+        m_NavMeshAgent.enabled = false;
+        StopAllCoroutines();
+    }
+
     private void OnDestroy()
     {
-        StopAllCoroutines();
-        Instantiate(m_DropItemPrefab, transform.position, Quaternion.identity);
+        OnDeath();
     }
 
 }

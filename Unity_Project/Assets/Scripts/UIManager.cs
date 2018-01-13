@@ -37,12 +37,12 @@ public class UIManager : MonoBehaviour
 
     private void OnUpdatePis(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].UpdatePis();
+        m_PlayerHUDs[playerNum - 1].UpdatePis(true);
     }
 
     private void OnUpdatePluses(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].UpdatePluses();
+        m_PlayerHUDs[playerNum - 1].UpdatePluses(true);
     }
 
     // Hide weapon images and text
@@ -54,13 +54,13 @@ public class UIManager : MonoBehaviour
     // Update and display new Player health
     private void OnUpdateHealth(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay();
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(true);
     }
 
     // Display new weapon received
     private void OnDisplayWeapon(Weapon type, int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].ShowWeapon(type);
+        m_PlayerHUDs[playerNum - 1].ShowWeapon(type, true);
     }
 
     private void OnActivateWeapon(Weapon type, int playerNum)

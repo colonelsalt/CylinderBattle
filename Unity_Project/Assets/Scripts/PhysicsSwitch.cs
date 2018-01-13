@@ -29,7 +29,7 @@ public class PhysicsSwitch : MonoBehaviour
         m_CharacterController = GetComponent<CharacterController>();
     }
 
-    public void ActivatePhysicsReactions()
+    public void ActivatePhysicsReactions(bool reactivateAfter)
     {
         // Temporarily remove manual position control from NavMeshAgent/CharacterController
         if (m_NavMeshAgent != null)
@@ -43,7 +43,10 @@ public class PhysicsSwitch : MonoBehaviour
 
         m_Body.isKinematic = false;
 
-        Invoke("DeactivatePhysicsReactions", m_AutoPhysicsTime);
+        if (reactivateAfter)
+        {
+            Invoke("DeactivatePhysicsReactions", m_AutoPhysicsTime);
+        }
     }
 
     private void DeactivatePhysicsReactions()

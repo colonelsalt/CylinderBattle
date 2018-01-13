@@ -36,7 +36,7 @@ public class Bomb : MonoBehaviour
             PhysicsSwitch manualMovedObject = hit.GetComponent<PhysicsSwitch>();
             if (manualMovedObject != null)
             {
-                manualMovedObject.ActivatePhysicsReactions();
+                manualMovedObject.ActivatePhysicsReactions(true);
             }
 
             // Apply explosion force to each Rigidbody hit

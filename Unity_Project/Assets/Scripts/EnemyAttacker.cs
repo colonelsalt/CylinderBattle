@@ -14,6 +14,8 @@ public class EnemyAttacker : EnemyBehaviour
 
     private bool m_IsAttacking = false;
 
+    private ParticleSystem m_VanishSmoke;
+
     private WaypointPatroller m_Patrol;
 
     private Animator m_Animator;
@@ -24,6 +26,15 @@ public class EnemyAttacker : EnemyBehaviour
     {
         m_Patrol = GetComponent<WaypointPatroller>();
         m_Animator = GetComponent<Animator>();
+
+        foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>())
+        {
+            if (ps.gameObject.name == "VanishSmoke")
+            {
+                m_VanishSmoke = ps;
+            }
+        }
+        if (m_VanishSmoke == null) Debug.LogError("Failed to find VanishSmoke particle system for " + name);
     }
 
     public override void Execute()
@@ -74,7 +85,7 @@ public class EnemyAttacker : EnemyBehaviour
         PhysicsSwitch manualMovedObject = other.GetComponent<PhysicsSwitch>();
         if (manualMovedObject != null && m_IsAttacking)
         {
-            manualMovedObject.ActivatePhysicsReactions();
+            manualMovedObject.ActivatePhysicsReactions(true);
         }
 
         Rigidbody body = other.GetComponent<Rigidbody>();
@@ -91,8 +102,14 @@ public class EnemyAttacker : EnemyBehaviour
         }
     }
 
-    private void OnDestroy()
+    private void OnDeath()
     {
         StopAllCoroutines();
+        m_VanishSmoke.Play();
+    }
+
+    private void OnDestroy()
+    {
+        OnDeath();
     }
 }

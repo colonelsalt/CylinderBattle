@@ -8,9 +8,14 @@ public class Health : MonoBehaviour
 
     [SerializeField] private int m_StartHealth = 3;
 
+    // Item to spawn when Object knocked out
+    [SerializeField] private GameObject m_DropItemPrefab;
+
     // --------------------------------------------------------------
 
     private int m_CurrentHealth = 3;
+
+    private Animator m_Animator;
 
     private Collider m_Collider;
 
@@ -29,6 +34,7 @@ public class Health : MonoBehaviour
     private void Awake()
     {
         m_Collider = GetComponentInChildren<Collider>();
+        m_Animator = GetComponent<Animator>();
         ResetHealth();
     }
 
@@ -56,7 +62,16 @@ public class Health : MonoBehaviour
         // Disable collider on death
         m_Collider.enabled = false;
 
-        Destroy(gameObject);
+        // Instantiate drop item
+        if (m_DropItemPrefab != null)
+        {
+            Instantiate(m_DropItemPrefab, transform.position, Quaternion.identity);
+        }
+
+        BroadcastMessage("OnDeath");
+        m_Animator.SetTrigger("deathTrigger");
+
+        Destroy(gameObject, 1.5f);
     }
 
 }

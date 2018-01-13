@@ -25,6 +25,16 @@ public class PlayerHUD : MonoBehaviour
 
     private ScoreKeeper m_Score;
 
+    private Animator m_ImageAnimator;
+
+    private Animator m_PlusAnimator;
+
+    private Animator m_PiAnimator;
+
+    private Animator m_HealthAnimator;
+
+    private Color m_ImageColour;
+
     private bool m_TimerActive = false;
 
     // --------------------------------------------------------------
@@ -32,6 +42,12 @@ public class PlayerHUD : MonoBehaviour
     private void Start()
     {
         m_Score = GetComponent<ScoreKeeper>();
+        m_ImageAnimator = m_WeaponImage.GetComponent<Animator>();
+        m_PlusAnimator = m_NumPlusesText.GetComponent<Animator>();
+        m_PiAnimator = m_NumPisText.GetComponent<Animator>();
+        m_HealthAnimator = m_HealthText.GetComponent<Animator>();
+
+        m_ImageColour = m_WeaponImage.color;
         UpdateAll();
     }
 
@@ -45,30 +61,49 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdateAll()
     {
-        UpdatePis();
-        UpdatePluses();
-        UpdateHealthDisplay();
+        UpdatePis(false);
+        UpdatePluses(false);
+        UpdateHealthDisplay(false);
     }
 
-    public void UpdatePis()
+    public void UpdatePis(bool withAnimation)
     {
         m_NumPisText.text = m_Score.NumPis + "/" + GameManager.MAX_NUM_PIS;
+        if (withAnimation)
+        {
+            m_PiAnimator.SetTrigger("flashTrigger");
+        }
     }
 
-    public void UpdatePluses()
+    public void UpdatePluses(bool withAnimation)
     {
         m_NumPlusesText.text = m_Score.NumPluses.ToString();
+        if (withAnimation)
+        {
+            m_PlusAnimator.SetTrigger("flashTrigger");
+        }
     }
 
-    public void UpdateHealthDisplay()
+    public void UpdateHealthDisplay(bool withAnimation)
     {
+        int oldHealth = int.Parse(m_HealthText.text);
         m_HealthText.text = m_Score.Health.ToString();
+        if (withAnimation)
+        {
+            string animationTrigger = (oldHealth > m_Score.Health) ? "extraLifeTrigger" : "damageTrigger";
+            m_HealthAnimator.SetTrigger(animationTrigger);
+        }
     }
 
-    public void ShowWeapon(Weapon type)
+    public void ShowWeapon(Weapon type, bool withAnimation)
     {
+        m_WeaponImage.color = m_ImageColour;
         m_WeaponImage.sprite = m_WeaponSprites[(int)type];
         m_WeaponImage.enabled = true;
+        if (withAnimation)
+        {
+            m_ImageAnimator.SetBool("isActive", true);
+        }
     }
 
     public void ActivateWeapon(Weapon type)
@@ -89,11 +124,16 @@ public class PlayerHUD : MonoBehaviour
                 m_TimerActive = true;
                 break;
         }
+        Color fadedColour = m_ImageColour;
+        fadedColour.a = 0.5f;
+        m_WeaponImage.color = fadedColour;
+
     }
 
     public void HideWeapon()
     {
         m_AmmoText.enabled = false;
+        m_ImageAnimator.SetBool("isActive", false);
         m_WeaponImage.enabled = false;
         m_TimerActive = false;
     }
