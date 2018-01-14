@@ -36,6 +36,7 @@ public class FadeOut : MonoBehaviour
             if (m_DelayBeforeFade <= 0)
             {
                 StartCoroutine(FadeAway());
+                m_HasStarted = false;
             }
         }
     }

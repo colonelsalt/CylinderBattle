@@ -19,6 +19,8 @@ public class PlayerHUD : MonoBehaviour
 
     [SerializeField] private Image m_WeaponImage;
 
+    [SerializeField] private Image m_TimerImage;
+
     [SerializeField] private Sprite[] m_WeaponSprites;
 
     // --------------------------------------------------------------
@@ -55,7 +57,7 @@ public class PlayerHUD : MonoBehaviour
     {
         if (m_TimerActive)
         {
-            m_AmmoText.text = m_Score.BoxingTimeRemaining.ToString();
+            m_TimerImage.fillAmount = m_Score.BoxingTimeRemaining / GameManager.POWERUP_DURATION;
         }
     }
 
@@ -68,7 +70,7 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdatePis(bool withAnimation)
     {
-        m_NumPisText.text = m_Score.NumPis + "/" + GameManager.MAX_NUM_PIS;
+        m_NumPisText.text = m_Score.NumPis.ToString();
         if (withAnimation)
         {
             m_PiAnimator.SetTrigger("flashTrigger");
@@ -118,9 +120,8 @@ public class PlayerHUD : MonoBehaviour
                 m_AmmoText.text = m_Score.RemainingAmmo.ToString();
                 break;
             case Weapon.BOXING_GLOVES:
-                // TEMPORARY SOLUTION! (show timer with powerup text)
-                m_AmmoText.enabled = true;
-                m_AmmoText.text = m_Score.BoxingTimeRemaining.ToString();
+                m_TimerImage.enabled = true;
+                m_TimerImage.fillAmount = 1f;
                 m_TimerActive = true;
                 break;
         }
@@ -135,6 +136,7 @@ public class PlayerHUD : MonoBehaviour
         m_AmmoText.enabled = false;
         m_ImageAnimator.SetBool("isActive", false);
         m_WeaponImage.enabled = false;
+        m_TimerImage.enabled = false;
         m_TimerActive = false;
     }
 

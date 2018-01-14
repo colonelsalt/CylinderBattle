@@ -125,11 +125,8 @@ public class BoxingGlove : MonoBehaviour
         Rigidbody bodyStruck = collision.gameObject.GetComponent<Rigidbody>();
         if (bodyStruck != null)
         {
-            if (bodyStruck.GetComponent<BoxingGlove>() == null)
-            {
-                ShowSparks(collision.contacts[0].point);
-                bodyStruck.AddForce(m_ImpactForce * transform.forward);
-            }
+            ShowSparks(collision.contacts[0].point);
+            bodyStruck.AddForce(m_ImpactForce * transform.forward);
         }
 
         // If struck object has health, deal damage to it

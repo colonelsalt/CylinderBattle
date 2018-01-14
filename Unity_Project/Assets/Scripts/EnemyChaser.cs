@@ -75,6 +75,11 @@ public class EnemyChaser : EnemyBehaviour
         foreach (Rigidbody body in GetComponentsInChildren<Rigidbody>())
         {
             body.isKinematic = false;
+            FadeOut fadeOut = body.GetComponent<FadeOut>();
+            if (fadeOut != null)
+            {
+                fadeOut.Begin();
+            }
         }
     }
 
