@@ -14,7 +14,7 @@ public class PowerupManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    [SerializeField] private GameObject m_QuickRunBootsPrefab;
+    [SerializeField] private GameObject m_LightningSprintPrefab;
 
     [SerializeField] private GameObject m_JetpackPrefab;
 
@@ -24,13 +24,9 @@ public class PowerupManager : MonoBehaviour
 
     private PlayerHealth m_Health;
 
-    private GameObject m_QuickRunBoots;
-
     private GameObject m_Jetpack;
 
     private Animator m_JetpackAnimator;
-
-    private Animator m_QuickRunBootsAnimator;
 
     // --------------------------------------------------------------
 
@@ -39,14 +35,6 @@ public class PowerupManager : MonoBehaviour
         get
         {
             return m_Jetpack != null;
-        }
-    }
-
-    public bool HasQuickRunBoots
-    {
-        get
-        {
-            return m_QuickRunBoots != null;
         }
     }
 
@@ -66,16 +54,13 @@ public class PowerupManager : MonoBehaviour
         switch (numPluses)
         {
             case 5:
+                Debug.Log("Player received Lightning Sprint!");
+                Instantiate(m_LightningSprintPrefab, transform.GetChild(0));
+                break;
+            case 10:
                 Debug.Log("Player received Jetpack!");
                 m_Jetpack = Instantiate(m_JetpackPrefab, transform.GetChild(0)) as GameObject;
                 m_JetpackAnimator = m_Jetpack.GetComponent<Animator>();
-                break;
-            case 10:
-                break;
-            case 20:
-                Debug.Log("Player received Quick-Run boots!");
-                m_QuickRunBoots = Instantiate(m_QuickRunBootsPrefab, transform.GetChild(0)) as GameObject;
-                m_QuickRunBootsAnimator = m_QuickRunBoots.GetComponent<Animator>();
                 break;
             default:
                 Debug.Log("Player got an extra life!");
@@ -93,19 +78,10 @@ public class PowerupManager : MonoBehaviour
        
     }
 
-    public void SetQuickRunBootsActive(bool active)
-    {
-        if (m_QuickRunBootsAnimator != null)
-        {
-            m_QuickRunBootsAnimator.SetBool("IsSprinting", active);
-        }
-    }
-
     private void OnRemovePowerups(int playerNum)
     {
         if (playerNum != m_Player.PlayerNum) return;
 
-        Destroy(m_QuickRunBoots);
         Destroy(m_Jetpack);
     }
 

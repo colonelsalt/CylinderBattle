@@ -28,9 +28,6 @@ public class PlayerController : MonoBehaviour
     // After struck by an explosion, how long Player will remain immobile
     [SerializeField] private float m_ExplosionDazeTime;
 
-    // How long Player can sprint for before recharge needed
-    [SerializeField] private float m_MaxSprintTime;
-
     // How long Player can float in the air when they have the jetpack
     [SerializeField] private float m_JetpackFloatTime;
 
@@ -62,10 +59,6 @@ public class PlayerController : MonoBehaviour
 
     private bool m_IsCrouching = false;
 
-    private float m_RemainingSprintTime;
-
-    private bool m_HasStamina = true;
-
     private bool m_IsFloating = false;
 
     private bool m_IsBackFlipping = false;
@@ -82,6 +75,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool IsRunning
+    {
+        get
+        {
+            return m_MovementSpeed == m_RunSpeed;
+        }
+        set
+        {
+            if (value)
+            {
+                m_MovementSpeed = m_RunSpeed;
+            }
+            else
+            {
+                m_MovementSpeed = m_WalkSpeed;
+            }
+        }
+    }
+
     // --------------------------------------------------------------
 
     private void Awake()
@@ -91,7 +103,7 @@ public class PlayerController : MonoBehaviour
         m_Animator = GetComponentInChildren<Animator>();
         m_PowerupManager = GetComponent<PowerupManager>();
 
-        m_RemainingSprintTime = m_MaxSprintTime;
+        m_MovementSpeed = m_WalkSpeed;
     }
 
     private void Start()
@@ -121,39 +133,13 @@ public class PlayerController : MonoBehaviour
         m_VerticalSpeed = Mathf.Min(m_VerticalSpeed, m_MaxFallSpeed);
     }
 
-    private void UpdateMovementState()
+    private void UpdateMovementDirection()
     {
         // Get Player's movement input and determine direction and set run speed
         float horizontalInput = InputHelper.GetMovementX(m_PlayerNum);
         float verticalInput = InputHelper.GetMovementY(m_PlayerNum);
 
         m_MovementDirection = new Vector3(horizontalInput, 0, verticalInput);
-
-        if (InputHelper.SprintButtonPressed(m_PlayerNum) && m_PowerupManager.HasQuickRunBoots)
-        {
-            if (m_RemainingSprintTime > 0f && m_HasStamina)
-            {
-                m_MovementSpeed = m_RunSpeed;
-                m_RemainingSprintTime -= Time.deltaTime;
-            }
-            else
-            {
-                m_HasStamina = false;
-                m_MovementSpeed = 0f;
-            }
-        }
-        else
-        {
-            m_MovementSpeed = m_WalkSpeed;
-            if (m_RemainingSprintTime < m_MaxSprintTime)
-            {
-                m_RemainingSprintTime += Time.deltaTime;
-            }
-            else
-            {
-                m_HasStamina = true;
-            }
-        }
     }
 
     private void UpdateJumpState()
@@ -224,7 +210,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // Update movement input
-        UpdateMovementState();
+        UpdateMovementDirection();
 
         // Update jumping input and apply gravity
         UpdateCrouchState();
@@ -239,8 +225,11 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            m_RemainingFloatTime = m_JetpackFloatTime;
             ApplyGravity();
+            if (m_CharacterController.isGrounded)
+            {
+                m_RemainingFloatTime = m_JetpackFloatTime;
+            }
         }
 
         // Calculate actual motion
@@ -296,7 +285,7 @@ public class PlayerController : MonoBehaviour
     {
         m_Animator.SetBool("IsBackflipping", m_IsBackFlipping);
 
-        bool isWalking = (m_MovementDirection != Vector3.zero);
+        bool isWalking = (m_MovementDirection != Vector3.zero && !IsRunning);
         m_Animator.SetBool("IsWalking", isWalking);
     }
 }
