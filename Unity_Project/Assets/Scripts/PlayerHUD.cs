@@ -21,6 +21,10 @@ public class PlayerHUD : MonoBehaviour
 
     [SerializeField] private Image m_TimerImage;
 
+    [SerializeField] private Image m_StaminaBar;
+
+    [SerializeField] private Image m_LightningIcon;
+
     [SerializeField] private Sprite[] m_WeaponSprites;
 
     // --------------------------------------------------------------
@@ -37,7 +41,9 @@ public class PlayerHUD : MonoBehaviour
 
     private Color m_ImageColour;
 
-    private bool m_TimerActive = false;
+    private bool m_WeaponTimerActive = false;
+
+    private bool m_LightningSprintActive = false;
 
     // --------------------------------------------------------------
 
@@ -55,9 +61,14 @@ public class PlayerHUD : MonoBehaviour
 
     private void Update()
     {
-        if (m_TimerActive)
+        if (m_WeaponTimerActive)
         {
             m_TimerImage.fillAmount = m_Score.BoxingTimeRemaining / GameManager.POWERUP_DURATION;
+        }
+
+        if (m_LightningSprintActive)
+        {
+            m_StaminaBar.fillAmount = m_Score.SprintTimeRemaining / m_Score.MaxSprintTime;
         }
     }
 
@@ -122,7 +133,7 @@ public class PlayerHUD : MonoBehaviour
             case Weapon.BOXING_GLOVES:
                 m_TimerImage.enabled = true;
                 m_TimerImage.fillAmount = 1f;
-                m_TimerActive = true;
+                m_WeaponTimerActive = true;
                 break;
         }
         Color fadedColour = m_ImageColour;
@@ -137,11 +148,24 @@ public class PlayerHUD : MonoBehaviour
         m_ImageAnimator.SetBool("isActive", false);
         m_WeaponImage.enabled = false;
         m_TimerImage.enabled = false;
-        m_TimerActive = false;
+        m_WeaponTimerActive = false;
     }
 
     public void UpdateAmmoDisplay()
     {
         m_AmmoText.text = m_Score.RemainingAmmo.ToString();
+    }
+
+    public void ActivatePowerup(Powerup type)
+    {
+        switch (type)
+        {
+            case Powerup.LIGHTNING_SPRINT:
+                m_StaminaBar.enabled = true;
+                m_LightningIcon.enabled = true;
+                m_LightningSprintActive = true;
+                break;
+        }
+        
     }
 }

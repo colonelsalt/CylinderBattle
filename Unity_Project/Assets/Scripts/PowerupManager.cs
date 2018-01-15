@@ -5,7 +5,7 @@ using UnityEngine;
 public enum Powerup
 {
     EXTRA_LIFE = 0,
-    QUICK_RUN_BOOTS = 1,
+    LIGHTNING_SPRINT = 1,
     JETPACK = 2
 }
 
@@ -17,6 +17,11 @@ public class PowerupManager : MonoBehaviour
     [SerializeField] private GameObject m_LightningSprintPrefab;
 
     [SerializeField] private GameObject m_JetpackPrefab;
+
+    // --------------------------------------------------------------
+
+    public delegate void PowerupEvent(Powerup type, int playerNum);
+    public static event PowerupEvent OnPowerupReceived;
 
     // --------------------------------------------------------------
 
@@ -45,6 +50,7 @@ public class PowerupManager : MonoBehaviour
             case 10:
                 Debug.Log("Player received Lightning Sprint!");
                 Instantiate(m_LightningSprintPrefab, transform.GetChild(0));
+                OnPowerupReceived(Powerup.LIGHTNING_SPRINT, m_Player.PlayerNum);
                 break;
             default:
                 Debug.Log("Player got an extra life!");

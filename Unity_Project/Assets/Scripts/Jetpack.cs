@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Jetpack : MonoBehaviour
 {
-
     // --------------------------------------------------------------
 
     // How long Player can float in the air

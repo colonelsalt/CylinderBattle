@@ -28,6 +28,7 @@ public class UIManager : MonoBehaviour
         PlayerHealth.OnPlayerDamaged += OnUpdateHealth;
         PlayerHealth.OnPlayerExtraLife += OnUpdateHealth;
         PlayerHealth.OnPlayerRespawn += OnResetDisplay;
+        PowerupManager.OnPowerupReceived += OnPowerupReceived;
 
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
         {
@@ -78,6 +79,11 @@ public class UIManager : MonoBehaviour
     private void OnResetDisplay(int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].UpdateAll();
+    }
+
+    private void OnPowerupReceived(Powerup type, int playerNum)
+    {
+        m_PlayerHUDs[playerNum - 1].ActivatePowerup(type);
     }
 
     private void OnGameOver(int numOfWinner)

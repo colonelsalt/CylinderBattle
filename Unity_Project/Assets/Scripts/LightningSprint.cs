@@ -31,6 +31,14 @@ public class LightningSprint : MonoBehaviour
         }
     }
 
+    public float MaxSprintTime
+    {
+        get
+        {
+            return m_MaxSprintTime;
+        }
+    }
+
     public bool HasStamina
     {
         get

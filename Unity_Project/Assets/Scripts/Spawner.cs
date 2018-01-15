@@ -73,7 +73,7 @@ public class Spawner : MonoBehaviour
         }
         while (IsOccupied(spawnPoint));
 
-        GameObject objectSpawned = Instantiate(m_ObjectToSpawn, spawnPoint) as GameObject;
+        Instantiate(m_ObjectToSpawn, spawnPoint);
     }
 
     private bool IsOccupied(Transform t) 

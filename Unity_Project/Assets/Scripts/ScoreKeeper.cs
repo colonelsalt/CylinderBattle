@@ -80,6 +80,16 @@ public class ScoreKeeper : MonoBehaviour
         }
     }
 
+    public float MaxSprintTime
+    {
+        get
+        {
+            if (m_LightningSprint == null) GetLightningSprint();
+
+            return m_LightningSprint.MaxSprintTime;
+        }
+    }
+
     public bool HasStamina
     {
         get
