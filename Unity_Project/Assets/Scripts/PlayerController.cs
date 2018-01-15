@@ -51,6 +51,8 @@ public class PlayerController : MonoBehaviour
     // The starting position of the player
     private Vector3 m_SpawningPosition = Vector3.zero;
 
+    private bool m_JumpedThisFrame = false;
+
     private bool m_IsCrouching = false;
 
     private bool m_IsBackFlipping = false;
@@ -81,6 +83,14 @@ public class PlayerController : MonoBehaviour
             {
                 m_MovementSpeed = m_WalkSpeed;
             }
+        }
+    }
+
+    public bool IsAirBorne
+    {
+        get
+        {
+            return !m_CharacterController.isGrounded && !m_JumpedThisFrame;
         }
     }
 
@@ -142,8 +152,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateJumpState()
     {
-        
-
+       
         // Character can jump when standing on the ground
         if (InputHelper.JumpButtonPressed(m_PlayerNum) && m_CharacterController.isGrounded)
         {
@@ -155,6 +164,7 @@ public class PlayerController : MonoBehaviour
             {
                 Jump(m_JumpHeight);
             }
+            m_JumpedThisFrame = true;
         }
     }
 
@@ -186,6 +196,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        m_JumpedThisFrame = false;
+
         if (m_CharacterController.isGrounded || IsFloating)
         {
             m_IsBackFlipping = false;

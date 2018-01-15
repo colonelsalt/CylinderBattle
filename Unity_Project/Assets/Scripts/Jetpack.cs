@@ -12,8 +12,6 @@ public class Jetpack : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private CharacterController m_CharacterController;
-
     private PlayerController m_Player;
 
     private ParticleSystem m_JetpackFire;
@@ -26,7 +24,6 @@ public class Jetpack : MonoBehaviour
 
     private void Awake()
     {
-        m_CharacterController = GetComponentInParent<CharacterController>();
         m_Player = GetComponentInParent<PlayerController>();
         m_JetpackFire = GetComponentInChildren<ParticleSystem>();
 
@@ -37,7 +34,7 @@ public class Jetpack : MonoBehaviour
     {
         if (m_IsFloating) m_RemainingFloatTime -= Time.deltaTime;
 
-        if (InputHelper.JumpButtonPressed(m_Player.PlayerNum) && !m_CharacterController.isGrounded && m_RemainingFloatTime > 0f)
+        if (InputHelper.JumpButtonPressed(m_Player.PlayerNum) && m_Player.IsAirBorne && m_RemainingFloatTime > 0f)
         {
             Activate();
         }
@@ -45,7 +42,7 @@ public class Jetpack : MonoBehaviour
         {
             Deactivate();
         }
-        if (m_CharacterController.isGrounded)
+        if (!m_Player.IsAirBorne)
         {
             m_RemainingFloatTime = m_FloatTime;
         }
