@@ -53,6 +53,7 @@ public class Health : MonoBehaviour
         m_CurrentHealth -= damage;
         if (m_CurrentHealth <= 0)
         {
+            m_CurrentHealth = 0;
             Die();
         }
     }

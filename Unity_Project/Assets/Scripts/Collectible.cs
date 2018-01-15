@@ -17,6 +17,8 @@ public class Collectible : MonoBehaviour
 
     private Animator m_Animator;
 
+    private bool m_HasBeenCollected = false;
+
     // --------------------------------------------------------------
 
     private void Awake()
@@ -34,10 +36,13 @@ public class Collectible : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (m_HasBeenCollected) return;
+
         Collector collector = other.GetComponent<Collector>();
         if (collector != null && m_CollectionWaitTime <= 0)
         {
             collector.PickupCollectible(m_Type);
+            m_HasBeenCollected = true;
             Vanish();
         }
     }

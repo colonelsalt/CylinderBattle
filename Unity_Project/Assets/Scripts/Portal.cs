@@ -6,16 +6,22 @@ public class Portal : MonoBehaviour {
 
     // --------------------------------------------------------------
 
-    public enum Type { GREEN_PORTAL, PURPLE_PORTAL }
+    public enum Type { FIRST, SECOND }
+
+    public static Portal[] PORTALS_IN_PLAY = new Portal[2];
 
     // --------------------------------------------------------------
 
     [SerializeField] private Type m_Type;
 
+    [SerializeField] private float m_CoolDownTime = 0.2f;
+
     // --------------------------------------------------------------
 
     // Reference to Trasform of Portal this one connects to
-    private Transform m_OtherPortal;
+    private Transform m_SisterPortal;
+
+    private Animator m_Animator;
 
     private bool m_PortalActivated = false;
 
@@ -23,36 +29,52 @@ public class Portal : MonoBehaviour {
 
     private void Awake()
     {
-        if (m_Type == Type.GREEN_PORTAL)
+        m_Animator = GetComponent<Animator>();
+
+        if (m_Type == Type.FIRST)
         {
             // Destroy all previously fired portals in scene
-            foreach (Portal portal in FindObjectsOfType<Portal>())
-            {
-                if (portal != this) portal.Deactivate();
-            }
+            DeactivateAll();
+
+            PORTALS_IN_PLAY[0] = this;
+        }
+        else
+        {
+            PORTALS_IN_PLAY[1] = this;
+
+            Activate();
+            PORTALS_IN_PLAY[0].Activate();
         }
     }
 
-
-    public void AttachToPortal(Transform otherPortal)
+    private void Activate()
     {
-        m_OtherPortal = otherPortal;
+        int sisterIndex = (m_Type == Type.FIRST) ? 1 : 0;
+
+        m_SisterPortal = PORTALS_IN_PLAY[sisterIndex].transform;
         m_PortalActivated = true;
     }
 
     public void Deactivate()
     {
-        Destroy(gameObject);
+        m_Animator.SetTrigger("deactivationTrigger");
+        Destroy(gameObject, 1f);
+    }
+
+    public static void DeactivateAll()
+    {
+        if (PORTALS_IN_PLAY[0] != null) PORTALS_IN_PLAY[0].Deactivate();
+        if (PORTALS_IN_PLAY[1] != null) PORTALS_IN_PLAY[1].Deactivate();
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (!m_PortalActivated) return;
 
-        if (other.gameObject.tag != "Wall" && other.gameObject.GetComponent<PlayerFeet>() == null)
+        if (other.gameObject.tag != "Wall" && other.GetComponent<PlayerFeet>() == null)
         {
-            other.transform.position = m_OtherPortal.transform.position + m_OtherPortal.transform.forward;
-            other.transform.rotation = m_OtherPortal.transform.rotation;
+            other.transform.position = m_SisterPortal.position + m_SisterPortal.forward;
+            other.transform.rotation = m_SisterPortal.rotation;
         }
     }
 }

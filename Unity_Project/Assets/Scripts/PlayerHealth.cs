@@ -85,7 +85,9 @@ public class PlayerHealth : Health
     private IEnumerator MoveToSpawnPos()
     {
         SetVisibility(false);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
+        SetVisibility(false);
+        transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
 
         Vector3 startPosition = transform.position;
         float distanceToTarget = Vector3.Distance(startPosition, m_SpawningPosition);
@@ -99,7 +101,7 @@ public class PlayerHealth : Health
             transform.position = Vector3.Lerp(startPosition, m_SpawningPosition, distanceCovered / distanceToTarget);
             yield return new WaitForEndOfFrame();
         }
-        transform.rotation = Quaternion.Euler(0.0f, 180.0f, 0.0f);
+        
 
         m_PlayerAnim.SetTrigger("RespawnTrigger");
         yield return new WaitForSeconds(0.2f);
@@ -127,6 +129,8 @@ public class PlayerHealth : Health
 
     public override void Die()
     {
+        if (!m_IsAlive) return;
+
         Instantiate(m_DeathExplosionEffect, transform.position, Quaternion.identity);
 
         m_IsAlive = false;

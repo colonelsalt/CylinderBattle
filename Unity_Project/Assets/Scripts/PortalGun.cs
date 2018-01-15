@@ -6,9 +6,7 @@ public class PortalGun : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    [SerializeField] private GameObject m_GreenPortalPrefab;
-
-    [SerializeField] private GameObject m_PurplePortalPrefab;
+    [SerializeField] private GameObject[] m_ProjectilePrefabs;
 
     // --------------------------------------------------------------
 
@@ -24,11 +22,9 @@ public class PortalGun : MonoBehaviour
 
     private bool m_IsAimingAtObject = false;
 
-    private GameObject m_GreenPortal;
-
-    private GameObject m_PurplePortal;
-
     private bool m_IsFiring = false;
+
+    private int m_PortalsFired = 0;
 
     // --------------------------------------------------------------
 
@@ -58,7 +54,7 @@ public class PortalGun : MonoBehaviour
 
     private void UpdateAimLine()
     {
-        // If Aiming at nothing, don't show AimLine
+        // If aiming at nothing, don't show AimLine
         if (!m_IsAimingAtObject)
         {
             m_AimLine.enabled = false;
@@ -101,16 +97,12 @@ public class PortalGun : MonoBehaviour
 
     private void FirePortal()
     {
-        if (m_GreenPortal == null)
-        {
-            m_GreenPortal = Instantiate(m_GreenPortalPrefab, m_TargetPos, m_TargetRotation) as GameObject;
-        }
-        else if (m_PurplePortal == null)
-        {
-            m_PurplePortal = Instantiate(m_PurplePortalPrefab, m_TargetPos, m_TargetRotation) as GameObject;
-            m_GreenPortal.GetComponent<Portal>().AttachToPortal(m_PurplePortal.transform);
-            m_PurplePortal.GetComponent<Portal>().AttachToPortal(m_GreenPortal.transform);
+        GameObject portalBeam = Instantiate(m_ProjectilePrefabs[m_PortalsFired], transform.position, transform.rotation) as GameObject;
+        m_PortalsFired++;
+        portalBeam.GetComponent<PortalProjectile>().SetTarget(m_TargetPos, m_TargetRotation);
 
+        if (m_PortalsFired == 2)
+        {
             Deactivate();
         }
     }
@@ -120,9 +112,9 @@ public class PortalGun : MonoBehaviour
         if (playerNum != m_Player.PlayerNum) return;
 
         // If only one portal has been fired, destroy it
-        if (m_PurplePortal == null)
+        if (m_PortalsFired == 1)
         {
-            if (m_GreenPortal != null) Destroy(m_GreenPortal);
+            Portal.DeactivateAll();
         }
 
         Deactivate();
