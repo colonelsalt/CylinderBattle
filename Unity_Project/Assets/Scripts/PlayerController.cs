@@ -25,12 +25,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private int m_PlayerNum;
 
-    // After struck by an explosion, how long Player will remain immobile
-    [SerializeField] private float m_ExplosionDazeTime;
-
-    // How long Player can float in the air when they have the jetpack
-    [SerializeField] private float m_JetpackFloatTime;
-
     // --------------------------------------------------------------
 
     private Rigidbody m_RigidBody;
@@ -59,11 +53,7 @@ public class PlayerController : MonoBehaviour
 
     private bool m_IsCrouching = false;
 
-    private bool m_IsFloating = false;
-
     private bool m_IsBackFlipping = false;
-
-    private float m_RemainingFloatTime;
 
     // --------------------------------------------------------------
 
@@ -93,6 +83,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public bool IsFloating = false;
 
     // --------------------------------------------------------------
 
@@ -125,6 +117,12 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyGravity()
     {
+        if (IsFloating)
+        {
+            m_VerticalSpeed = 0f;
+            return;
+        }
+
         // Apply gravity
         m_VerticalSpeed -= m_Gravity * Time.deltaTime;
 
@@ -144,10 +142,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateJumpState()
     {
-        if (m_CharacterController.isGrounded || m_IsFloating)
-        {
-            m_IsBackFlipping = false;
-        }
+        
 
         // Character can jump when standing on the ground
         if (InputHelper.JumpButtonPressed(m_PlayerNum) && m_CharacterController.isGrounded)
@@ -175,24 +170,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void UpdateFloatState()
-    {
-        if (InputHelper.JumpButtonPressed(m_PlayerNum) && m_PowerupManager.HasJetpack
-            && !m_CharacterController.isGrounded && m_RemainingFloatTime > 0f)
-        {
-            m_IsFloating = true;
-            m_PowerupManager.SetJetpackActive(true);
-
-            // Make sure there is no extra movement along y-axis
-            m_VerticalSpeed = 0f;
-        }
-        else if (InputHelper.JumpButtonReleased(m_PlayerNum) || m_RemainingFloatTime <= 0f)
-        {
-           m_IsFloating = false;
-            m_PowerupManager.SetJetpackActive(false);
-        } 
-    }
-
     private void Crouch()
     {
         transform.Translate(0f, -0.5f, 0f);
@@ -209,28 +186,20 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (m_CharacterController.isGrounded || IsFloating)
+        {
+            m_IsBackFlipping = false;
+        }
+
         // Update movement input
         UpdateMovementDirection();
 
         // Update jumping input and apply gravity
         UpdateCrouchState();
         UpdateJumpState();
-        UpdateFloatState();
 
         UpdateAnimationState();
-
-        if (m_IsFloating)
-        {
-            m_RemainingFloatTime -= Time.deltaTime;
-        }
-        else
-        {
-            ApplyGravity();
-            if (m_CharacterController.isGrounded)
-            {
-                m_RemainingFloatTime = m_JetpackFloatTime;
-            }
-        }
+        ApplyGravity();
 
         // Calculate actual motion
         m_CurrentMovementOffset = (m_MovementDirection * m_MovementSpeed + new Vector3(0, m_VerticalSpeed, 0)) * Time.deltaTime;

@@ -24,25 +24,10 @@ public class PowerupManager : MonoBehaviour
 
     private PlayerHealth m_Health;
 
-    private GameObject m_Jetpack;
-
-    private Animator m_JetpackAnimator;
-
-    // --------------------------------------------------------------
-
-    public bool HasJetpack
-    {
-        get
-        {
-            return m_Jetpack != null;
-        }
-    }
-
     // --------------------------------------------------------------
 
     private void Awake()
     {
-        PlayerHealth.OnPlayerDeath += OnRemovePowerups;
         m_Player = GetComponent<PlayerController>();
         m_Health = GetComponent<PlayerHealth>();
     }
@@ -59,34 +44,12 @@ public class PowerupManager : MonoBehaviour
                 break;
             case 10:
                 Debug.Log("Player received Jetpack!");
-                m_Jetpack = Instantiate(m_JetpackPrefab, transform.GetChild(0)) as GameObject;
-                m_JetpackAnimator = m_Jetpack.GetComponent<Animator>();
+                Instantiate(m_JetpackPrefab, transform.GetChild(0));
                 break;
             default:
                 Debug.Log("Player got an extra life!");
                 m_Health.GetExtraLife();
                 break;
         }
-    }
-
-    public void SetJetpackActive(bool active)
-    {
-        if (m_JetpackAnimator != null)
-        {
-            m_JetpackAnimator.SetBool("IsFloating", active);
-        }
-       
-    }
-
-    private void OnRemovePowerups(int playerNum)
-    {
-        if (playerNum != m_Player.PlayerNum) return;
-
-        Destroy(m_Jetpack);
-    }
-
-    private void OnDisable()
-    {
-        PlayerHealth.OnPlayerDeath -= OnRemovePowerups;
     }
 }

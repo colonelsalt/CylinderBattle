@@ -22,6 +22,8 @@ public class ScoreKeeper : MonoBehaviour
 
     private BoxingGlove m_BoxingGloves;
 
+    private LightningSprint m_LightningSprint;
+
     // --------------------------------------------------------------
 
     public int NumPis
@@ -68,6 +70,26 @@ public class ScoreKeeper : MonoBehaviour
         }
     }
 
+    public float SprintTimeRemaining
+    {
+        get
+        {
+            if (m_LightningSprint == null) GetLightningSprint();
+
+            return m_LightningSprint.RemainingSprintTime;
+        }
+    }
+
+    public bool HasStamina
+    {
+        get
+        {
+            if (m_LightningSprint == null) GetLightningSprint();
+
+            return m_LightningSprint.HasStamina;
+        }
+    }
+
     // --------------------------------------------------------------
 
     private void Awake()
@@ -86,5 +108,10 @@ public class ScoreKeeper : MonoBehaviour
     private void GetBoxingGloves()
     {
         m_BoxingGloves = m_Player.GetComponentInChildren<BoxingGlove>();
+    }
+
+    private void GetLightningSprint()
+    {
+        m_LightningSprint = m_Player.GetComponentInChildren<LightningSprint>();
     }
 }

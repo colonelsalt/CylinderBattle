@@ -23,6 +23,24 @@ public class LightningSprint : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    public float RemainingSprintTime
+    {
+        get
+        {
+            return m_RemainingSprintTime;
+        }
+    }
+
+    public bool HasStamina
+    {
+        get
+        {
+            return m_HasStamina;
+        }
+    }
+
+    // --------------------------------------------------------------
+
     private void Awake()
     {
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
