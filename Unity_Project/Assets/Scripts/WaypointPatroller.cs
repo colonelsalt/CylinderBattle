@@ -36,7 +36,7 @@ public class WaypointPatroller : MonoBehaviour
     private Camera m_Camera;
 
     // Behaviour to execute once Enemy spots Player
-    private EnemyBehaviour m_EnemyBehaviour;
+    private IEnemyBehaviour m_EnemyBehaviour;
 
     private ParticleSystem m_Exclamation;
 
@@ -63,7 +63,7 @@ public class WaypointPatroller : MonoBehaviour
     private void Awake()
     {
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
-        m_EnemyBehaviour = GetComponent<EnemyBehaviour>();
+        m_EnemyBehaviour = GetComponent<IEnemyBehaviour>();
 
         m_Camera = GetComponentInChildren<Camera>();
         m_Exclamation = GetComponentInChildren<ParticleSystem>();

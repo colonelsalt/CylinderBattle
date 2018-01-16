@@ -17,17 +17,22 @@ public class UIManager : MonoBehaviour
 
     void OnEnable()
     {
-        Collector.OnPiPickup += OnUpdatePis;
-        Collector.OnPiDrop += OnUpdatePis;
+        Collector.OnPiPickup += OnPiPickup;
+        Collector.OnPiDrop += OnPiDrop;
         Collector.OnPlusPickup += OnUpdatePluses;
         Collector.OnAllPisCollected += OnGameOver;
+
         Gun.OnGunFired += OnUpdateAmmo;
-        WeaponManager.OnWeaponPickup += OnDisplayWeapon;
+
+        WeaponManager.OnWeaponPickup += OnWeaponPickup;
         WeaponManager.OnWeaponActivated += OnActivateWeapon;
         WeaponManager.OnWeaponDisabled += OnHideWeapon;
+
         PlayerHealth.OnPlayerDamaged += OnUpdateHealth;
         PlayerHealth.OnPlayerExtraLife += OnUpdateHealth;
-        PlayerHealth.OnPlayerRespawn += OnResetDisplay;
+        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
+        PlayerHealth.OnPlayerRespawn += OnPlayerRespawn;
+
         PowerupManager.OnPowerupReceived += OnPowerupReceived;
 
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
@@ -36,9 +41,14 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnUpdatePis(int playerNum)
+    private void OnPiPickup(int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].UpdatePis(true);
+    }
+
+    private void OnPiDrop(int playerNum)
+    {
+        m_PlayerHUDs[playerNum - 1].UpdatePis(false);
     }
 
     private void OnUpdatePluses(int playerNum)
@@ -59,7 +69,7 @@ public class UIManager : MonoBehaviour
     }
 
     // Display new weapon received
-    private void OnDisplayWeapon(Weapon type, int playerNum)
+    private void OnWeaponPickup(Weapon type, int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].ShowWeapon(type, true);
     }
@@ -75,10 +85,22 @@ public class UIManager : MonoBehaviour
         m_PlayerHUDs[playerNum - 1].UpdateAmmoDisplay();
     }
 
-    // Reset HUD after Player death
-    private void OnResetDisplay(int playerNum)
+    private void OnPlayerDeath(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].UpdateAll();
+        // Reset health count
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(true);
+
+        // Reset plus count
+        m_PlayerHUDs[playerNum - 1].UpdatePluses(false);
+
+        // Remove powerup display if present
+        m_PlayerHUDs[playerNum - 1].HidePowerup();
+    }
+
+    private void OnPlayerRespawn(int playerNum)
+    {
+        // Reset number of lives
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(false);
     }
 
     private void OnPowerupReceived(Powerup type, int playerNum)
@@ -88,16 +110,16 @@ public class UIManager : MonoBehaviour
 
     private void OnGameOver(int numOfWinner)
     {
-        Collector.OnPiPickup -= OnUpdatePis;
-        Collector.OnPiDrop -= OnUpdatePis;
+        Collector.OnPiPickup -= OnPiPickup;
+        Collector.OnPiDrop -= OnPiPickup;
         Collector.OnPlusPickup -= OnUpdatePluses;
         Collector.OnAllPisCollected -= OnGameOver;
         Gun.OnGunFired -= OnUpdateAmmo;
-        WeaponManager.OnWeaponActivated -= OnDisplayWeapon;
+        WeaponManager.OnWeaponActivated -= OnWeaponPickup;
         WeaponManager.OnWeaponDisabled -= OnHideWeapon;
         PlayerHealth.OnPlayerDamaged -= OnUpdateHealth;
         PlayerHealth.OnPlayerExtraLife -= OnUpdateHealth;
-        PlayerHealth.OnPlayerRespawn -= OnResetDisplay;
+        PlayerHealth.OnPlayerRespawn -= OnPlayerRespawn;
 
         m_GameOverTitle.enabled = true;
         m_GameOverTitle.text += "\nPlayer " + numOfWinner + " wins!";

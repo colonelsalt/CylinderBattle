@@ -22,7 +22,7 @@ public class PortalGun : MonoBehaviour
 
     private bool m_IsAimingAtObject = false;
 
-    private bool m_IsFiring = false;
+    private bool m_IsFiring = true;
 
     private int m_PortalsFired = 0;
 
@@ -101,7 +101,7 @@ public class PortalGun : MonoBehaviour
         m_PortalsFired++;
         portalBeam.GetComponent<PortalProjectile>().SetTarget(m_TargetPos, m_TargetRotation);
 
-        if (m_PortalsFired == 2)
+        if (m_PortalsFired >= 2)
         {
             Deactivate();
         }

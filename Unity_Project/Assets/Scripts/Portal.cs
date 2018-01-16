@@ -14,8 +14,6 @@ public class Portal : MonoBehaviour {
 
     [SerializeField] private Type m_Type;
 
-    [SerializeField] private float m_CoolDownTime = 0.2f;
-
     // --------------------------------------------------------------
 
     // Reference to Trasform of Portal this one connects to

@@ -29,7 +29,7 @@ public class Gun : MonoBehaviour
     private int m_RemainingAmmo;
 
     // Flag to keep track of whether Gun is currently firing
-    private bool m_IsFiring = false;
+    private bool m_IsFiring = true;
     
     // --------------------------------------------------------------
 

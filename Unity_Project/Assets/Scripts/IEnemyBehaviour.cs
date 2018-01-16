@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EnemyBehaviour : MonoBehaviour
+public interface IEnemyBehaviour
 {
 
-    public abstract void Execute();
+    void Execute();
 	
 }

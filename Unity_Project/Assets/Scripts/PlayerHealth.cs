@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerController))]
-public class PlayerHealth : Health
+public class PlayerHealth : MonoBehaviour, IHealth
 {
     // --------------------------------------------------------------
-    
+
+    [SerializeField] private int m_StartHealth = 3;
+
     // After being damaged, how long Player will be invincible
     [SerializeField] private float m_InvincibilityTime = 2.5f;
-
-    [SerializeField] private Vector3 m_SpawningPosition;
 
     [SerializeField] private GameObject m_DeathExplosionEffect;
 
@@ -32,6 +32,10 @@ public class PlayerHealth : Health
 
     private Renderer[] m_Renderers;
 
+    private Vector3 m_SpawningPosition;
+
+    private int m_CurrentHealth;
+
     private bool m_IsInvincible = false;
 
     private bool m_IsAlive = true;
@@ -42,28 +46,43 @@ public class PlayerHealth : Health
 
     // --------------------------------------------------------------
 
+    public int Health
+    {
+        get
+        {
+            return m_CurrentHealth;
+        }
+    }
+
+    // --------------------------------------------------------------
+
     private void Awake()
     {
         m_Player = GetComponent<PlayerController>();
         m_PlayerAnim = GetComponentInChildren<Animator>();
         m_Renderers = GetComponentsInChildren<Renderer>();
+
+        m_CurrentHealth = m_StartHealth;
+        m_SpawningPosition = transform.position;
     }
 
-    public override void GetExtraLife()
+    public void GetExtraLife()
     {
-        base.GetExtraLife();
+        m_CurrentHealth++;
         OnPlayerExtraLife(m_Player.PlayerNum);
     }
 
-    public override void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         if (m_IsInvincible) return;
 
-        base.TakeDamage(damage);
-
+        m_CurrentHealth -= damage;
         OnPlayerDamaged(m_Player.PlayerNum);
-
-        if (m_IsAlive)
+        if (m_CurrentHealth <= 0)
+        {
+            Die();
+        }
+        else if (m_IsAlive)
         {
             m_IsInvincible = true;
             StartCoroutine(InvincibilityFlash());
@@ -120,16 +139,19 @@ public class PlayerHealth : Health
 
     private void Respawn()
     {
-        ResetHealth();
+        m_CurrentHealth = m_StartHealth;
         m_IsAlive = true;
         m_Player.enabled = true;
 
         OnPlayerRespawn(m_Player.PlayerNum);
     }
 
-    public override void Die()
+    public void Die()
     {
+        // Prevent multiple calls before Player has respawned
         if (!m_IsAlive) return;
+
+        m_CurrentHealth = 0;
 
         Instantiate(m_DeathExplosionEffect, transform.position, Quaternion.identity);
 

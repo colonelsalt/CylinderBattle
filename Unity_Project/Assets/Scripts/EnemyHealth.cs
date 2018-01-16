@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class EnemyHealth : MonoBehaviour, IHealth
 {
     // --------------------------------------------------------------
 
-    [SerializeField] private int m_StartHealth = 3;
+    [SerializeField] private int m_StartHealth = 1;
 
     // Item to spawn when Object knocked out
     [SerializeField] private GameObject m_DropItemPrefab;
 
     // --------------------------------------------------------------
 
-    private int m_CurrentHealth = 3;
+    private int m_CurrentHealth;
 
     private Animator m_Animator;
 
@@ -21,34 +21,14 @@ public class Health : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    public int RemainingHealth
-    {
-        get
-        {
-            return m_CurrentHealth;
-        }
-    }
-
-    // --------------------------------------------------------------
-
     private void Awake()
     {
         m_Collider = GetComponentInChildren<Collider>();
         m_Animator = GetComponent<Animator>();
-        ResetHealth();
-    }
-
-    public void ResetHealth()
-    {
         m_CurrentHealth = m_StartHealth;
     }
 
-    public virtual void GetExtraLife()
-    {
-        m_CurrentHealth++;
-    }
-
-    public virtual void TakeDamage(int damage)
+    public void TakeDamage(int damage)
     {
         m_CurrentHealth -= damage;
         if (m_CurrentHealth <= 0)
@@ -58,7 +38,7 @@ public class Health : MonoBehaviour
         }
     }
 
-    public virtual void Die()
+    public void Die()
     {
         // Disable collider on death
         m_Collider.enabled = false;

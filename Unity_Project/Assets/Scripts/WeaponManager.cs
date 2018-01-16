@@ -38,6 +38,8 @@ public class WeaponManager : MonoBehaviour
 
     private void Awake()
     {
+        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
+
         m_Player = GetComponent<PlayerController>();
     }
 
@@ -89,9 +91,22 @@ public class WeaponManager : MonoBehaviour
         OnWeaponPickup(weapon, m_Player.PlayerNum);
     }
 
+    private void OnPlayerDeath(int playerNum)
+    {
+        if (playerNum == m_Player.PlayerNum)
+        {
+            DisableWeapon();
+        }
+    }
+
     public void DisableWeapon()
     {
         m_WeaponIsActive = false;
         OnWeaponDisabled(m_Weapon, m_Player.PlayerNum);
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
     }
 }

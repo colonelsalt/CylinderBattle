@@ -130,7 +130,7 @@ public class BoxingGlove : MonoBehaviour
         }
 
         // If struck object has health, deal damage to it
-        Health health = collision.gameObject.GetComponent<Health>();
+        IHealth health = collision.gameObject.GetComponent<IHealth>();
         if (health != null)
         {
             health.TakeDamage(m_Damage);
@@ -140,7 +140,7 @@ public class BoxingGlove : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // If struck object has health, deal damage to it
-        Health health = other.GetComponent<Health>();
+        IHealth health = other.GetComponent<IHealth>();
         if (health != null)
         {
             health.TakeDamage(m_Damage);

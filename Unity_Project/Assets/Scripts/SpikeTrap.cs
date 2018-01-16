@@ -74,7 +74,7 @@ public class SpikeTrap : MonoBehaviour
             }
 
             // Damage objects with Health
-            Health otherHealth = other.GetComponent<Health>();
+            EnemyHealth otherHealth = other.GetComponent<EnemyHealth>();
             if (otherHealth != null)
             {
                 otherHealth.TakeDamage(1);

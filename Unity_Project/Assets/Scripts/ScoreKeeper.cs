@@ -14,8 +14,6 @@ public class ScoreKeeper : MonoBehaviour
 
     private PlayerHealth m_PlayerHealth;
 
-    private PowerupManager m_PowerupManager;
-
     private Collector m_Collector;
 
     private Gun m_Gun;
@@ -56,7 +54,7 @@ public class ScoreKeeper : MonoBehaviour
     {
         get
         {
-            return m_PlayerHealth.RemainingHealth;
+            return m_PlayerHealth.Health;
         }
     }
 
@@ -106,7 +104,6 @@ public class ScoreKeeper : MonoBehaviour
     {
         m_PlayerController = m_Player.GetComponent<PlayerController>();
         m_PlayerHealth = m_Player.GetComponent<PlayerHealth>();
-        m_PowerupManager = m_Player.GetComponent<PowerupManager>();
         m_Collector = m_Player.GetComponent<Collector>();
     }
 

@@ -44,11 +44,9 @@ public class PowerupManager : MonoBehaviour
         switch (numPluses)
         {
             case 5:
-                Debug.Log("Player received Jetpack!");
                 Instantiate(m_JetpackPrefab, transform.GetChild(0));
                 break;
             case 10:
-                Debug.Log("Player received Lightning Sprint!");
                 Instantiate(m_LightningSprintPrefab, transform.GetChild(0));
                 OnPowerupReceived(Powerup.LIGHTNING_SPRINT, m_Player.PlayerNum);
                 break;

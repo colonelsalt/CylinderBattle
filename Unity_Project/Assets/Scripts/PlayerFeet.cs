@@ -23,7 +23,7 @@ public class PlayerFeet : MonoBehaviour
     private void Awake()
     {
         m_Player = GetComponentInParent<PlayerController>();
-        m_Collider = GetComponentInParent<Collider>();
+        m_Collider = transform.parent.GetComponent<Collider>();
     }
 
 
@@ -33,7 +33,7 @@ public class PlayerFeet : MonoBehaviour
         if (Mathf.Abs(m_Collider.bounds.min.y - other.bounds.max.y) <= m_Epsilon)
         {
             // Damage other Health object
-            Health otherHealth = other.GetComponent<Health>();
+            IHealth otherHealth = other.GetComponent<IHealth>();
             if (otherHealth != null)
             {
                 otherHealth.TakeDamage(1);

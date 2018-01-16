@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAttacker : EnemyBehaviour
+public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
 {
     // --------------------------------------------------------------
 
@@ -37,7 +37,7 @@ public class EnemyAttacker : EnemyBehaviour
         if (m_VanishSmoke == null) Debug.LogError("Failed to find VanishSmoke particle system for " + name);
     }
 
-    public override void Execute()
+    public void Execute()
     {
         if (!m_IsAttacking)
         {

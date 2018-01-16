@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyChaser : EnemyBehaviour
+public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
 {
     // --------------------------------------------------------------
 
@@ -18,6 +18,8 @@ public class EnemyChaser : EnemyBehaviour
 
     private bool m_TouchingPlayer = false;
 
+    private Collider[] m_Colliders;
+
     // --------------------------------------------------------------
 
 
@@ -25,9 +27,10 @@ public class EnemyChaser : EnemyBehaviour
     {
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
         m_Patrol = GetComponent<WaypointPatroller>();
+        m_Colliders = GetComponents<Collider>();
     }
 
-    public override void Execute()
+    public void Execute()
     {
         if (!m_TouchingPlayer)
         {
@@ -39,8 +42,6 @@ public class EnemyChaser : EnemyBehaviour
         {
             m_NavMeshAgent.destination = transform.position;
         }
-        
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -50,7 +51,11 @@ public class EnemyChaser : EnemyBehaviour
         {
             m_TouchingPlayer = true;
 
-            player.TakeDamage(1);
+            // Unless Player is above us (presumably jumping on our head), deal damage
+            if (other.bounds.min.y < m_Colliders[0].bounds.center.y)
+            {
+                player.TakeDamage(1);
+            }
         }
     }
 
@@ -66,6 +71,11 @@ public class EnemyChaser : EnemyBehaviour
 
     private void BreakToPieces()
     {
+        foreach (Collider collider in m_Colliders)
+        {
+            collider.enabled = false;
+        }
+
         PhysicsSwitch physicsSwitch = GetComponent<PhysicsSwitch>();
         if (physicsSwitch != null)
         {

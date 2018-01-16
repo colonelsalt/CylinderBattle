@@ -113,7 +113,7 @@ public class LightningSprint : MonoBehaviour
     {
         if (playerNum == m_Player.PlayerNum)
         {
-            m_Player.IsRunning = false;
+            Stop();
             Destroy(gameObject);
         }
     }

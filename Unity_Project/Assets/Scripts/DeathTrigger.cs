@@ -12,14 +12,14 @@ public class DeathTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        PlayerHealth player = other.GetComponent<PlayerHealth>();
-        if (player != null)
+        IHealth health = other.GetComponent<IHealth>();
+        if (health != null)
         {
             // Spawn explosion effect
             Instantiate(m_ExplosionEffect, other.transform.position + (3f * transform.up), Quaternion.identity);
 
-            // Kill the player
-            player.Die();
+            // Kill object
+            health.Die();
         }
         else if (other.GetComponent<PlayerFeet>() == null)
         {

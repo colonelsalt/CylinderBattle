@@ -103,7 +103,7 @@ public class PlayerHUD : MonoBehaviour
         m_HealthText.text = m_Score.Health.ToString();
         if (withAnimation)
         {
-            string animationTrigger = (oldHealth > m_Score.Health) ? "extraLifeTrigger" : "damageTrigger";
+            string animationTrigger = (oldHealth < m_Score.Health) ? "extraLifeTrigger" : "damageTrigger";
             m_HealthAnimator.SetTrigger(animationTrigger);
         }
     }
@@ -162,10 +162,17 @@ public class PlayerHUD : MonoBehaviour
         {
             case Powerup.LIGHTNING_SPRINT:
                 m_StaminaBar.enabled = true;
+                m_StaminaBar.fillAmount = 1f;
                 m_LightningIcon.enabled = true;
                 m_LightningSprintActive = true;
                 break;
         }
-        
+    }
+
+    public void HidePowerup()
+    {
+        m_StaminaBar.enabled = false;
+        m_LightningIcon.enabled = false;
+        m_LightningSprintActive = false;
     }
 }

@@ -31,8 +31,6 @@ public class PlayerController : MonoBehaviour
 
     private Animator m_Animator;
 
-    private PowerupManager m_PowerupManager;
-
     // The charactercontroller of the player
     private CharacterController m_CharacterController;
 
@@ -47,9 +45,6 @@ public class PlayerController : MonoBehaviour
 
     // The current movement offset
     private Vector3 m_CurrentMovementOffset = Vector3.zero;
-
-    // The starting position of the player
-    private Vector3 m_SpawningPosition = Vector3.zero;
 
     private bool m_JumpedThisFrame = false;
 
@@ -103,14 +98,8 @@ public class PlayerController : MonoBehaviour
         m_CharacterController = GetComponent<CharacterController>();
         m_RigidBody = GetComponent<Rigidbody>();
         m_Animator = GetComponentInChildren<Animator>();
-        m_PowerupManager = GetComponent<PowerupManager>();
 
         m_MovementSpeed = m_WalkSpeed;
-    }
-
-    private void Start()
-    {
-        m_SpawningPosition = transform.position;
     }
 
     public void Jump(float heightToJump)
