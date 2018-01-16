@@ -52,7 +52,7 @@ public class EnemyHealth : MonoBehaviour, IHealth
         BroadcastMessage("OnDeath");
         m_Animator.SetTrigger("deathTrigger");
 
-        Destroy(gameObject, 1.5f);
+        Destroy(gameObject, 2f);
     }
 
 }
