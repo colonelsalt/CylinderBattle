@@ -81,9 +81,20 @@ public class WeaponManager : MonoBehaviour
         m_HasWeapon = false;
     }
 
+    // If collected weapon block while holding weapon, refill it
+    private void RefillWeapon()
+    {
+        BroadcastMessage("OnWeaponReset");
+        OnWeaponActivated(m_Weapon, m_Player.PlayerNum);
+    }
+
     public void PickupWeapon(Weapon weapon)
     {
-        if (m_HasWeapon || m_WeaponIsActive) return;
+        if (m_WeaponIsActive)
+        {
+            RefillWeapon();
+            return;
+        }
         
         m_HasWeapon = true;
         m_Weapon = weapon;

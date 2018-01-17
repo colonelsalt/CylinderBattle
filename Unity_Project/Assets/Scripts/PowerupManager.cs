@@ -57,7 +57,7 @@ public class PowerupManager : MonoBehaviour
                 OnPowerupReceived(Powerup.LIGHTNING_SPRINT, m_Player.PlayerNum);
                 break;
             default:
-                Debug.Log("Player got an extra life!");
+                // Get extra life
                 Instantiate(m_PowerupEffects[(int)Powerup.EXTRA_LIFE], transform);
                 m_Health.GetExtraLife();
                 break;

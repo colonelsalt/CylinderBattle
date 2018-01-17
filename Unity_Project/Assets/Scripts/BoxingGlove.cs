@@ -156,6 +156,11 @@ public class BoxingGlove : MonoBehaviour
         }
     }
 
+    private void OnWeaponReset()
+    {
+        m_TimeRemaining = GameManager.POWERUP_DURATION;
+    }
+
     private void OnPlayerDeath(int playerNum)
     {
         if (playerNum == m_Player.PlayerNum)

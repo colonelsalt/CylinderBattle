@@ -77,6 +77,11 @@ public class Gun : MonoBehaviour
         }
     }
 
+    private void OnWeaponReset()
+    {
+        m_RemainingAmmo = MAX_AMMO;
+    }
+
     private void OnPlayerDeath(int playerNum)
     {
         if (playerNum == m_Player.PlayerNum)

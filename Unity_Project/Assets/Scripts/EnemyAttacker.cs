@@ -102,6 +102,11 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        OnTriggerEnter(collision.collider);
+    }
+
     private void OnDeath()
     {
         StopAllCoroutines();
