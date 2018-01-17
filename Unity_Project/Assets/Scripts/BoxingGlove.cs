@@ -18,6 +18,12 @@ public class BoxingGlove : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_PunchSounds;
+
+    [SerializeField] private AudioClip[] m_HitSounds;
+
+    // --------------------------------------------------------------
+
     // Reference to PlayerController this is attached to
     private PlayerController m_Player;
 
@@ -87,6 +93,9 @@ public class BoxingGlove : MonoBehaviour
         SetCollidersActive(true);
         m_Animator.SetTrigger("PunchTrigger");
         m_Animator.SetInteger("NumPunches", m_NumPunches);
+
+        SoundManager.Instance.PlayRandom(m_PunchSounds);
+
     }
 
     // Activates or deactivates colliders on each Glove
@@ -134,6 +143,7 @@ public class BoxingGlove : MonoBehaviour
         if (health != null)
         {
             health.TakeDamage(m_Damage);
+            SoundManager.Instance.PlayRandom(m_HitSounds);
         }
     }
 
@@ -144,6 +154,7 @@ public class BoxingGlove : MonoBehaviour
         if (health != null)
         {
             health.TakeDamage(m_Damage);
+            SoundManager.Instance.PlayRandom(m_HitSounds);
         }
     }
 

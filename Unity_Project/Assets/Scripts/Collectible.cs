@@ -15,6 +15,10 @@ public class Collectible : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_PickupSounds;
+
+    // --------------------------------------------------------------
+
     private Animator m_Animator;
 
     private bool m_HasBeenCollected = false;
@@ -49,6 +53,7 @@ public class Collectible : MonoBehaviour
 
     private void Vanish()
     {
+        SoundManager.Instance.PlayRandom(m_PickupSounds);
         m_Animator.SetTrigger("VanishTrigger");
         Destroy(gameObject, 0.5f);
     }

@@ -27,6 +27,13 @@ public class PlayerController : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // Sounds
+    [SerializeField] private AudioClip[] m_JumpSounds;
+
+    [SerializeField] private AudioClip[] m_BackflipSounds;
+
+    // --------------------------------------------------------------
+
     private Rigidbody m_RigidBody;
 
     private Animator m_Animator;
@@ -104,11 +111,13 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(float heightToJump)
     {
+        SoundManager.Instance.PlayRandom(m_JumpSounds);
         m_VerticalSpeed = Mathf.Sqrt(heightToJump * m_Gravity);
     }
 
     private void BackFlip()
     {
+        SoundManager.Instance.PlayRandom(m_BackflipSounds);
         m_VerticalSpeed = Mathf.Sqrt(m_BackFlipHeight * m_Gravity);
         m_IsBackFlipping = true;
         GetUp();

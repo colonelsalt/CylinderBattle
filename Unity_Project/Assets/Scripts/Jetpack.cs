@@ -21,6 +21,10 @@ public class Jetpack : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip m_EngineSound;
+
+    // --------------------------------------------------------------
+
     private void Awake()
     {
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
@@ -51,6 +55,8 @@ public class Jetpack : MonoBehaviour
 
     private void Activate()
     {
+        SoundManager.Instance.PlayWithLoop(m_EngineSound);
+
         m_IsFloating = true;
         m_Player.IsFloating = true;
         m_JetpackFire.Play();
@@ -58,6 +64,7 @@ public class Jetpack : MonoBehaviour
 
     private void Deactivate()
     {
+        SoundManager.Instance.StopLoopingSound();
         m_IsFloating = false;
         m_Player.IsFloating = false;
         m_JetpackFire.Stop();

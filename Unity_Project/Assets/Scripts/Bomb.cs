@@ -19,16 +19,25 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float m_ExplosionRadius;
 
     [SerializeField] private int m_Damage;
-    
+
+    // --------------------------------------------------------------
+
+    [SerializeField] private AudioClip[] m_FuseSounds;
+
+    [SerializeField] private AudioClip[] m_ExplosionSounds;
+
     // --------------------------------------------------------------
 
     private void Start()
     {
+        SoundManager.Instance.PlayRandom(m_FuseSounds);
         Invoke("Explode", m_ExplosionTime);
     }
 
     private void Explode()
     {
+        SoundManager.Instance.PlayRandom(m_ExplosionSounds);
+
         Collider[] collidersStruck = Physics.OverlapSphere(transform.position, m_ExplosionRadius);
         foreach (Collider hit in collidersStruck)
         {
@@ -52,7 +61,6 @@ public class Bomb : MonoBehaviour
             {
                 health.TakeDamage(m_Damage);
             }
-
         }
 
         Destroy(gameObject, 1f);

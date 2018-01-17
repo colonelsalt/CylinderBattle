@@ -14,7 +14,12 @@ public class Gun : MonoBehaviour
     [SerializeField] private float m_FiringRate = 0.2f;
 
     // --------------------------------------------------------------
-    
+
+    // Sounds
+    [SerializeField] private AudioClip[] m_GunSounds;
+
+    // --------------------------------------------------------------
+
     // Events
     public delegate void GunEvent(int playerNum);
     public static event GunEvent OnGunFired;
@@ -69,6 +74,8 @@ public class Gun : MonoBehaviour
         OnGunFired(m_Player.PlayerNum);
         Vector3 spawnPos = transform.position + (2.5f * transform.forward);
         Instantiate(m_LaserPrefab, spawnPos, transform.rotation);
+
+        SoundManager.Instance.PlayRandom(m_GunSounds);
 
         // If ran out of ammo, remove Gun
         if (m_RemainingAmmo <= 0)
