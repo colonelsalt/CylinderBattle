@@ -13,6 +13,10 @@ public class Breakable : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_BreakSounds;
+
+    // --------------------------------------------------------------
+
     private Rigidbody m_Body;
 
     private Vector3 m_LastVelocity;
@@ -27,7 +31,7 @@ public class Breakable : MonoBehaviour
     private void LateUpdate()
     {
         Vector3 velocityChange = m_LastVelocity - m_Body.velocity;
-        if ((velocityChange).magnitude > m_BreakThreshold)
+        if (velocityChange.magnitude > m_BreakThreshold)
         {
             Break();
         }
@@ -36,7 +40,7 @@ public class Breakable : MonoBehaviour
 
     private void Break()
     {
-
+        SoundManager.Instance.PlayRandom(m_BreakSounds);
         Instantiate(m_ShatteredVersion, transform.position, transform.rotation);
         Destroy(gameObject);
     }

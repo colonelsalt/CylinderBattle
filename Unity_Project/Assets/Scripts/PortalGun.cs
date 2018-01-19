@@ -10,6 +10,10 @@ public class PortalGun : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_PortalFireSounds;
+
+    // --------------------------------------------------------------
+
     private PlayerController m_Player;
 
     private LineRenderer m_AimLine;
@@ -97,6 +101,8 @@ public class PortalGun : MonoBehaviour
 
     private void FirePortal()
     {
+        SoundManager.Instance.PlayRandom(m_PortalFireSounds);
+
         GameObject portalBeam = Instantiate(m_ProjectilePrefabs[m_PortalsFired], transform.position, transform.rotation) as GameObject;
         m_PortalsFired++;
         portalBeam.GetComponent<PortalProjectile>().SetTarget(m_TargetPos, m_TargetRotation);

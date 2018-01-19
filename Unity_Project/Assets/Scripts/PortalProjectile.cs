@@ -12,11 +12,13 @@ public class PortalProjectile : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // Called when PortalGun fired
     public void SetTarget(Vector3 target, Quaternion portalRotation)
     {
         StartCoroutine(MoveToTarget(target, portalRotation));
     }
 
+    // Move to target aimed at by PortalGun
     private IEnumerator MoveToTarget(Vector3 target, Quaternion portalRotation)
     {
         Vector3 startPosition = transform.position;

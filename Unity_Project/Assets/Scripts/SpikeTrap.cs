@@ -15,6 +15,12 @@ public class SpikeTrap : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_SpikeSounds;
+
+    [SerializeField] private AudioClip[] m_ActivationSounds;
+
+    // --------------------------------------------------------------
+
     private bool m_TrapActivated = false;
 
     private Animator m_Animator;
@@ -31,6 +37,8 @@ public class SpikeTrap : MonoBehaviour
 
     private void StartTrap()
     {
+        SoundManager.Instance.PlayRandom(m_ActivationSounds);
+
         m_Collider.enabled = false;
         m_Animator.SetTrigger("ActivationTrigger");
         Invoke("ExtendSpikes", m_ActivationTime);
@@ -38,6 +46,8 @@ public class SpikeTrap : MonoBehaviour
 
     private void ExtendSpikes()
     {
+        SoundManager.Instance.PlayRandom(m_SpikeSounds);
+
         m_Animator.SetTrigger("AttackTrigger");
         m_Collider.enabled = true;
         Invoke("RetractSpikes", 1f);

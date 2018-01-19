@@ -17,6 +17,14 @@ public class PlayerHealth : MonoBehaviour, IHealth
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_DamageSounds;
+
+    [SerializeField] private AudioClip[] m_DeathSounds;
+
+    [SerializeField] private AudioClip[] m_RespawnSounds;
+
+    // --------------------------------------------------------------
+
     // Events
     public delegate void PlayerHealthEvent(int playerNum);
     public static event PlayerHealthEvent OnPlayerDamaged;
@@ -76,6 +84,8 @@ public class PlayerHealth : MonoBehaviour, IHealth
     {
         if (m_IsInvincible) return;
 
+        SoundManager.Instance.PlayRandom(m_DamageSounds);
+
         m_CurrentHealth -= damage;
         OnPlayerDamaged(m_Player.PlayerNum);
         if (m_CurrentHealth <= 0)
@@ -120,9 +130,13 @@ public class PlayerHealth : MonoBehaviour, IHealth
             transform.position = Vector3.Lerp(startPosition, m_SpawningPosition, distanceCovered / distanceToTarget);
             yield return new WaitForEndOfFrame();
         }
+
+        SoundManager.Instance.PlayRandom(m_RespawnSounds);
+        yield return new WaitForSeconds(0.2f);
+        m_PlayerAnim.SetTrigger("RespawnTrigger");
+
         
 
-        m_PlayerAnim.SetTrigger("RespawnTrigger");
         yield return new WaitForSeconds(0.2f);
         SetVisibility(true);
         yield return new WaitForSeconds(0.45f);
@@ -151,6 +165,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
         // Prevent multiple calls before Player has respawned
         if (!m_IsAlive) return;
 
+        SoundManager.Instance.PlayRandom(m_DeathSounds);
         m_CurrentHealth = 0;
 
         Instantiate(m_DeathExplosionEffect, transform.position, Quaternion.identity);

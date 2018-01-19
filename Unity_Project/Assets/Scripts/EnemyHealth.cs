@@ -13,6 +13,12 @@ public class EnemyHealth : MonoBehaviour, IHealth
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_DamageSounds;
+
+    [SerializeField] private AudioClip[] m_DeathSounds;
+
+    // --------------------------------------------------------------
+
     private int m_CurrentHealth;
 
     private Animator m_Animator;
@@ -36,10 +42,16 @@ public class EnemyHealth : MonoBehaviour, IHealth
             m_CurrentHealth = 0;
             Die();
         }
+        else
+        {
+            SoundManager.Instance.PlayRandom(m_DamageSounds);
+        }
     }
 
     public void Die()
     {
+        SoundManager.Instance.PlayRandom(m_DeathSounds);
+
         // Disable collider on death
         m_Collider.enabled = false;
 

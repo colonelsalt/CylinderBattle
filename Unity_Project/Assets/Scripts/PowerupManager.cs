@@ -22,6 +22,12 @@ public class PowerupManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // Sounds
+    [SerializeField] private AudioClip[] m_PowerupSounds;
+
+    // --------------------------------------------------------------
+
+    // Events
     public delegate void PowerupEvent(Powerup type, int playerNum);
     public static event PowerupEvent OnPowerupReceived;
 
@@ -39,9 +45,13 @@ public class PowerupManager : MonoBehaviour
         m_Health = GetComponent<PlayerHealth>();
     }
 
+    // Called at every Plus collection
     public void CheckForPlusBonus(int numPluses)
     {
-        if (numPluses % 5 != 0) return;
+        // Get bonus only for each 10 Pluses collected
+        if (numPluses % 10 != 0) return;
+
+        SoundManager.Instance.PlayRandom(m_PowerupSounds);
 
         switch (numPluses)
         {
@@ -50,7 +60,7 @@ public class PowerupManager : MonoBehaviour
                 Instantiate(m_JetpackPrefab, transform.GetChild(0));
                 Instantiate(m_PowerupEffects[(int)Powerup.JETPACK], transform);
                 break;
-            case 20:
+            case 30:
                 // Receive Lightning Sprint
                 Instantiate(m_LightningSprintPrefab, transform.GetChild(0));
                 Instantiate(m_PowerupEffects[(int)Powerup.LIGHTNING_SPRINT], transform);

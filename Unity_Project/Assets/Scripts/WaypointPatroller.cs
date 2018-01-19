@@ -14,6 +14,10 @@ public class WaypointPatroller : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_PlayerSpottedSounds;
+
+    // --------------------------------------------------------------
+
     private NavMeshAgent m_NavMeshAgent;
 
     // Waypoint Enemy is currently walking towards
@@ -155,6 +159,7 @@ public class WaypointPatroller : MonoBehaviour
 
     private void ShowExclamation()
     {
+        SoundManager.Instance.PlayRandom(m_PlayerSpottedSounds);
         m_Exclamation.Play();
     }
 

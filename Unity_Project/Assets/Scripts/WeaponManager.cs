@@ -15,7 +15,12 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private GameObject m_BoxingGlovesPrefab;
 
     [SerializeField] private GameObject m_PortalGunPrefab;
-    
+
+    // --------------------------------------------------------------
+
+    // Sounds
+    [SerializeField] private AudioClip[] m_WeaponReceivedSounds;
+
     // --------------------------------------------------------------
 
     // Events
@@ -90,6 +95,7 @@ public class WeaponManager : MonoBehaviour
 
     public void PickupWeapon(Weapon weapon)
     {
+        SoundManager.Instance.PlayRandom(m_WeaponReceivedSounds);
         if (m_WeaponIsActive)
         {
             RefillWeapon();

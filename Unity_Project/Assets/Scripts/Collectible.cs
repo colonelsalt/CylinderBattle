@@ -15,6 +15,8 @@ public class Collectible : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_SpawnSounds;
+
     [SerializeField] private AudioClip[] m_PickupSounds;
 
     // --------------------------------------------------------------
@@ -28,6 +30,11 @@ public class Collectible : MonoBehaviour
     private void Awake()
     {
         m_Animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        SoundManager.Instance.PlayRandom(m_SpawnSounds);
     }
 
     private void Update()

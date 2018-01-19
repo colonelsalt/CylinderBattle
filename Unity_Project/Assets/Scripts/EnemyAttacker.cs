@@ -12,6 +12,10 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip m_AttackSound;
+
+    // --------------------------------------------------------------
+
     private bool m_IsAttacking = false;
 
     private ParticleSystem m_VanishSmoke;
@@ -52,6 +56,8 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
         m_Animator.SetBool("isAttacking", true);
         transform.LookAt(target);
 
+        SoundManager.Instance.PlayWithLoop(m_AttackSound);
+
         yield return new WaitForSeconds(0.3f);
 
         Vector3 startPosition = transform.position;
@@ -77,6 +83,7 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
 
         m_IsAttacking = false;
         m_Animator.SetBool("isAttacking", false);
+        SoundManager.Instance.StopLoopingSound();
     }
 
     private void OnTriggerEnter(Collider other)

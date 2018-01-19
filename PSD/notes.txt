@@ -1,16 +1,7 @@
 SOUND EFFECTS:
-	-backflip
 	-damage (red + blue)
-	-player death
-	-pi spawn
-	-pi pickup
 	-fire portal
-	-portal spawn
-	-crate break
-	-weapon pickup
-	-powerup received
 	-lightning sprint
-	-bomb fuse burning
-	-bomb explosion
 	-enemy death
-	-player respawn
+	-spike trap activation
+	-player spotted

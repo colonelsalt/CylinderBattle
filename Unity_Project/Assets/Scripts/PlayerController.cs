@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private AudioClip[] m_BackflipSounds;
 
+    [SerializeField] private AudioClip[] m_CrouchSounds;
+
     // --------------------------------------------------------------
 
     private Rigidbody m_RigidBody;
@@ -183,6 +185,7 @@ public class PlayerController : MonoBehaviour
         transform.Translate(0f, -0.5f, 0f);
         transform.Rotate(90f, 0f, 0f);
         m_IsCrouching = true;
+        SoundManager.Instance.PlayRandom(m_CrouchSounds);
     }
 
     private void GetUp()

@@ -20,7 +20,9 @@ public class BoxingGlove : MonoBehaviour
 
     [SerializeField] private AudioClip[] m_PunchSounds;
 
-    [SerializeField] private AudioClip[] m_HitSounds;
+    [SerializeField] private AudioClip[] m_FleshImpactSounds;
+
+    [SerializeField] private AudioClip[] m_HardImpactSounds;
 
     // --------------------------------------------------------------
 
@@ -143,7 +145,11 @@ public class BoxingGlove : MonoBehaviour
         if (health != null)
         {
             health.TakeDamage(m_Damage);
-            SoundManager.Instance.PlayRandom(m_HitSounds);
+            SoundManager.Instance.PlayRandom(m_FleshImpactSounds);
+        }
+        else
+        {
+            SoundManager.Instance.PlayRandom(m_HardImpactSounds);
         }
     }
 
@@ -154,7 +160,7 @@ public class BoxingGlove : MonoBehaviour
         if (health != null)
         {
             health.TakeDamage(m_Damage);
-            SoundManager.Instance.PlayRandom(m_HitSounds);
+            SoundManager.Instance.PlayRandom(m_FleshImpactSounds);
         }
     }
 

@@ -9,6 +9,11 @@ public class LightningSprint : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // Sounds
+    [SerializeField] private AudioClip m_SprintSound;
+
+    // --------------------------------------------------------------
+
     private PlayerController m_Player;
 
     private Renderer m_Rend;
@@ -93,6 +98,8 @@ public class LightningSprint : MonoBehaviour
 
     private void Sprint()
     {
+        SoundManager.Instance.PlayWithLoop(m_SprintSound);
+
         m_Player.IsRunning = true;
         m_Animator.SetBool("IsSprinting", true);
 
@@ -102,6 +109,8 @@ public class LightningSprint : MonoBehaviour
 
     private void Stop()
     {
+        SoundManager.Instance.StopLoopingSound();
+
         m_Player.IsRunning = false;
         m_Animator.SetBool("IsSprinting", false);
 

@@ -15,6 +15,10 @@ public class Spawner : MonoBehaviour
     // Max. number of allowed objects of this type in this level
     [SerializeField] private int m_MaxNumObjects;
 
+    [SerializeField] private bool m_StartsAutomatically = true;
+
+    [SerializeField] private int m_FirstSpawnIndex;
+
     // --------------------------------------------------------------
 
     private Transform[] m_SpawnPositions;
@@ -76,6 +80,7 @@ public class Spawner : MonoBehaviour
         Instantiate(m_ObjectToSpawn, spawnPoint);
     }
 
+    // Whether a given spawn position already in use by another object of this type
     private bool IsOccupied(Transform t) 
     {
         return (t.childCount != 0);

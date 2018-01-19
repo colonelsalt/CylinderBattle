@@ -16,6 +16,14 @@ public class Portal : MonoBehaviour {
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_SpawnSounds;
+
+    [SerializeField] private AudioClip[] m_TransportSounds;
+
+    [SerializeField] private AudioClip[] m_DeactivationSounds;
+
+    // --------------------------------------------------------------
+
     // Reference to Trasform of Portal this one connects to
     private Transform m_SisterPortal;
 
@@ -45,6 +53,11 @@ public class Portal : MonoBehaviour {
         }
     }
 
+    private void Start()
+    {
+        SoundManager.Instance.PlayRandom(m_SpawnSounds);
+    }
+
     private void Activate()
     {
         int sisterIndex = (m_Type == Type.FIRST) ? 1 : 0;
@@ -55,6 +68,7 @@ public class Portal : MonoBehaviour {
 
     public void Deactivate()
     {
+        SoundManager.Instance.PlayRandom(m_DeactivationSounds);
         m_Animator.SetTrigger("deactivationTrigger");
         Destroy(gameObject, 1f);
     }
@@ -71,6 +85,7 @@ public class Portal : MonoBehaviour {
 
         if (other.gameObject.tag != "Wall" && other.GetComponent<PlayerFeet>() == null)
         {
+            SoundManager.Instance.PlayRandom(m_TransportSounds);
             other.transform.position = m_SisterPortal.position + m_SisterPortal.forward;
             other.transform.rotation = m_SisterPortal.rotation;
         }

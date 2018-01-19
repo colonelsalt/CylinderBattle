@@ -13,7 +13,11 @@ public class Laser : MonoBehaviour
 
     // Which Player fired the laser
     [SerializeField] private int m_FiredByPlayer;
-    
+
+    // --------------------------------------------------------------
+
+    [SerializeField] private AudioClip[] m_VanishSounds;
+
     // --------------------------------------------------------------
 
     // Flag to prevent multiple trigger events in one frame
@@ -61,6 +65,7 @@ public class Laser : MonoBehaviour
             }
 
             // Damage hit object
+            SoundManager.Instance.PlayRandom(m_VanishSounds);
             otherHealth.TakeDamage(m_Damage);
         }
 
