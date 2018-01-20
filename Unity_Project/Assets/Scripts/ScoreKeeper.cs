@@ -24,6 +24,14 @@ public class ScoreKeeper : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    public int PlayerNum
+    {
+        get
+        {
+            return m_PlayerController.PlayerNum;
+        }
+    }
+
     public int NumPis
     {
         get

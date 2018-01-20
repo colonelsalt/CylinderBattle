@@ -9,6 +9,8 @@ public class PlayerHUD : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    [SerializeField] private ScoreKeeper m_Score;
+
     [SerializeField] private Text m_NumPisText;
 
     [SerializeField] private Text m_NumPlusesText;
@@ -29,8 +31,6 @@ public class PlayerHUD : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private ScoreKeeper m_Score;
-
     private Animator m_ImageAnimator;
 
     private Animator m_PlusAnimator;
@@ -49,7 +49,6 @@ public class PlayerHUD : MonoBehaviour
 
     private void Start()
     {
-        m_Score = GetComponent<ScoreKeeper>();
         m_ImageAnimator = m_WeaponImage.GetComponent<Animator>();
         m_PlusAnimator = m_NumPlusesText.GetComponent<Animator>();
         m_PiAnimator = m_NumPisText.GetComponent<Animator>();

@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    public const int MAX_NUM_PIS = 10;
+    public const int MAX_NUM_PIS = 5;
     public const int NUM_PLAYERS = 2;
     public const int PLAYER_HEALTH = 3;
     public const float POWERUP_DURATION = 15f;
@@ -22,6 +22,12 @@ public class GameManager : MonoBehaviour
     private bool m_IsPaused = false;
 
     // --------------------------------------------------------------
+
+
+    private void Awake()
+    {
+        Collector.OnAllPisCollected += OnGameOver;    
+    }
 
     private void Update()
     {
@@ -40,6 +46,12 @@ public class GameManager : MonoBehaviour
                 OnGamePause();
             }
         }
+    }
+
+    private void OnGameOver(int playerNum)
+    {
+        Time.timeScale = 0.3f;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
     }
 
 
