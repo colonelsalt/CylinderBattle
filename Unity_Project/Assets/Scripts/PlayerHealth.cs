@@ -135,8 +135,6 @@ public class PlayerHealth : MonoBehaviour, IHealth
         yield return new WaitForSeconds(0.2f);
         m_PlayerAnim.SetTrigger("RespawnTrigger");
 
-        
-
         yield return new WaitForSeconds(0.2f);
         SetVisibility(true);
         yield return new WaitForSeconds(0.45f);

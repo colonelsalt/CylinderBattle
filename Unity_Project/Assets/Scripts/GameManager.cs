@@ -30,11 +30,13 @@ public class GameManager : MonoBehaviour
             if (m_IsPaused)
             {
                 Time.timeScale = 1f;
+                m_IsPaused = false;
                 OnGameResume();
             }
             else
             {
                 Time.timeScale = 0f;
+                m_IsPaused = true;
                 OnGamePause();
             }
         }

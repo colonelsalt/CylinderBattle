@@ -6,5 +6,7 @@ public interface IEnemyBehaviour
 {
 
     void Execute();
-	
+
+    void Disable();
+
 }

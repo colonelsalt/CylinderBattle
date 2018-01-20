@@ -26,16 +26,13 @@ public class WaypointPatroller : MonoBehaviour
     // Waypoint Enemy last visited
     private Waypoint m_LastVisitedWaypoint;
 
-    // Default speed as set in NavMeshAgent (might be modified by EnemyBehaviour later)
-    private float m_WalkSpeed;
-
     // Whether Enemy can currently see Player
     private bool m_PlayerInSight = false;
 
-    // Reference to each Player in scene
-    private PlayerController[] m_Players;
+    // Reference to Collider for each Player in scene
+    private Collider[] m_PlayerColliders;
 
-    private PlayerController m_LastSeenPlayer;
+    private Transform m_LastSeenPlayer;
 
     private Camera m_Camera;
 
@@ -58,7 +55,7 @@ public class WaypointPatroller : MonoBehaviour
     {
         get
         {
-            return m_LastSeenPlayer.transform.position;
+            return m_LastSeenPlayer.position;
         }
     }
 
@@ -71,12 +68,21 @@ public class WaypointPatroller : MonoBehaviour
 
         m_Camera = GetComponentInChildren<Camera>();
         m_Exclamation = GetComponentInChildren<ParticleSystem>();
-        m_Players = FindObjectsOfType<PlayerController>();
 
-        m_WalkSpeed = m_NavMeshAgent.speed;
 
+        SetupPlayerReferences();
         FindStartingWaypoint();
         StartCoroutine(LookForPlayer());
+    }
+
+    private void SetupPlayerReferences()
+    {
+        PlayerController[] players = FindObjectsOfType<PlayerController>();
+        m_PlayerColliders = new Collider[players.Length];
+        for (int i = 0; i < players.Length; i++)
+        {
+            m_PlayerColliders[i] = players[i].GetComponent<Collider>();
+        }
     }
 
     // Determine which Waypoint in scene is closest, and go to that one first
@@ -108,22 +114,23 @@ public class WaypointPatroller : MonoBehaviour
         {
             m_EnemyBehaviour.Execute();
         }
-        else if (m_NavMeshAgent.remainingDistance <= 0.5f)
-        {
-            // If we've reached our destination Waypoint, find the next one
-            m_NavMeshAgent.speed = m_WalkSpeed;
-
-            Waypoint nextWayPoint = m_CurrentWaypoint.GetNextWaypoint(m_LastVisitedWaypoint);
-            m_LastVisitedWaypoint = m_CurrentWaypoint;
-
-            m_NavMeshAgent.destination = nextWayPoint.transform.position;
-
-            m_CurrentWaypoint = nextWayPoint;
-        }
         else
         {
-            m_NavMeshAgent.speed = m_WalkSpeed;
-            m_NavMeshAgent.destination = m_CurrentWaypoint.transform.position;
+            m_EnemyBehaviour.Disable();
+            if (m_NavMeshAgent.remainingDistance < 0.5f)
+            {
+                // If we've reached our destination Waypoint, find the next one
+                Waypoint nextWayPoint = m_CurrentWaypoint.GetNextWaypoint(m_LastVisitedWaypoint);
+                m_LastVisitedWaypoint = m_CurrentWaypoint;
+
+                m_NavMeshAgent.destination = nextWayPoint.transform.position;
+
+                m_CurrentWaypoint = nextWayPoint;
+            }
+            else
+            {
+                m_NavMeshAgent.destination = m_CurrentWaypoint.transform.position;
+            }
         }
     }
 
@@ -132,20 +139,20 @@ public class WaypointPatroller : MonoBehaviour
     {
         Plane[] planesInView = GeometryUtility.CalculateFrustumPlanes(m_Camera);
         bool spottedPlayer = false;
-        foreach (PlayerController player in m_Players)
+        foreach (Collider playerCollider in m_PlayerColliders)
         {
-            if (GeometryUtility.TestPlanesAABB(planesInView, player.GetComponent<Collider>().bounds))
+            if (GeometryUtility.TestPlanesAABB(planesInView, playerCollider.bounds))
             {
-                m_LastSeenPlayer = player;
+                m_LastSeenPlayer = playerCollider.transform;
                 spottedPlayer = true;
                 break;
             }
         }
-        m_PlayerInSight = spottedPlayer;
-        if (spottedPlayer)
+        if (spottedPlayer && !m_PlayerInSight)
         {
             ShowExclamation();
         }
+        m_PlayerInSight = spottedPlayer;
 
         // Only update occasionally to prevent performance hit (and to make Enemy a little dumber)
         yield return new WaitForSeconds(m_TimeBetweenPlayerSearches);
@@ -168,6 +175,7 @@ public class WaypointPatroller : MonoBehaviour
     {
         m_NavMeshAgent.enabled = false;
         StopAllCoroutines();
+        GetComponent<Collider>().enabled = false;
     }
 
     private void OnDestroy()

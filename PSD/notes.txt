@@ -1,7 +1,4 @@
 SOUND EFFECTS:
 	-damage (red + blue)
-	-fire portal
-	-lightning sprint
-	-enemy death
-	-spike trap activation
-	-player spotted
+	-out of stamina sound (red + blue)
+	-weapon block spawn

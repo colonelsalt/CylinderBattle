@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Jetpack : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -15,13 +16,12 @@ public class Jetpack : MonoBehaviour
 
     private ParticleSystem m_JetpackFire;
 
+    // AudioSource that plays looping jetpack engine sound
+    private AudioSource m_Audio;
+
     private bool m_IsFloating = false;
 
     private float m_RemainingFloatTime;
-
-    // --------------------------------------------------------------
-
-    [SerializeField] private AudioClip m_EngineSound;
 
     // --------------------------------------------------------------
 
@@ -31,6 +31,7 @@ public class Jetpack : MonoBehaviour
 
         m_Player = GetComponentInParent<PlayerController>();
         m_JetpackFire = GetComponentInChildren<ParticleSystem>();
+        m_Audio = GetComponent<AudioSource>();
 
         m_RemainingFloatTime = m_FloatTime;
     }
@@ -55,7 +56,8 @@ public class Jetpack : MonoBehaviour
 
     private void Activate()
     {
-        SoundManager.Instance.PlayWithLoop(m_EngineSound);
+        m_Audio.volume = 1f;
+        m_Audio.Play();
 
         m_IsFloating = true;
         m_Player.IsFloating = true;
@@ -64,7 +66,8 @@ public class Jetpack : MonoBehaviour
 
     private void Deactivate()
     {
-        SoundManager.Instance.StopLoopingSound();
+        SoundManager.Instance.FadeOut(m_Audio);
+
         m_IsFloating = false;
         m_Player.IsFloating = false;
         m_JetpackFire.Stop();

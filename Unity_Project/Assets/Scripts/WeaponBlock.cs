@@ -15,6 +15,10 @@ public class WeaponBlock : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip[] m_SpawnSounds;
+
+    // --------------------------------------------------------------
+
     private Animator m_Animator;
 
     // --------------------------------------------------------------
@@ -22,6 +26,11 @@ public class WeaponBlock : MonoBehaviour
     private void Awake()
     {
         m_Animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        SoundManager.Instance.PlayRandom(m_SpawnSounds);
     }
 
     private static Weapon RandomWeapon()

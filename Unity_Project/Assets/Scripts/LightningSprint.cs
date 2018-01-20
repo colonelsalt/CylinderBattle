@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class LightningSprint : MonoBehaviour
 {
     // How long Player can sprint for before recharge needed
@@ -22,9 +23,13 @@ public class LightningSprint : MonoBehaviour
 
     private Animator m_Animator;
 
+    private AudioSource m_Audio;
+
     private float m_RemainingSprintTime;
 
     private bool m_HasStamina = true;
+
+    private bool m_PlayingSprintSound = false;
 
     // --------------------------------------------------------------
 
@@ -62,6 +67,7 @@ public class LightningSprint : MonoBehaviour
         m_Rend = GetComponent<Renderer>();
         m_Lightning = GetComponentInChildren<ParticleSystem>();
         m_Animator = transform.parent.GetComponent<Animator>();
+        m_Audio = GetComponent<AudioSource>();
 
         m_RemainingSprintTime = m_MaxSprintTime;
     }
@@ -98,8 +104,13 @@ public class LightningSprint : MonoBehaviour
 
     private void Sprint()
     {
-        SoundManager.Instance.PlayWithLoop(m_SprintSound);
-
+        if (!m_PlayingSprintSound)
+        {
+            m_Audio.volume = 1f;
+            m_Audio.Play();
+            m_PlayingSprintSound = true;
+        }
+        
         m_Player.IsRunning = true;
         m_Animator.SetBool("IsSprinting", true);
 
@@ -109,7 +120,8 @@ public class LightningSprint : MonoBehaviour
 
     private void Stop()
     {
-        SoundManager.Instance.StopLoopingSound();
+        SoundManager.Instance.FadeOut(m_Audio);
+        m_PlayingSprintSound = false;
 
         m_Player.IsRunning = false;
         m_Animator.SetBool("IsSprinting", false);

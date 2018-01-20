@@ -16,8 +16,8 @@ public class DeathTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        IHealth health = other.GetComponent<IHealth>();
-        if (health != null)
+        PlayerHealth player = other.GetComponent<PlayerHealth>();
+        if (player != null)
         {
             SoundManager.Instance.PlayRandom(m_DeathSounds);
 
@@ -25,7 +25,7 @@ public class DeathTrigger : MonoBehaviour
             Instantiate(m_ExplosionEffect, other.transform.position + (3f * transform.up), Quaternion.identity);
 
             // Kill object
-            health.Die();
+            player.Die();
         }
         else if (other.GetComponent<PlayerFeet>() == null)
         {

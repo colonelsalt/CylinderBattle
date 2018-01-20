@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
 {
     // --------------------------------------------------------------
@@ -24,12 +25,15 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
 
     private Animator m_Animator;
 
+    private AudioSource m_Audio;
+
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_Patrol = GetComponent<WaypointPatroller>();
         m_Animator = GetComponent<Animator>();
+        m_Audio = GetComponent<AudioSource>();
 
         foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>())
         {
@@ -49,6 +53,11 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
         }
     }
 
+    public void Disable()
+    {
+
+    }
+
     private IEnumerator Attack(Vector3 target)
     {
         yield return new WaitForSeconds(0.2f);
@@ -56,7 +65,7 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
         m_Animator.SetBool("isAttacking", true);
         transform.LookAt(target);
 
-        SoundManager.Instance.PlayWithLoop(m_AttackSound);
+        m_Audio.Play();
 
         yield return new WaitForSeconds(0.3f);
 
@@ -83,12 +92,13 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
 
         m_IsAttacking = false;
         m_Animator.SetBool("isAttacking", false);
-        SoundManager.Instance.StopLoopingSound();
+
+        SoundManager.Instance.FadeOut(m_Audio);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // If struck kinematic Rigidbody, make it temporarily affected by physics
+        // If attacking, and struck kinematic Rigidbody, make it temporarily affected by physics
         PhysicsSwitch manualMovedObject = other.GetComponent<PhysicsSwitch>();
         if (manualMovedObject != null && m_IsAttacking)
         {

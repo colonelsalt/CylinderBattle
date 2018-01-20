@@ -17,9 +17,7 @@ public class SoundManager : MonoBehaviour
 
     private static SoundManager m_Instance;
 
-    private AudioSource m_MainAudio;
-
-    private AudioSource m_LoopingAudio;
+    private AudioSource m_Audio;
 
     // --------------------------------------------------------------
 
@@ -42,29 +40,16 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        SetupAudioSources();
-        
-    }
 
-    private void SetupAudioSources()
-    {
-        AudioSource[] audioSources = GetComponents<AudioSource>();
-        if (audioSources.Length < 2)
-        {
-            Debug.LogError(name + " is missing one or more AudioSources");
-        }
-
-        m_MainAudio = audioSources[0];
-        m_LoopingAudio = audioSources[1];
-        m_LoopingAudio.loop = true;
+        m_Audio = GetComponent<AudioSource>();
     }
 
     public void Play(AudioClip clip)
     {
         if (clip == null) return;
 
-        m_MainAudio.pitch = 1f;
-        m_MainAudio.PlayOneShot(clip);
+        m_Audio.pitch = 1f;
+        m_Audio.PlayOneShot(clip);
     }
 
     public void PlayRandom(params AudioClip[] clips)
@@ -72,37 +57,33 @@ public class SoundManager : MonoBehaviour
         if (clips.Length <= 0) return;
 
         AudioClip clipToPlay = clips[Random.Range(0, clips.Length)];
-        m_MainAudio.pitch = Random.Range(m_LowPitch, m_HighPitch);
+        m_Audio.pitch = Random.Range(m_LowPitch, m_HighPitch);
 
-        m_MainAudio.PlayOneShot(clipToPlay);
+        m_Audio.PlayOneShot(clipToPlay);
     }
 
-    public void PlayWithLoop(AudioClip clip)
+    public void FadeOut(AudioSource audio)
     {
-        if (clip == null) return;
+        if (!audio.isPlaying) return;
 
         StopAllCoroutines();
-        m_LoopingAudio.volume = 1f;
-        m_LoopingAudio.clip = clip;
-        m_LoopingAudio.Play();
+
+        StartCoroutine(FadeOutSound(audio));
     }
 
-    public void StopLoopingSound()
+    private IEnumerator FadeOutSound(AudioSource audio)
     {
-        StartCoroutine(FadeOutSound());
-    }
-
-    private IEnumerator FadeOutSound()
-    {
-        float startVolume = m_LoopingAudio.volume;
-        while (m_LoopingAudio.volume > 0f)
+        float startVolume = audio.volume;
+        while (audio?.volume > 0.1f)
         {
-            m_LoopingAudio.volume -= startVolume * Time.deltaTime / m_FadeOutTime;
+            audio.volume -= startVolume * Time.deltaTime / m_FadeOutTime;
             yield return new WaitForEndOfFrame();
         }
-
-        m_LoopingAudio.Stop();
-        m_LoopingAudio.volume = startVolume;
+        if (audio != null)
+        {
+            audio.Stop();
+            audio.volume = startVolume;
+        }
     }
 
 }

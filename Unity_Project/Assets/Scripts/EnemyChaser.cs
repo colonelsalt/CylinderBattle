@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(AudioSource))]
 public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
 {
     // --------------------------------------------------------------
@@ -14,11 +15,18 @@ public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
 
     private NavMeshAgent m_NavMeshAgent;
 
+    // Default speed as set in NavMeshAgent
+    private float m_WalkSpeed;
+
     private WaypointPatroller m_Patrol;
+
+    private AudioSource m_Audio;
 
     private bool m_TouchingPlayer = false;
 
     private Collider[] m_Colliders;
+
+    private bool m_PlayingSound = false;
 
     // --------------------------------------------------------------
 
@@ -28,10 +36,19 @@ public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
         m_Patrol = GetComponent<WaypointPatroller>();
         m_Colliders = GetComponents<Collider>();
+        m_Audio = GetComponent<AudioSource>();
+
+        m_WalkSpeed = m_NavMeshAgent.speed;
     }
 
     public void Execute()
     {
+        if (!m_PlayingSound)
+        {
+            m_Audio.Play();
+            m_PlayingSound = true;
+        }
+
         if (!m_TouchingPlayer)
         {
             // Follow Player around once spotted
@@ -40,14 +57,24 @@ public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
         }
         else
         {
-            m_NavMeshAgent.destination = transform.position;
+            m_Patrol.StandStill();
         }
     }
+    public void Disable()
+    {
+        m_NavMeshAgent.speed = m_WalkSpeed;
+        if (m_PlayingSound)
+        {
+            SoundManager.Instance.FadeOut(m_Audio);
+            m_PlayingSound = false;
+        }
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
         PlayerHealth player = other.GetComponent<PlayerHealth>();
-        if (player != null && !m_TouchingPlayer)
+        if (player != null)
         {
             m_TouchingPlayer = true;
 
@@ -69,28 +96,16 @@ public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
         m_TouchingPlayer = false;
     }
 
-    private void BreakToPieces()
+    private void OnDeath()
     {
-        foreach (Collider collider in m_Colliders)
+        foreach (Collider col in m_Colliders)
         {
-            collider.enabled = false;
-        }
-
-        PhysicsSwitch physicsSwitch = GetComponent<PhysicsSwitch>();
-        if (physicsSwitch != null)
-        {
-            physicsSwitch.ActivatePhysicsReactions(false);
+            col.enabled = false;
         }
 
         foreach (Rigidbody body in GetComponentsInChildren<Rigidbody>())
         {
             body.isKinematic = false;
-            FadeOut fadeOut = body.GetComponent<FadeOut>();
-            if (fadeOut != null)
-            {
-                fadeOut.Begin();
-            }
         }
     }
-
 }

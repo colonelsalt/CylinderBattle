@@ -23,13 +23,10 @@ public class EnemyHealth : MonoBehaviour, IHealth
 
     private Animator m_Animator;
 
-    private Collider m_Collider;
-
     // --------------------------------------------------------------
 
     private void Awake()
     {
-        m_Collider = GetComponentInChildren<Collider>();
         m_Animator = GetComponent<Animator>();
         m_CurrentHealth = m_StartHealth;
     }
@@ -51,9 +48,6 @@ public class EnemyHealth : MonoBehaviour, IHealth
     public void Die()
     {
         SoundManager.Instance.PlayRandom(m_DeathSounds);
-
-        // Disable collider on death
-        m_Collider.enabled = false;
 
         // Instantiate drop item
         if (m_DropItemPrefab != null)
