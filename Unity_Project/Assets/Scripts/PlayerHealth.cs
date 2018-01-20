@@ -82,11 +82,11 @@ public class PlayerHealth : MonoBehaviour, IHealth
 
     public void TakeDamage(int damage)
     {
-        if (m_IsInvincible) return;
+        if (m_IsInvincible || !m_IsAlive) return;
 
         SoundManager.Instance.PlayRandom(m_DamageSounds);
 
-        m_CurrentHealth -= damage;
+        m_CurrentHealth = Mathf.Max(0, m_CurrentHealth - damage);
         OnPlayerDamaged(m_Player.PlayerNum);
         if (m_CurrentHealth <= 0)
         {

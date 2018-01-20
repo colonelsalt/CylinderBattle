@@ -11,7 +11,7 @@ public class LightningSprint : MonoBehaviour
     // --------------------------------------------------------------
 
     // Sounds
-    [SerializeField] private AudioClip m_SprintSound;
+    [SerializeField] private AudioClip[] m_OutOfStaminaSounds;
 
     // --------------------------------------------------------------
 
@@ -30,6 +30,8 @@ public class LightningSprint : MonoBehaviour
     private bool m_HasStamina = true;
 
     private bool m_PlayingSprintSound = false;
+
+    private bool m_PlayingOutOfStaminaSound = false;
 
     // --------------------------------------------------------------
 
@@ -83,6 +85,11 @@ public class LightningSprint : MonoBehaviour
             }
             else
             {
+                if (m_HasStamina)
+                {
+                    SoundManager.Instance.PlayRandom(m_OutOfStaminaSounds);
+                }
+                
                 m_HasStamina = false;
                 Stop();
             }
