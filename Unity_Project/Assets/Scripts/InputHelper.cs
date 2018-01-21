@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using XboxCtrlrInput;
 
+public enum ButtonAction
+{
+    JUMP,
+    FIRE,
+    CROUCH,
+    SPRINT
+}
+
 // Wrapper around XboxControllerInput and Unity Input classes
 public static class InputHelper
 {
@@ -135,6 +143,28 @@ public static class InputHelper
     public static bool PauseButtonPressed()
     {
         return XCI.GetButton(XboxButton.Start) || Input.GetButton("Cancel");
+    }
+
+    public static string GetButtonName(ButtonAction button, int playerNum)
+    {
+        switch (button)
+        {
+            case ButtonAction.JUMP:
+                if (GamePadConnected(playerNum)) return "A";
+                return (playerNum == 1) ? "SPACE" : "RIGHT CTRL";
+            case ButtonAction.FIRE:
+                if (GamePadConnected(playerNum)) return "RT";
+                return (playerNum == 1) ? "LEFT CTRL" : "RIGHT SHIFT";
+            case ButtonAction.CROUCH:
+                if (GamePadConnected(playerNum)) return "LT";
+                return (playerNum == 1) ? "Z" : ".";
+            case ButtonAction.SPRINT:
+                if (GamePadConnected(playerNum)) return "X";
+                return (playerNum == 1) ? "X" : "/";
+            default:
+                Debug.LogError("InputHelper: No button " + button + " found for playerNum " + playerNum);
+                return "";
+        }
     }
 
 

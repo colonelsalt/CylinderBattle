@@ -41,6 +41,17 @@ public class WeaponManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    public Weapon CurrentWeapon
+    {
+        get
+        {
+            return m_Weapon;
+        }
+    }
+
+    // --------------------------------------------------------------
+
+
     private void Awake()
     {
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;

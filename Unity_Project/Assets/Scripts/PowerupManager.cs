@@ -59,6 +59,7 @@ public class PowerupManager : MonoBehaviour
                 // Receive Jetpack
                 Instantiate(m_JetpackPrefab, transform.GetChild(0));
                 Instantiate(m_PowerupEffects[(int)Powerup.JETPACK], transform);
+                OnPowerupReceived(Powerup.JETPACK, m_Player.PlayerNum);
                 break;
             case 30:
                 // Receive Lightning Sprint
@@ -69,6 +70,7 @@ public class PowerupManager : MonoBehaviour
             default:
                 // Get extra life
                 Instantiate(m_PowerupEffects[(int)Powerup.EXTRA_LIFE], transform);
+                OnPowerupReceived(Powerup.EXTRA_LIFE, m_Player.PlayerNum);
                 m_Health.GetExtraLife();
                 break;
         }

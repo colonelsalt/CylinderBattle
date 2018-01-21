@@ -1,4 +1,12 @@
-SOUND EFFECTS:
-	-damage (red + blue)
-	-out of stamina sound (red + blue)
-	-weapon block spawn
+tutorial manager will listen for certain events
+
+when event happens for first time, flash tutorial text
+over appropriate player's head
+
+
+
+REFACTORING TODOS:
+-Simplify and thoroughly comment VoronoiSplitScreen
+-Factor out specific InputHelper methods into generic GetButtonDown/Up
+ methods
+-

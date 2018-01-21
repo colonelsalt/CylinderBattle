@@ -9,9 +9,9 @@ public class MusicPlayer : MonoBehaviour
     // How much music speeds up at match point
     [SerializeField] private float m_SpeedUpMultiplier = 1.4f;
 
-    [SerializeField] private ScoreKeeper[] m_ScoreKeepers;
-
     // --------------------------------------------------------------
+
+    private ScoreKeeper[] m_ScoreKeepers;
 
     // Whether only one more Pi remains to collect before game over
     private bool m_MatchPointReached = false;
@@ -27,6 +27,7 @@ public class MusicPlayer : MonoBehaviour
         Collector.OnAllPisCollected += OnGameOver;
 
         m_Audio = GetComponent<AudioSource>();
+        m_ScoreKeepers = FindObjectsOfType<ScoreKeeper>();
     }
 
     private void OnPiPickup(int playerNum)

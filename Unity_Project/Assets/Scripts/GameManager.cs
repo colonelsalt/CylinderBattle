@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameState { LOADING, PLAYING, PAUSED, GAME_OVER }
+
 public class GameManager : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -22,7 +24,6 @@ public class GameManager : MonoBehaviour
     private bool m_IsPaused = false;
 
     // --------------------------------------------------------------
-
 
     private void Awake()
     {

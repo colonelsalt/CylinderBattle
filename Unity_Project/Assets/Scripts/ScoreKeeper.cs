@@ -106,6 +106,14 @@ public class ScoreKeeper : MonoBehaviour
         }
     }
 
+    public Vector3 PlayerPosition
+    {
+        get
+        {
+            return m_Player.transform.position;
+        }
+    }
+
     // --------------------------------------------------------------
 
     private void Awake()
