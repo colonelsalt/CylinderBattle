@@ -12,7 +12,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private PlayerHUD[] m_PlayerHUDs;
 
     [SerializeField] private Text m_GameOverTitle;
-    
+
+    [SerializeField] private Text m_MatchPointTitle;
+
+    // --------------------------------------------------------------
+
+    private Animator m_MatchPointAnim;
+
     // --------------------------------------------------------------
 
     void OnEnable()
@@ -21,6 +27,7 @@ public class UIManager : MonoBehaviour
         Collector.OnPiDrop += OnPiDrop;
         Collector.OnPlusPickup += OnUpdatePluses;
         Collector.OnAllPisCollected += OnGameOver;
+        Collector.OnMatchPoint += OnMatchPoint;
 
         Gun.OnGunFired += OnUpdateAmmo;
 
@@ -34,6 +41,8 @@ public class UIManager : MonoBehaviour
         PlayerHealth.OnPlayerRespawn += OnPlayerRespawn;
 
         PowerupManager.OnPowerupReceived += OnPowerupReceived;
+
+        m_MatchPointAnim = m_MatchPointTitle.GetComponent<Animator>();
 
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
         {
@@ -106,6 +115,11 @@ public class UIManager : MonoBehaviour
     private void OnPowerupReceived(Powerup type, int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].ActivatePowerup(type);
+    }
+
+    private void OnMatchPoint(int playerNum)
+    {
+        m_MatchPointAnim.SetTrigger("showTrigger");
     }
 
     private void OnGameOver(int numOfWinner)

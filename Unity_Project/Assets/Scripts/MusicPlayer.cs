@@ -22,7 +22,7 @@ public class MusicPlayer : MonoBehaviour
 
     private void Awake()
     {
-        Collector.OnPiPickup += OnPiPickup;
+        Collector.OnMatchPoint += OnMatchPoint;
         Collector.OnPiDrop += OnPiDrop;
         Collector.OnAllPisCollected += OnGameOver;
 
@@ -30,37 +30,18 @@ public class MusicPlayer : MonoBehaviour
         m_ScoreKeepers = FindObjectsOfType<ScoreKeeper>();
     }
 
-    private void OnPiPickup(int playerNum)
+    private void OnMatchPoint(int playerNum)
     {
-        foreach (ScoreKeeper score in m_ScoreKeepers)
-        {
-            if (score.PlayerNum == playerNum)
-            {
-                if (score.NumPis == GameManager.MAX_NUM_PIS - 1)
-                {
-                    m_MatchPointReached = true;
-                    SpeedUpMusic();
-                }
-                break;
-            }
-        }
+        m_MatchPointReached = true;
+        SpeedUpMusic();
     }
 
     private void OnPiDrop(int playerNum)
     {
-        if (!m_MatchPointReached) return;
-
-        foreach (ScoreKeeper score in m_ScoreKeepers)
+        if (m_MatchPointReached)
         {
-            if (score.PlayerNum == playerNum)
-            {
-                if (score.NumPis < GameManager.MAX_NUM_PIS - 1)
-                {
-                    m_MatchPointReached = false;
-                    SetMusicToNormal();
-                }
-                break;
-            }
+            SetMusicToNormal();
+            m_MatchPointReached = false;
         }
     }
 

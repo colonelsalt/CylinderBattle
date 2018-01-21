@@ -21,11 +21,24 @@ public class Breakable : MonoBehaviour
 
     private Vector3 m_LastVelocity;
 
+    private static int m_NumBreakables = 0;
+
+    // --------------------------------------------------------------
+
+    public static int NumBreakables
+    {
+        get
+        {
+            return m_NumBreakables;
+        }
+    }
+
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_Body = GetComponent<Rigidbody>();
+        m_NumBreakables++;
     }
 
     private void LateUpdate()

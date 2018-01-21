@@ -31,8 +31,6 @@ public class LightningSprint : MonoBehaviour
 
     private bool m_PlayingSprintSound = false;
 
-    private bool m_PlayingOutOfStaminaSound = false;
-
     // --------------------------------------------------------------
 
     public float RemainingSprintTime

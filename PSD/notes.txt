@@ -10,3 +10,13 @@ REFACTORING TODOS:
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
 -
+
+
+ACHIEVEMENTS:
+-Fucking
+-Jumping out of map
+-50 pluses collected
+-Broken all crates in scene
+
+
+
