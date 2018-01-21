@@ -10,13 +10,10 @@ public class TutorialManager : MonoBehaviour
     {
         MAIN_OBJECTIVE = 0,
         WEAPON = 1,
-        GUN = 2,
-        BOXING_GLOVES = 3,
-        PORTAL_GUN = 4,
-        JETPACK = 5,
-        SPRINT = 6,
-        STAMINA = 7,
-        BOMB = 8
+        PORTAL_GUN = 2,
+        JETPACK = 3,
+        SPRINT = 4,
+        STAMINA = 5,
     }
 
     // --------------------------------------------------------------
@@ -41,9 +38,15 @@ public class TutorialManager : MonoBehaviour
 
     private Text m_Text;
 
+    private Image m_ArrowImage;
+
+    private Vector3 m_StaticPosition;
+
     private Animator m_Animator;
 
     private bool m_TutorialActive = false;
+
+    private bool m_TetherToPlayer = true;
 
     private float m_TutorialTimeRemaining;
 
@@ -51,17 +54,22 @@ public class TutorialManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private void Awake()
+    private void Start()
     {
         WeaponManager.OnWeaponPickup += OnWeaponPickup;
+        WeaponManager.OnWeaponActivated += OnWeaponActivated;
         PowerupManager.OnPowerupReceived += OnPowerupReceived;
 
         m_Text = GetComponent<Text>();
         m_Animator = GetComponent<Animator>();
+        m_ArrowImage = GetComponentInChildren<Image>();
+
+        m_StaticPosition = transform.position;
+        m_TimeUntilNextTutorial = m_DelayTime;
 
         m_TutorialQueue = new Queue<TutorialAction>();
         m_TutorialsShown = new Dictionary<TutorialAction, bool>();
-        for (int i = 0; i <= 8; i++)
+        for (int i = 0; i <= 5; i++)
         {
             m_TutorialsShown.Add((TutorialAction)i, false);
         }
@@ -71,7 +79,7 @@ public class TutorialManager : MonoBehaviour
     {
         if (m_TutorialActive && m_TutorialTimeRemaining > 0f)
         {
-            AnchorTextToPlayer();
+            SetTextPosition();
             m_TutorialTimeRemaining -= Time.deltaTime;
             if (m_TutorialTimeRemaining <= 0f)
             {
@@ -90,34 +98,26 @@ public class TutorialManager : MonoBehaviour
 
     private void QueueTutorial(TutorialAction action)
     {
+        // If we've already shown tutorial, don't show it again
+        if (m_TutorialsShown[action]) return;
+
         m_TutorialQueue.Enqueue(action);
-        m_TimeUntilNextTutorial = m_DelayTime;
+        m_TutorialsShown[action] = true;
     }
 
     private void OnWeaponPickup(Weapon type, int playerNum)
     {
-        if (playerNum != m_Score.PlayerNum) return;
-
-        switch (type)
+        if (playerNum == m_Score.PlayerNum)
         {
-            case Weapon.GUN:
-                if (!m_TutorialsShown[TutorialAction.GUN])
-                {
-                    QueueTutorial(TutorialAction.GUN);
-                }
-                break;
-            case Weapon.BOMB:
-                if (!m_TutorialsShown[TutorialAction.BOMB])
-                {
-                    QueueTutorial(TutorialAction.BOMB);
-                }
-                break;
-            case Weapon.PORTAL_GUN:
-                if (!m_TutorialsShown[TutorialAction.PORTAL_GUN])
-                {
-                    QueueTutorial(TutorialAction.PORTAL_GUN);
-                }
-                break;
+            QueueTutorial(TutorialAction.WEAPON);
+        }
+    }
+
+    private void OnWeaponActivated(Weapon type, int playerNum)
+    {
+        if (playerNum == m_Score.PlayerNum && type == Weapon.PORTAL_GUN)
+        {
+            QueueTutorial(TutorialAction.PORTAL_GUN);
         }
     }
 
@@ -128,52 +128,71 @@ public class TutorialManager : MonoBehaviour
         switch (type)
         {
             case Powerup.JETPACK:
-                if (!m_TutorialsShown[TutorialAction.JETPACK])
-                {
-                    QueueTutorial(TutorialAction.JETPACK);
-                }
+                QueueTutorial(TutorialAction.JETPACK);
+                break;
+            case Powerup.LIGHTNING_SPRINT:
+                QueueTutorial(TutorialAction.SPRINT);
+                QueueTutorial(TutorialAction.STAMINA);
                 break;
         }
-
     }
 
     private void ShowTutorial(TutorialAction action)
     {
-        AnchorTextToPlayer();
+        if (action == TutorialAction.STAMINA)
+        {
+            Debug.Log("Showing Stamina tutoriall...");
+            m_TetherToPlayer = false;
+            m_ArrowImage.enabled = true;
+        }
+        else
+        {
+            m_TetherToPlayer = true;
+        }
+        SetTextPosition();
         
         m_Text.text = GetTutorialTextFor(action);
         m_Animator.SetBool("isVisible", true);
         m_TutorialTimeRemaining = m_MaxTutorialTime;
-
-        m_TutorialsShown[action] = true;
+        m_TimeUntilNextTutorial = m_DelayTime;
         m_TutorialActive = true;
     }
 
     private void HideTutorial()
     {
         m_Animator.SetBool("isVisible", false);
+        m_ArrowImage.enabled = false;
         m_TutorialActive = false;
     }
 
-    private void AnchorTextToPlayer()
+    private void SetTextPosition()
     {
-        // Display text on left or right side of player depending on screen position
-        Vector3 offset = (m_PlayerCamera.WorldToViewportPoint(m_Score.PlayerPosition).x < 0.5f) ? m_OffsetFromPlayer : -m_OffsetFromPlayer;
-        m_Text.transform.position = m_PlayerCamera.WorldToScreenPoint(m_Score.PlayerPosition + offset);
+        if (m_TetherToPlayer)
+        {
+            // Display text on left or right side of player depending on screen position
+            Vector3 offset = (m_PlayerCamera.WorldToViewportPoint(m_Score.PlayerPosition).x < 0.5f) ? m_OffsetFromPlayer : -m_OffsetFromPlayer;
+            transform.position = m_PlayerCamera.WorldToScreenPoint(m_Score.PlayerPosition + offset);
+        }
+        else
+        {
+            transform.position = m_StaticPosition;
+        }
     }
 
     private string GetTutorialTextFor(TutorialAction action)
     {
         switch (action)
         {
-            case TutorialAction.GUN:
-                return "Press " + InputHelper.GetButtonName(ButtonAction.FIRE, m_Score.PlayerNum) + " to fire laser!";
+            case TutorialAction.WEAPON:
+                return "Press " + InputHelper.GetButtonName(ButtonAction.FIRE, m_Score.PlayerNum) + " to fire weapon!";
             case TutorialAction.JETPACK:
-                return "Press " + InputHelper.GetButtonName(ButtonAction.JUMP, m_Score.PlayerNum) + " in mid-air to use jetpack!";
-            case TutorialAction.BOMB:
-                return "Press " + InputHelper.GetButtonName(ButtonAction.FIRE, m_Score.PlayerNum) + " to place bomb!";
+                return "Press " + InputHelper.GetButtonName(ButtonAction.JUMP, m_Score.PlayerNum) + " in mid-air for a boost!";
             case TutorialAction.PORTAL_GUN:
                 return "Press " + InputHelper.GetButtonName(ButtonAction.FIRE, m_Score.PlayerNum) + " to fire portals!";
+            case TutorialAction.SPRINT:
+                return "Hold " + InputHelper.GetButtonName(ButtonAction.SPRINT, m_Score.PlayerNum) + " to sprint!";
+            case TutorialAction.STAMINA:
+                return "Watch your stamina meter!";
             default:
                 return "";
         }
