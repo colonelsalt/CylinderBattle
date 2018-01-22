@@ -15,6 +15,12 @@ public class SoundManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    [SerializeField] private AudioClip m_GameStartSound;
+
+    [SerializeField] private AudioClip m_GameOverSound;
+
+    // --------------------------------------------------------------
+
     private static SoundManager m_Instance;
 
     private AudioSource m_Audio;
@@ -30,18 +36,31 @@ public class SoundManager : MonoBehaviour
     }
 
     // --------------------------------------------------------------
+
     private void Awake()
     {
         if (m_Instance == null)
         {
             m_Instance = this;
+            DontDestroyOnLoad(gameObject);
+            GameManager.OnGameStart += OnGameStart;
+            Collector.OnAllPisCollected += OnGameOver;
+            m_Audio = GetComponent<AudioSource>();
         }
         else
         {
             Destroy(gameObject);
         }
+    }
 
-        m_Audio = GetComponent<AudioSource>();
+    private void OnGameStart()
+    {
+        Play(m_GameStartSound);
+    }
+
+    private void OnGameOver(int playerNum)
+    {
+        Play(m_GameOverSound);
     }
 
     public void Play(AudioClip clip)

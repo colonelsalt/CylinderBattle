@@ -11,8 +11,6 @@ public class MusicPlayer : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private ScoreKeeper[] m_ScoreKeepers;
-
     // Whether only one more Pi remains to collect before game over
     private bool m_MatchPointReached = false;
 
@@ -22,12 +20,18 @@ public class MusicPlayer : MonoBehaviour
 
     private void Awake()
     {
+        GameManager.OnGameStart += OnGameStart;
+
         Collector.OnMatchPoint += OnMatchPoint;
         Collector.OnPiDrop += OnPiDrop;
         Collector.OnAllPisCollected += OnGameOver;
 
         m_Audio = GetComponent<AudioSource>();
-        m_ScoreKeepers = FindObjectsOfType<ScoreKeeper>();
+    }
+
+    private void OnGameStart()
+    {
+        m_Audio.Play();
     }
 
     private void OnMatchPoint(int playerNum)

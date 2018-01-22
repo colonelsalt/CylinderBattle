@@ -11,6 +11,10 @@ public class UIManager : MonoBehaviour
     // HUD object for each Player in game
     [SerializeField] private PlayerHUD[] m_PlayerHUDs;
 
+    [SerializeField] private Text m_ObjectiveTitle;
+
+    [SerializeField] private Text m_StartTitle;
+
     [SerializeField] private Text m_GameOverTitle;
 
     [SerializeField] private Text m_MatchPointTitle;
@@ -21,8 +25,10 @@ public class UIManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    void OnEnable()
+    private void OnEnable()
     {
+        GameManager.OnGameStart += OnGameStart;
+
         Collector.OnPiPickup += OnPiPickup;
         Collector.OnPiDrop += OnPiDrop;
         Collector.OnPlusPickup += OnUpdatePluses;
@@ -44,10 +50,20 @@ public class UIManager : MonoBehaviour
 
         m_MatchPointAnim = m_MatchPointTitle.GetComponent<Animator>();
 
+
+        m_ObjectiveTitle.GetComponent<Animator>().SetTrigger("showTrigger");
+        Destroy(m_ObjectiveTitle, 4f);
+
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
         {
             Debug.LogError("Incorrect number of PlayerHUDs assigned.");
         }
+    }
+
+    private void OnGameStart()
+    {
+        m_StartTitle.enabled = true;
+        Destroy(m_StartTitle.gameObject, 2f);
     }
 
     private void OnPiPickup(int playerNum)

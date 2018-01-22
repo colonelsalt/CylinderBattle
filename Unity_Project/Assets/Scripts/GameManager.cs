@@ -8,9 +8,15 @@ public class GameManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    public delegate void GameStateEvent();
-    public static event GameStateEvent OnGamePause;
-    public static event GameStateEvent OnGameResume;
+    public delegate void GameStateEvent(GameState state);
+    public static event GameStateEvent OnGameStateChanged;
+
+    public delegate void GameStartEvent();
+    public static event GameStartEvent OnGameStart;
+
+    // --------------------------------------------------------------
+
+    [SerializeField] private float m_LoadTime = 3f;
 
     // --------------------------------------------------------------
 
@@ -21,31 +27,59 @@ public class GameManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private bool m_IsPaused = false;
+    private GameState m_State = GameState.LOADING;
+
+    private float m_TimeUntilLevelStart;
+
+    private PlayerController[] m_Players;
 
     // --------------------------------------------------------------
 
     private void Awake()
     {
-        Collector.OnAllPisCollected += OnGameOver;    
+        Collector.OnAllPisCollected += OnGameOver;
+
+        m_Players = FindObjectsOfType<PlayerController>();
+        SetPlayersActive(false);
+
+        m_TimeUntilLevelStart = m_LoadTime;
     }
 
     private void Update()
     {
+        if (m_State == GameState.LOADING)
+        {
+            m_TimeUntilLevelStart -= Time.deltaTime;
+            if (m_TimeUntilLevelStart <= 0f)
+            {
+                m_State = GameState.PLAYING;
+                OnGameStart();
+                SetPlayersActive(true);
+            }
+        }
+
         if (InputHelper.PauseButtonPressed())
         {
-            if (m_IsPaused)
+            if (m_State == GameState.PAUSED)
             {
                 Time.timeScale = 1f;
-                m_IsPaused = false;
-                OnGameResume();
+                m_State = GameState.PLAYING;
+                
             }
-            else
+            else if (m_State == GameState.PLAYING)
             {
                 Time.timeScale = 0f;
-                m_IsPaused = true;
-                OnGamePause();
+                m_State = GameState.PAUSED;
             }
+            OnGameStateChanged(m_State);
+        }
+    }
+
+    private void SetPlayersActive(bool enabled)
+    {
+        foreach (PlayerController player in m_Players)
+        {
+            player.enabled = enabled;
         }
     }
 

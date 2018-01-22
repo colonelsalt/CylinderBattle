@@ -46,6 +46,8 @@ public class Gun : MonoBehaviour
         }
     }
 
+    // --------------------------------------------------------------
+
     private void Awake()
     {
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
