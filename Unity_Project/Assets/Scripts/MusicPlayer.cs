@@ -14,6 +14,8 @@ public class MusicPlayer : MonoBehaviour
     // Whether only one more Pi remains to collect before game over
     private bool m_MatchPointReached = false;
 
+    private int m_PlayerNumOfMatchPointHolder = 0;
+
     private AudioSource m_Audio;
 
     // --------------------------------------------------------------
@@ -36,15 +38,17 @@ public class MusicPlayer : MonoBehaviour
 
     private void OnMatchPoint(int playerNum)
     {
+        m_PlayerNumOfMatchPointHolder = playerNum;
         m_MatchPointReached = true;
         SpeedUpMusic();
     }
 
     private void OnPiDrop(int playerNum)
     {
-        if (m_MatchPointReached)
+        if (m_MatchPointReached && playerNum == m_PlayerNumOfMatchPointHolder)
         {
             SetMusicToNormal();
+            m_PlayerNumOfMatchPointHolder = 0;
             m_MatchPointReached = false;
         }
     }

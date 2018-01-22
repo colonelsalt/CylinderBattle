@@ -11,21 +11,38 @@ public class MenuManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    private void ButtonSound()
+    {
+        SoundManager.Instance.Play(m_ButtonClickSound);
+    }
+
     // Load level select scene
     public void OnPlayButtonClicked()
     {
-        SoundManager.Instance.Play(m_ButtonClickSound);
+        ButtonSound();
         SceneManager.LoadScene("MainScene");
     }
 
     public void OnTutorialButtonClicked()
     {
-        SoundManager.Instance.Play(m_ButtonClickSound);
+        ButtonSound();
     }
 
     public void OnAchievementsButtonClicked()
     {
-        SoundManager.Instance.Play(m_ButtonClickSound);
+        ButtonSound();
+    }
+
+    public void OnMainMenuButtonClicked()
+    {
+        if (SceneManager.GetActiveScene().name == "TitleScreen")
+        {
+            // TODO
+        }
+        else
+        {
+            SceneManager.LoadScene("TitleScreen");
+        }
     }
 
 }
