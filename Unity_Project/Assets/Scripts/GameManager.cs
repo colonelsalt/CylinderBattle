@@ -1,22 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public enum GameState { LOADING, PLAYING, PAUSED, GAME_OVER }
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    public delegate void GameStateEvent(GameState state);
-    public static event GameStateEvent OnGameStateChanged;
-
-    public delegate void GameStartEvent();
-    public static event GameStartEvent OnGameStart;
+    private enum GameState { LOADING, PRE_GAME, PLAYING, PAUSED, GAME_OVER }
 
     // --------------------------------------------------------------
 
-    [SerializeField] private float m_LoadTime = 3f;
+    public delegate void GameStateEvent();
+    public static event GameStateEvent OnGameStart;
+    public static event GameStateEvent OnGamePaused;
+    public static event GameStateEvent OnGameResumed;
+
+    // --------------------------------------------------------------
+
+    // Time between level finishing load and game starting
+    [SerializeField] private float m_StartupTime = 3f;
+
+    // Time between game over and transition to GameOver screen
+    [SerializeField] private float m_LevelTransitionTime = 3f;
 
     // --------------------------------------------------------------
 
@@ -33,21 +39,29 @@ public class GameManager : MonoBehaviour
 
     private PlayerController[] m_Players;
 
+    private float m_GameOverTime;
+
     // --------------------------------------------------------------
 
     private void Awake()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
         Collector.OnAllPisCollected += OnGameOver;
 
         m_Players = FindObjectsOfType<PlayerController>();
         SetPlayersActive(false);
 
-        m_TimeUntilLevelStart = m_LoadTime;
+        m_TimeUntilLevelStart = m_StartupTime;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        m_State = GameState.PRE_GAME;
     }
 
     private void Update()
     {
-        if (m_State == GameState.LOADING)
+        if (m_State == GameState.PRE_GAME)
         {
             m_TimeUntilLevelStart -= Time.deltaTime;
             if (m_TimeUntilLevelStart <= 0f)
@@ -57,21 +71,34 @@ public class GameManager : MonoBehaviour
                 SetPlayersActive(true);
             }
         }
-
-        if (InputHelper.PauseButtonPressed())
+        else if (InputHelper.PauseButtonPressed())
         {
             if (m_State == GameState.PAUSED)
             {
                 Time.timeScale = 1f;
                 m_State = GameState.PLAYING;
+                SetPlayersActive(true);
+                OnGameResumed();
                 
             }
             else if (m_State == GameState.PLAYING)
             {
                 Time.timeScale = 0f;
                 m_State = GameState.PAUSED;
+                SetPlayersActive(false);
+                OnGamePaused();
             }
-            OnGameStateChanged(m_State);
+        }
+        else if (m_State == GameState.GAME_OVER)
+        {
+            if (Time.realtimeSinceStartup > m_GameOverTime + m_LevelTransitionTime)
+            {
+                // Set TimeScale to normal and load Game Over screen
+                Time.timeScale = 1f;
+                Time.fixedDeltaTime = 0.02f * Time.timeScale;
+
+                SceneManager.LoadScene("GameOver");
+            }
         }
     }
 
@@ -87,7 +114,11 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0.3f;
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        m_State = GameState.GAME_OVER;
+        m_GameOverTime = Time.realtimeSinceStartup;
     }
+
+
 
 
 }

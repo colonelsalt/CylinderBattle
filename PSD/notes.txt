@@ -1,7 +1,6 @@
-tutorial manager will listen for certain events
-
-when event happens for first time, flash tutorial text
-over appropriate player's head
+SOUNDS
+-Game start sound (whistle / gun)
+-Game over / success sound
 
 
 
@@ -9,7 +8,6 @@ REFACTORING TODOS:
 -Simplify and thoroughly comment VoronoiSplitScreen
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
--
 
 
 ACHIEVEMENTS:
@@ -17,6 +15,12 @@ ACHIEVEMENTS:
 -Jumping out of map
 -50 pluses collected
 -Broken all crates in scene
+-Surviving entire game without dying
+
+17 march 10.20am 
+
+
+sggFEQNE7540*)fxwyKB2$!
 
 
 

@@ -92,9 +92,11 @@ public class SoundManager : MonoBehaviour
 
     private IEnumerator FadeOutSound(AudioSource audio)
     {
-        float startVolume = audio.volume;
+        float startVolume = audio?.volume ?? 1f;
         while (audio?.volume > 0.1f)
         {
+            if (audio == null) break;
+
             audio.volume -= startVolume * Time.deltaTime / m_FadeOutTime;
             yield return new WaitForEndOfFrame();
         }

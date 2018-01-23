@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -19,15 +20,25 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Text m_MatchPointTitle;
 
+    [SerializeField] private Text m_PauseTitle;
+
+    [SerializeField] private Image m_FadePanel;
+
     // --------------------------------------------------------------
 
     private Animator m_MatchPointAnim;
+
+    private Animator m_FadePanelAnim;
 
     // --------------------------------------------------------------
 
     private void OnEnable()
     {
         GameManager.OnGameStart += OnGameStart;
+        GameManager.OnGamePaused += OnGamePaused;
+        GameManager.OnGameResumed += OnGameResumed;
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
         Collector.OnPiPickup += OnPiPickup;
         Collector.OnPiDrop += OnPiDrop;
@@ -49,21 +60,36 @@ public class UIManager : MonoBehaviour
         PowerupManager.OnPowerupReceived += OnPowerupReceived;
 
         m_MatchPointAnim = m_MatchPointTitle.GetComponent<Animator>();
-
-
-        m_ObjectiveTitle.GetComponent<Animator>().SetTrigger("showTrigger");
-        Destroy(m_ObjectiveTitle, 4f);
+        m_FadePanelAnim = m_FadePanel.GetComponent<Animator>();
 
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
         {
-            Debug.LogError("Incorrect number of PlayerHUDs assigned.");
+            Debug.LogError("UIManager: Incorrect number of PlayerHUDs assigned.");
         }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        m_ObjectiveTitle.GetComponent<Animator>().SetTrigger("showTrigger");
+        Destroy(m_ObjectiveTitle, 4f);
     }
 
     private void OnGameStart()
     {
         m_StartTitle.enabled = true;
         Destroy(m_StartTitle.gameObject, 2f);
+    }
+
+    private void OnGamePaused()
+    {
+        m_PauseTitle.enabled = true;
+        m_FadePanelAnim.SetBool("isPaused", true);
+    }
+
+    private void OnGameResumed()
+    {
+        m_PauseTitle.enabled = false;
+        m_FadePanelAnim.SetBool("isPaused", false);
     }
 
     private void OnPiPickup(int playerNum)
@@ -150,6 +176,7 @@ public class UIManager : MonoBehaviour
         PlayerHealth.OnPlayerDamaged -= OnUpdateHealth;
         PlayerHealth.OnPlayerExtraLife -= OnUpdateHealth;
         PlayerHealth.OnPlayerRespawn -= OnPlayerRespawn;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
 
         m_GameOverTitle.enabled = true;
         m_GameOverTitle.text += "\nPlayer " + numOfWinner + " wins!";

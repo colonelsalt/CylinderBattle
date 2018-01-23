@@ -141,7 +141,6 @@ public class TutorialManager : MonoBehaviour
     {
         if (action == TutorialAction.STAMINA)
         {
-            Debug.Log("Showing Stamina tutoriall...");
             m_TetherToPlayer = false;
             m_ArrowImage.enabled = true;
         }

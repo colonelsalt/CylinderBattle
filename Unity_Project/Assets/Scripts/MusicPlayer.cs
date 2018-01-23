@@ -22,18 +22,15 @@ public class MusicPlayer : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.OnGameStart += OnGameStart;
+        GameManager.OnGameStart += () => m_Audio.Play();
+        GameManager.OnGamePaused += () => m_Audio.Pause();
+        GameManager.OnGameResumed += () => m_Audio.UnPause();
+        Collector.OnAllPisCollected += (p) => m_Audio.Stop();
 
         Collector.OnMatchPoint += OnMatchPoint;
         Collector.OnPiDrop += OnPiDrop;
-        Collector.OnAllPisCollected += OnGameOver;
 
         m_Audio = GetComponent<AudioSource>();
-    }
-
-    private void OnGameStart()
-    {
-        m_Audio.Play();
     }
 
     private void OnMatchPoint(int playerNum)
@@ -51,11 +48,6 @@ public class MusicPlayer : MonoBehaviour
             m_PlayerNumOfMatchPointHolder = 0;
             m_MatchPointReached = false;
         }
-    }
-
-    private void OnGameOver(int playerNum)
-    {
-        m_Audio.Stop();
     }
 
     private void SpeedUpMusic()
