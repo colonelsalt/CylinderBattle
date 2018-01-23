@@ -12,23 +12,19 @@ public class UIManager : MonoBehaviour
     // HUD object for each Player in game
     [SerializeField] private PlayerHUD[] m_PlayerHUDs;
 
-    [SerializeField] private Text m_ObjectiveTitle;
-
     [SerializeField] private Text m_StartTitle;
 
     [SerializeField] private Text m_GameOverTitle;
 
-    [SerializeField] private Text m_MatchPointTitle;
-
     [SerializeField] private Text m_PauseTitle;
 
-    [SerializeField] private Image m_FadePanel;
+    [SerializeField] private Animator m_ObjectiveTitleAnim;
+
+    [SerializeField] private Animator m_FadePanelAnim;
+
+    [SerializeField] private Animator m_MatchPointAnim;
 
     // --------------------------------------------------------------
-
-    private Animator m_MatchPointAnim;
-
-    private Animator m_FadePanelAnim;
 
     // --------------------------------------------------------------
 
@@ -59,9 +55,6 @@ public class UIManager : MonoBehaviour
 
         PowerupManager.OnPowerupReceived += OnPowerupReceived;
 
-        m_MatchPointAnim = m_MatchPointTitle.GetComponent<Animator>();
-        m_FadePanelAnim = m_FadePanel.GetComponent<Animator>();
-
         if (m_PlayerHUDs.Length != GameManager.NUM_PLAYERS)
         {
             Debug.LogError("UIManager: Incorrect number of PlayerHUDs assigned.");
@@ -70,8 +63,8 @@ public class UIManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        m_ObjectiveTitle.GetComponent<Animator>().SetTrigger("showTrigger");
-        Destroy(m_ObjectiveTitle, 4f);
+        m_ObjectiveTitleAnim.SetTrigger("showTrigger");
+        Destroy(m_ObjectiveTitleAnim.gameObject, 4f);
     }
 
     private void OnGameStart()
@@ -156,7 +149,10 @@ public class UIManager : MonoBehaviour
 
     private void OnPowerupReceived(Powerup type, int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].ActivatePowerup(type);
+        if (type == Powerup.LIGHTNING_SPRINT)
+        {
+            m_PlayerHUDs[playerNum - 1].ActivateLightningSprint();
+        }
     }
 
     private void OnMatchPoint(int playerNum)
@@ -166,19 +162,32 @@ public class UIManager : MonoBehaviour
 
     private void OnGameOver(int numOfWinner)
     {
-        Collector.OnPiPickup -= OnPiPickup;
-        Collector.OnPiDrop -= OnPiPickup;
-        Collector.OnPlusPickup -= OnUpdatePluses;
-        Collector.OnAllPisCollected -= OnGameOver;
-        Gun.OnGunFired -= OnUpdateAmmo;
-        WeaponManager.OnWeaponActivated -= OnWeaponPickup;
-        WeaponManager.OnWeaponDisabled -= OnHideWeapon;
-        PlayerHealth.OnPlayerDamaged -= OnUpdateHealth;
-        PlayerHealth.OnPlayerExtraLife -= OnUpdateHealth;
-        PlayerHealth.OnPlayerRespawn -= OnPlayerRespawn;
+        GameManager.OnGameStart -= OnGameStart;
+        GameManager.OnGamePaused -= OnGamePaused;
+        GameManager.OnGameResumed -= OnGameResumed;
+
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
+        Collector.OnPiPickup -= OnPiPickup;
+        Collector.OnPiDrop -= OnPiDrop;
+        Collector.OnPlusPickup -= OnUpdatePluses;
+        Collector.OnAllPisCollected -= OnGameOver;
+        Collector.OnMatchPoint -= OnMatchPoint;
+
+        Gun.OnGunFired -= OnUpdateAmmo;
+
+        WeaponManager.OnWeaponPickup -= OnWeaponPickup;
+        WeaponManager.OnWeaponActivated -= OnActivateWeapon;
+        WeaponManager.OnWeaponDisabled -= OnHideWeapon;
+
+        PlayerHealth.OnPlayerDamaged -= OnUpdateHealth;
+        PlayerHealth.OnPlayerExtraLife -= OnUpdateHealth;
+        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
+        PlayerHealth.OnPlayerRespawn -= OnPlayerRespawn;
+
+        PowerupManager.OnPowerupReceived -= OnPowerupReceived;
+
         m_GameOverTitle.enabled = true;
-        m_GameOverTitle.text += "\nPlayer " + numOfWinner + " wins!";
+        m_FadePanelAnim.SetTrigger("fadeOutTrigger");
     }
 }

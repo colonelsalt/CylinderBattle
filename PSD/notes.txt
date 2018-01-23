@@ -8,12 +8,14 @@ REFACTORING TODOS:
 -Simplify and thoroughly comment VoronoiSplitScreen
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
+-Place starting Pi + some WeaponBlocks in level from start of game
+-Get and insert Game Over screen music
 
 
 ACHIEVEMENTS:
--Fucking
--Jumping out of map
--50 pluses collected
+-Fucking (Hidden); "Dirty Boi"
+-Jumping out of map (Hidden); "What are you doing here?"
+-50 pluses collected without dying
 -Broken all crates in scene
 -Surviving entire game without dying
 

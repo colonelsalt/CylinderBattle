@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(ScoreKeeper))]
+[RequireComponent(typeof(ScoreRetriever))]
 public class PlayerHUD : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    [SerializeField] private ScoreKeeper m_Score;
+    [SerializeField] private ScoreRetriever m_Score;
 
     [SerializeField] private Text m_NumPisText;
 
@@ -155,17 +155,12 @@ public class PlayerHUD : MonoBehaviour
         m_AmmoText.text = m_Score.RemainingAmmo.ToString();
     }
 
-    public void ActivatePowerup(Powerup type)
+    public void ActivateLightningSprint()
     {
-        switch (type)
-        {
-            case Powerup.LIGHTNING_SPRINT:
-                m_StaminaBar.enabled = true;
-                m_StaminaBar.fillAmount = 1f;
-                m_LightningIcon.enabled = true;
-                m_LightningSprintActive = true;
-                break;
-        }
+        m_StaminaBar.enabled = true;
+        m_StaminaBar.fillAmount = 1f;
+        m_LightningIcon.enabled = true;
+        m_LightningSprintActive = true;
     }
 
     public void HidePowerup()

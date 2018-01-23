@@ -44,7 +44,6 @@ public class SoundManager : MonoBehaviour
             m_Instance = this;
             DontDestroyOnLoad(gameObject);
             GameManager.OnGameStart += OnGameStart;
-            Collector.OnAllPisCollected += OnGameOver;
             m_Audio = GetComponent<AudioSource>();
         }
         else
@@ -56,11 +55,6 @@ public class SoundManager : MonoBehaviour
     private void OnGameStart()
     {
         Play(m_GameStartSound);
-    }
-
-    private void OnGameOver(int playerNum)
-    {
-        Play(m_GameOverSound);
     }
 
     public void Play(AudioClip clip)
@@ -95,16 +89,20 @@ public class SoundManager : MonoBehaviour
         float startVolume = audio?.volume ?? 1f;
         while (audio?.volume > 0.1f)
         {
-            if (audio == null) break;
-
             audio.volume -= startVolume * Time.deltaTime / m_FadeOutTime;
             yield return new WaitForEndOfFrame();
+            if (audio == null) break;
         }
         if (audio != null)
         {
             audio.Stop();
             audio.volume = startVolume;
         }
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnGameStart -= OnGameStart;
     }
 
 }

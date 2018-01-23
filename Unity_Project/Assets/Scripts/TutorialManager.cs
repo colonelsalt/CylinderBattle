@@ -18,7 +18,7 @@ public class TutorialManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    [SerializeField] private ScoreKeeper m_Score;
+    [SerializeField] private ScoreRetriever m_Score;
 
     [SerializeField] private Camera m_PlayerCamera;
 

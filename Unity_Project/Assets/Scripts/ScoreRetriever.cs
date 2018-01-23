@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreKeeper : MonoBehaviour
+// Middleman class between UI / backend class and Player stats
+public class ScoreRetriever : MonoBehaviour
 {
     // --------------------------------------------------------------
 
     [SerializeField] private GameObject m_Player;
 
     // --------------------------------------------------------------
+
+    // References to all relevant Player components
 
     private PlayerController m_PlayerController;
 
@@ -23,6 +26,8 @@ public class ScoreKeeper : MonoBehaviour
     private LightningSprint m_LightningSprint;
 
     // --------------------------------------------------------------
+
+    // Public accessors for retrieving Player stats
 
     public int PlayerNum
     {
@@ -82,7 +87,7 @@ public class ScoreKeeper : MonoBehaviour
         {
             if (m_LightningSprint == null) GetLightningSprint();
 
-            return m_LightningSprint.RemainingSprintTime;
+            return m_LightningSprint?.RemainingSprintTime ?? 0f;
         }
     }
 

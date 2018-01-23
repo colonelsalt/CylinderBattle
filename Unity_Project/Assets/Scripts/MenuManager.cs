@@ -9,6 +9,8 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField] private AudioClip m_ButtonClickSound;
 
+    [SerializeField] private Animator m_FadePanelAnim;
+
     // --------------------------------------------------------------
 
     private void ButtonSound()
@@ -20,29 +22,44 @@ public class MenuManager : MonoBehaviour
     public void OnPlayButtonClicked()
     {
         ButtonSound();
-        SceneManager.LoadScene("MainScene");
+        FadeOutBeforeLevelLoad();
     }
 
     public void OnTutorialButtonClicked()
     {
         ButtonSound();
+        // TODO
     }
 
     public void OnAchievementsButtonClicked()
     {
         ButtonSound();
+        // TODO
     }
 
     public void OnMainMenuButtonClicked()
     {
         if (SceneManager.GetActiveScene().name == "TitleScreen")
         {
-            // TODO
+            // TODO: Show level select options
+
         }
         else
         {
-            SceneManager.LoadScene("TitleScreen");
+            FadeOutBeforeLevelLoad();
         }
+    }
+
+    private void FadeOutBeforeLevelLoad()
+    {
+        m_FadePanelAnim.SetTrigger("fadeOutTrigger");
+        Invoke("LoadNextLevel", 1.2f);
+    }
+
+    private void LoadNextLevel()
+    {
+        int levelIndex = (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings;
+        SceneManager.LoadScene(levelIndex);
     }
 
 }

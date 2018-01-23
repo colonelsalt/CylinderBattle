@@ -22,15 +22,35 @@ public class MusicPlayer : MonoBehaviour
 
     private void Awake()
     {
-        GameManager.OnGameStart += () => m_Audio.Play();
-        GameManager.OnGamePaused += () => m_Audio.Pause();
-        GameManager.OnGameResumed += () => m_Audio.UnPause();
-        Collector.OnAllPisCollected += (p) => m_Audio.Stop();
+        GameManager.OnGameStart += OnGameStart;
+        GameManager.OnGamePaused += OnGamePaused;
+        GameManager.OnGameResumed += OnGameResumed;
+        Collector.OnAllPisCollected += OnGameOver;
 
         Collector.OnMatchPoint += OnMatchPoint;
         Collector.OnPiDrop += OnPiDrop;
 
         m_Audio = GetComponent<AudioSource>();
+    }
+
+    private void OnGameStart()
+    {
+        m_Audio.Play();
+    }
+
+    private void OnGamePaused()
+    {
+        m_Audio.Pause();
+    }
+
+    private void OnGameResumed()
+    {
+        m_Audio.UnPause();
+    }
+
+    private void OnGameOver(int playerNum)
+    {
+        m_Audio.Stop();
     }
 
     private void OnMatchPoint(int playerNum)
@@ -58,6 +78,17 @@ public class MusicPlayer : MonoBehaviour
     private void SetMusicToNormal()
     {
         m_Audio.pitch = 1f;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.OnGameStart -= OnGameStart;
+        GameManager.OnGamePaused -= OnGamePaused;
+        GameManager.OnGameResumed -= OnGameResumed;
+        Collector.OnAllPisCollected -= OnGameOver;
+
+        Collector.OnMatchPoint -= OnMatchPoint;
+        Collector.OnPiDrop -= OnPiDrop;
     }
 
 }
