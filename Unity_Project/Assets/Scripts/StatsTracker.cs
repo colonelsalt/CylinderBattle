@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Keeps track of hidden Player stats (
+// Keeps track of Player stats
 public class StatsTracker : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -27,7 +27,9 @@ public class StatsTracker : MonoBehaviour
 
     private int m_Deaths = 0;
 
-    private int m_Distance = 0;
+    private float m_Distance = 0;
+
+    private Vector3 m_LastPlayerPos;
 
     // --------------------------------------------------------------
 
@@ -36,6 +38,38 @@ public class StatsTracker : MonoBehaviour
         get
         {
             return m_PlayerWinner;
+        }
+    }
+
+    public int NumDeaths
+    {
+        get
+        {
+            return m_Deaths;
+        }
+    }
+
+    public int NumPis
+    {
+        get
+        {
+            return m_Pis;
+        }
+    }
+
+    public int NumTotalPluses
+    {
+        get
+        {
+            return m_TotalPluses;
+        }
+    }
+
+    public int DistanceCovered
+    {
+        get
+        {
+            return (int)m_Distance;
         }
     }
 
@@ -49,16 +83,37 @@ public class StatsTracker : MonoBehaviour
     private void OnGameStart()
     {
         Collector.OnAllPisCollected += OnGameOver;
+        Collector.OnPlusPickup += OnPlusPickup;
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
 
+        m_LastPlayerPos = m_Score.PlayerPosition;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void LateUpdate()
+    {
+        if (m_Score.IsPlayerAlive)
+        {
+            m_Distance += Vector3.Distance(m_LastPlayerPos, m_Score.PlayerPosition);
+            m_LastPlayerPos = m_Score.PlayerPosition;
+        }
     }
 
     private void OnGameOver(int playerNum)
     {
         m_PlayerWinner = playerNum;
-        Collector.OnAllPisCollected -= OnGameOver;
-        GameManager.OnGameStart -= OnGameStart;
+
+        RemoveListeners();
+
+        m_Pis = m_Score.NumPis;
+    }
+
+    private void OnPlusPickup(int playerNum)
+    {
+        if (playerNum == m_Score.PlayerNum)
+        {
+            m_TotalPluses++;
+        }
     }
 
     private void OnPlayerDeath(int playerNum)
@@ -69,9 +124,15 @@ public class StatsTracker : MonoBehaviour
         }
     }
 
-    public void Disable()
+    private void RemoveListeners()
     {
-        Destroy(gameObject);
+        Collector.OnAllPisCollected -= OnGameOver;
+        GameManager.OnGameStart -= OnGameStart;
+    }
+
+    private void OnDisable()
+    {
+        RemoveListeners();
     }
 
 }

@@ -62,6 +62,14 @@ public class PlayerHealth : MonoBehaviour, IHealth
         }
     }
 
+    public bool IsAlive
+    {
+        get
+        {
+            return m_IsAlive;
+        }
+    }
+
     // --------------------------------------------------------------
 
     private void Awake()

@@ -119,6 +119,7 @@ public class BoxingGlove : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // Do nothing if we just collided with ourselves
+        if (collision.gameObject.GetComponent<BoxingGlove>() != null) return;
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
         if (player != null)
         {
@@ -188,9 +189,13 @@ public class BoxingGlove : MonoBehaviour
 
     private void Deactivate()
     {
-        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
         m_Player.GetComponent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
     }
 
 }

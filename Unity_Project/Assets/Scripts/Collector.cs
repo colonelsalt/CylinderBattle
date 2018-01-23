@@ -136,4 +136,11 @@ public class Collector : MonoBehaviour
 
         OnPiDrop(m_Player.PlayerNum);
     }
+
+    private void OnDisable()
+    {
+        PlayerHealth.OnPlayerDeath -= OnResetPlusCount;
+        PlayerHealth.OnPlayerDeath -= OnCheckForPiDrop;
+        PlayerHealth.OnPlayerDamaged -= OnCheckForPiDrop;
+    }
 }

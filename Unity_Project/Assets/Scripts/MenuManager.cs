@@ -39,6 +39,7 @@ public class MenuManager : MonoBehaviour
 
     public void OnMainMenuButtonClicked()
     {
+        ButtonSound();
         if (SceneManager.GetActiveScene().name == "TitleScreen")
         {
             // TODO: Show level select options

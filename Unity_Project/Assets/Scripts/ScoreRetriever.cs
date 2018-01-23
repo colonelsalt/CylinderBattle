@@ -101,13 +101,21 @@ public class ScoreRetriever : MonoBehaviour
         }
     }
 
-    public bool HasStamina
+    public bool PlayerHasStamina
     {
         get
         {
             if (m_LightningSprint == null) GetLightningSprint();
 
             return m_LightningSprint.HasStamina;
+        }
+    }
+
+    public bool IsPlayerAlive
+    {
+        get
+        {
+            return m_PlayerHealth.IsAlive;
         }
     }
 

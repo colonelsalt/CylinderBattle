@@ -10,6 +10,8 @@ REFACTORING TODOS:
  methods
 -Place starting Pi + some WeaponBlocks in level from start of game
 -Get and insert Game Over screen music
+-Solve "Invalid world AABB" glitch (something about Boxing Glove
+ spark particles?)
 
 
 ACHIEVEMENTS:

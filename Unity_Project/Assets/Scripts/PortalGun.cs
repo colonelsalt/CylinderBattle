@@ -128,9 +128,13 @@ public class PortalGun : MonoBehaviour
 
     private void Deactivate()
     {
-        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
         m_Player.GetComponent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
+    }
+
+    private void OnDisable()
+    {
+        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
     }
 
 }

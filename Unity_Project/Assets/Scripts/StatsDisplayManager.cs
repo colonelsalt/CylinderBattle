@@ -17,6 +17,18 @@ public class StatsDisplayManager : MonoBehaviour
 
     [SerializeField] private Sprite[] m_PlayerLoseSprites;
 
+    [SerializeField] private Text[] m_PiTexts;
+
+    [SerializeField] private Text[] m_TotalPlusesTexts;
+
+    [SerializeField] private Text[] m_PlayerKillsTexts;
+
+    [SerializeField] private Text[] m_EnemyKillsTexts;
+
+    [SerializeField] private Text[] m_DeathsTexts;
+
+    [SerializeField] private Text[] m_DistanceTexts;
+
     // --------------------------------------------------------------
 
     private StatsTracker[] m_Stats;
@@ -40,10 +52,23 @@ public class StatsDisplayManager : MonoBehaviour
 
         // TODO: Retrieve stats from StatsTrackers and display
         m_Stats = FindObjectsOfType<StatsTracker>();
+        if (m_Stats.Length != GameManager.NUM_PLAYERS)
+        {
+            Debug.LogError("StatsDisplayManager: Invalid number of StatsTrackers found.");
+            return;
+        }
+
+        for (int i = 0; i < GameManager.NUM_PLAYERS; i++)
+        {
+            m_PiTexts[i].text = m_Stats[i].NumPis.ToString();
+            m_DeathsTexts[i].text = m_Stats[i].NumDeaths.ToString();
+            m_TotalPlusesTexts[i].text = m_Stats[i].NumTotalPluses.ToString();
+            m_DistanceTexts[i].text = m_Stats[i].DistanceCovered + " m";
+        }
 
         foreach (StatsTracker tracker in m_Stats)
         {
-            tracker.Disable();
+            Destroy(tracker.gameObject);
         }
 
     }
