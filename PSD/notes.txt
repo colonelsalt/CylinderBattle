@@ -1,14 +1,10 @@
-proposal:
--IAttacker interface, which PlayerController and enemies implement
--Whenever an IHealth takes damage or dies, a reference to the
- IAttacker that did it will be passed in
-
 
 REFACTORING TODOS:
 -Simplify and thoroughly comment VoronoiSplitScreen
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
--Place starting Pi + some WeaponBlocks in level from start of game
+
+-Insert Level 2 music
 -Get and insert Game Over screen music
 -Insert "Main Menu" and "Quit Game" buttons in appropriate places
 -Solve "Invalid world AABB" glitch

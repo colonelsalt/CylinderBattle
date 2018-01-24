@@ -11,6 +11,8 @@ public class VoronoiSplitScreen : MonoBehaviour
     // Distance between camera and corresponding Player
     [SerializeField] private float m_CameraDistance = 20f;
 
+    [SerializeField] private GameObject m_SplitScreenMask;
+
     [SerializeField] private Camera m_PrimaryCamera;
 
     [SerializeField] private Camera m_SecondaryCamera;
@@ -24,9 +26,9 @@ public class VoronoiSplitScreen : MonoBehaviour
     // Midpoint between Players
     private Vector3 m_Midpoint;
 
-    private Renderer m_SplitScreenMask;
+    private Renderer m_Player1Rend;
 
-    private Renderer m_DividerLine;
+    private Renderer m_Player2Rend;
 
     // Whether screen is currently split
     private bool m_SplitScreenActive = false;
@@ -40,10 +42,10 @@ public class VoronoiSplitScreen : MonoBehaviour
     {
         m_SecondaryCamera.enabled = false;
 
-        m_MaskOffset = m_PrimaryCamera.nearClipPlane + 0.1f;
+        m_Player1Rend = m_Player1.GetComponentInChildren<Renderer>();
+        m_Player2Rend = m_Player2.GetComponentInChildren<Renderer>();
 
-        m_SplitScreenMask = GetComponentInChildren<Renderer>();
-        m_DividerLine = m_SplitScreenMask.transform.GetChild(0).GetComponent<Renderer>();
+        m_MaskOffset = m_PrimaryCamera.nearClipPlane + 0.1f;
     }
 
     private void LateUpdate()
@@ -66,6 +68,7 @@ public class VoronoiSplitScreen : MonoBehaviour
         {
             PositionCameras();
             PositionScreenMask();
+
         }
         else
         {
@@ -80,8 +83,7 @@ public class VoronoiSplitScreen : MonoBehaviour
         m_SplitScreenActive = enabled;
         m_SecondaryCamera.enabled = enabled;
 
-        m_SplitScreenMask.enabled = enabled;
-        m_DividerLine.enabled = enabled;
+        m_SplitScreenMask.SetActive(enabled);
     }
 
     private void PositionCameras()

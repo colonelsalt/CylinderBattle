@@ -92,7 +92,7 @@ public class Gun : MonoBehaviour
         m_RemainingAmmo = MAX_AMMO;
     }
 
-    private void Death()
+    private void OnDeath()
     {
          Deactivate();
     }
