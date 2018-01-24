@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerController))]
 public class WeaponManager : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -31,7 +30,7 @@ public class WeaponManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private PlayerController m_Player;
+    private int m_PlayerNum;
 
     private bool m_HasWeapon = false;
 
@@ -54,12 +53,12 @@ public class WeaponManager : MonoBehaviour
 
     private void Awake()
     {
-        m_Player = GetComponent<PlayerController>();
+        m_PlayerNum = GetComponent<IPlayer>().PlayerNum();
     }
 
     private void Update()
     {
-        if (InputHelper.FireButtonPressed(m_Player.PlayerNum))
+        if (InputHelper.FireButtonPressed(m_PlayerNum))
         {
             ActivateWeapon();
         }
@@ -76,7 +75,7 @@ public class WeaponManager : MonoBehaviour
             case Weapon.BOMB:
                 // Spawn bomb 1m in front of Player with fuse pointing up (x=-90 deg. angle)
                 GameObject bomb = Instantiate(m_BombPrefab, transform.position + transform.forward, Quaternion.Euler(-90f, 0f, 0f)) as GameObject;
-                bomb.GetComponent<Bomb>().AssignOwner(m_Player.gameObject);
+                bomb.GetComponent<Bomb>().AssignOwner(gameObject);
                 m_WeaponIsActive = false;
                 break;
             case Weapon.GUN:
@@ -92,7 +91,7 @@ public class WeaponManager : MonoBehaviour
                 break;
         }
 
-        OnWeaponActivated(m_Weapon, m_Player.PlayerNum);
+        OnWeaponActivated(m_Weapon, m_PlayerNum);
         m_HasWeapon = false;
     }
 
@@ -100,7 +99,7 @@ public class WeaponManager : MonoBehaviour
     private void RefillWeapon()
     {
         BroadcastMessage("OnWeaponReset");
-        OnWeaponActivated(m_Weapon, m_Player.PlayerNum);
+        OnWeaponActivated(m_Weapon, m_PlayerNum);
     }
 
     public void PickupWeapon(Weapon weapon)
@@ -115,7 +114,7 @@ public class WeaponManager : MonoBehaviour
         m_HasWeapon = true;
         m_Weapon = weapon;
 
-        OnWeaponPickup(weapon, m_Player.PlayerNum);
+        OnWeaponPickup(weapon, m_PlayerNum);
     }
 
     private void OnDeath()
@@ -126,6 +125,6 @@ public class WeaponManager : MonoBehaviour
     public void DisableWeapon()
     {
         m_WeaponIsActive = false;
-        OnWeaponDisabled(m_Weapon, m_Player.PlayerNum);
+        OnWeaponDisabled(m_Weapon, m_PlayerNum);
     }
 }

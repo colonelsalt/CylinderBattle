@@ -8,7 +8,7 @@ public class StatsTracker : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    [SerializeField] private ScoreRetriever m_Score;
+    [SerializeField] private PlayerStats m_Player;
 
     // How long after Player X knocks over Player Y to consider Y's death as X's kill
     [SerializeField] private float m_KnockBackTime = 3f;
@@ -109,17 +109,17 @@ public class StatsTracker : MonoBehaviour
         EnemyHealth.OnEnemyDeath += OnEnemyDeath;
         PhysicsSwitch.OnObjectKnockedBack += OnObjectKnockedBack;
 
-        m_LastPlayerPos = m_Score.PlayerPosition;
+        m_LastPlayerPos = m_Player.Position();
         DontDestroyOnLoad(gameObject);
     }
 
     private void LateUpdate()
     {
         // If Player alive, update their "distance covered" measure (don't count respawn movement)
-        if (m_Score.IsPlayerAlive)
+        if (m_Player.IsPlayerAlive)
         {
-            m_Distance += Vector3.Distance(m_LastPlayerPos, m_Score.PlayerPosition);
-            m_LastPlayerPos = m_Score.PlayerPosition;
+            m_Distance += Vector3.Distance(m_LastPlayerPos, m_Player.Position());
+            m_LastPlayerPos = m_Player.Position();
         }
 
         if (m_TimeSinceKnockOver < m_KnockBackTime)
@@ -134,12 +134,12 @@ public class StatsTracker : MonoBehaviour
 
         RemoveListeners();
 
-        m_Pis = m_Score.NumPis;
+        m_Pis = m_Player.NumPis;
     }
 
     private void OnPlusPickup(int playerNum)
     {
-        if (playerNum == m_Score.PlayerNum)
+        if (playerNum == m_Player.PlayerNum())
         {
             m_TotalPluses++;
         }
@@ -147,7 +147,7 @@ public class StatsTracker : MonoBehaviour
 
     private void OnPlayerDeath(int playerNum, GameObject killer)
     {
-        if (playerNum == m_Score.PlayerNum)
+        if (playerNum == m_Player.PlayerNum())
         {
             m_Deaths++;
 
@@ -160,11 +160,11 @@ public class StatsTracker : MonoBehaviour
         else
         {
             // If other Player was killed by this Player, increment PlayerKills count
-            PlayerController playerAttacker = killer.GetComponent<PlayerController>();
+            IPlayer playerAttacker = killer.GetComponent<IPlayer>();
 
             if (playerAttacker != null)
             {
-                if (playerAttacker.PlayerNum == m_Score.PlayerNum)
+                if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
                 {
                     m_PlayerKills++;
                 }
@@ -183,10 +183,10 @@ public class StatsTracker : MonoBehaviour
 
     private void OnEnemyDeath(GameObject killer)
     {
-        PlayerController playerAttacker = killer.GetComponent<PlayerController>();
+        IPlayer playerAttacker = killer.GetComponent<IPlayer>();
         if (playerAttacker != null)
         {
-            if (playerAttacker.PlayerNum == m_Score.PlayerNum)
+            if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
             {
                 m_EnemyKills++;
             }
@@ -195,12 +195,12 @@ public class StatsTracker : MonoBehaviour
 
     private void OnObjectKnockedBack(GameObject victim, GameObject attacker)
     {
-        PlayerController playerAttacker = attacker.GetComponent<PlayerController>();
+        IPlayer playerAttacker = attacker.GetComponent<IPlayer>();
         if (playerAttacker != null)
         {
-            if (playerAttacker.PlayerNum == m_Score.PlayerNum)
+            if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
             {
-                if (victim.GetComponent<PlayerController>() != null)
+                if (victim.GetComponent<IPlayer>() != null)
                 {
                     m_TimeSinceKnockOver = m_KnockBackTime;
                 }

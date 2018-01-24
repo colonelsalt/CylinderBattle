@@ -18,7 +18,7 @@ public class TutorialManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    [SerializeField] private ScoreRetriever m_Score;
+    [SerializeField] private PlayerStats m_Player;
 
     [SerializeField] private Camera m_PlayerCamera;
 
@@ -107,7 +107,7 @@ public class TutorialManager : MonoBehaviour
 
     private void OnWeaponPickup(Weapon type, int playerNum)
     {
-        if (playerNum == m_Score.PlayerNum)
+        if (playerNum == m_Player.PlayerNum())
         {
             QueueTutorial(TutorialAction.WEAPON);
         }
@@ -115,7 +115,7 @@ public class TutorialManager : MonoBehaviour
 
     private void OnWeaponActivated(Weapon type, int playerNum)
     {
-        if (playerNum == m_Score.PlayerNum && type == Weapon.PORTAL_GUN)
+        if (playerNum == m_Player.PlayerNum() && type == Weapon.PORTAL_GUN)
         {
             QueueTutorial(TutorialAction.PORTAL_GUN);
         }
@@ -123,7 +123,7 @@ public class TutorialManager : MonoBehaviour
 
     private void OnPowerupReceived(Powerup type, int playerNum)
     {
-        if (playerNum != m_Score.PlayerNum) return;
+        if (playerNum != m_Player.PlayerNum()) return;
 
         switch (type)
         {
@@ -169,8 +169,8 @@ public class TutorialManager : MonoBehaviour
         if (m_TetherToPlayer)
         {
             // Display text on left or right side of player depending on screen position
-            Vector3 offset = (m_PlayerCamera.WorldToViewportPoint(m_Score.PlayerPosition).x < 0.5f) ? m_OffsetFromPlayer : -m_OffsetFromPlayer;
-            transform.position = m_PlayerCamera.WorldToScreenPoint(m_Score.PlayerPosition + offset);
+            Vector3 offset = (m_PlayerCamera.WorldToViewportPoint(m_Player.Position()).x < 0.5f) ? m_OffsetFromPlayer : -m_OffsetFromPlayer;
+            transform.position = m_PlayerCamera.WorldToScreenPoint(m_Player.Position() + offset);
         }
         else
         {
@@ -183,13 +183,13 @@ public class TutorialManager : MonoBehaviour
         switch (action)
         {
             case TutorialAction.WEAPON:
-                return "Press " + InputHelper.GetButtonName(ButtonAction.FIRE, m_Score.PlayerNum) + " to fire weapon!";
+                return "Press " + InputHelper.GetButtonName(ButtonAction.FIRE, m_Player.PlayerNum()) + " to fire weapon!";
             case TutorialAction.JETPACK:
-                return "Press " + InputHelper.GetButtonName(ButtonAction.JUMP, m_Score.PlayerNum) + " in mid-air for a boost!";
+                return "Press " + InputHelper.GetButtonName(ButtonAction.JUMP, m_Player.PlayerNum()) + " in mid-air for a boost!";
             case TutorialAction.PORTAL_GUN:
-                return "Press " + InputHelper.GetButtonName(ButtonAction.FIRE, m_Score.PlayerNum) + " to fire portals!";
+                return "Press " + InputHelper.GetButtonName(ButtonAction.FIRE, m_Player.PlayerNum()) + " to fire portals!";
             case TutorialAction.SPRINT:
-                return "Hold " + InputHelper.GetButtonName(ButtonAction.SPRINT, m_Score.PlayerNum) + " to sprint!";
+                return "Hold " + InputHelper.GetButtonName(ButtonAction.SPRINT, m_Player.PlayerNum()) + " to sprint!";
             case TutorialAction.STAMINA:
                 return "Watch your stamina meter!";
             default:

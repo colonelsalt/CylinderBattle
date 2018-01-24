@@ -14,7 +14,7 @@ public class PortalGun : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private PlayerController m_Player;
+    private int m_PlayerNum;
 
     private LineRenderer m_AimLine;
 
@@ -34,7 +34,7 @@ public class PortalGun : MonoBehaviour
 
     private void Awake()
     {
-        m_Player = GetComponentInParent<PlayerController>();
+        m_PlayerNum = GetComponentInParent<IPlayer>().PlayerNum();
         m_AimLine = GetComponentInChildren<LineRenderer>();
     }
 
@@ -43,12 +43,12 @@ public class PortalGun : MonoBehaviour
         UpdateAimTarget();
         UpdateAimLine();
 
-        if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && m_TargetTag == "Wall" && !m_IsFiring)
+        if (InputHelper.FireButtonPressed(m_PlayerNum) && m_TargetTag == "Wall" && !m_IsFiring)
         {
             m_IsFiring = true;
             FirePortal();
         }
-        if (InputHelper.FireButtonReleased(m_Player.PlayerNum))
+        if (InputHelper.FireButtonReleased(m_PlayerNum))
         {
             m_IsFiring = false;
         }
@@ -124,7 +124,7 @@ public class PortalGun : MonoBehaviour
 
     private void Deactivate()
     {
-        m_Player.GetComponent<WeaponManager>().DisableWeapon();
+        GetComponentInParent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
     }
 

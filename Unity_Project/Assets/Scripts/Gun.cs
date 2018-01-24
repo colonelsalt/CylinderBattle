@@ -29,7 +29,7 @@ public class Gun : MonoBehaviour
     public const int MAX_AMMO = 10;
 
     // The Player this Gun belongs to
-    private PlayerController m_Player;
+    private int m_PlayerNum;
 
     private int m_RemainingAmmo;
 
@@ -51,17 +51,17 @@ public class Gun : MonoBehaviour
     private void Awake()
     {
         m_RemainingAmmo = MAX_AMMO;
-        m_Player = GetComponentInParent<PlayerController>();
+        m_PlayerNum = GetComponentInParent<IPlayer>().PlayerNum();
     }
 
     private void Update()
     {
-        if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && !m_IsFiring)
+        if (InputHelper.FireButtonPressed(m_PlayerNum) && !m_IsFiring)
         {
             InvokeRepeating("Fire", 0.00001f, m_FiringRate);
             m_IsFiring = true;
         }
-        if (InputHelper.FireButtonReleased(m_Player.PlayerNum))
+        if (InputHelper.FireButtonReleased(m_PlayerNum))
         {
             CancelInvoke("Fire");
             m_IsFiring = false;
@@ -72,11 +72,11 @@ public class Gun : MonoBehaviour
     private void Fire()
     {
         m_RemainingAmmo--;
-        OnGunFired(m_Player.PlayerNum);
+        OnGunFired(m_PlayerNum);
         Vector3 spawnPos = transform.position + (2.5f * transform.forward);
 
         GameObject laser = Instantiate(m_LaserPrefab, spawnPos, transform.rotation) as GameObject;
-        laser.GetComponent<Laser>().AssignOwner(m_Player.gameObject);
+        laser.GetComponent<Laser>().AssignOwner(transform.parent.gameObject);
 
         SoundManager.Instance.PlayRandom(m_GunSounds);
 
@@ -99,7 +99,7 @@ public class Gun : MonoBehaviour
 
     private void Deactivate()
     {
-        m_Player.GetComponent<WeaponManager>().DisableWeapon();
+        GetComponentInParent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
     }
 }

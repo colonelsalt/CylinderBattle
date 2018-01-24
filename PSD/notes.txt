@@ -13,8 +13,8 @@ REFACTORING TODOS:
 -Insert "Main Menu" and "Quit Game" buttons in appropriate places
 -Solve "Invalid world AABB" glitch
 -Clean up unused tags and layers
--Abstract away PlayerController behind IPlayer interface?
- OR INDEED: Make ScoreRetriever a component of Player?
+-Remove direct call by weapons to WeaponManager.DisableWeapon in favour
+ of SendMessageUpwards?
 
 ACHIEVEMENTS:
 -Fucking (Hidden); "Dirty Boi"

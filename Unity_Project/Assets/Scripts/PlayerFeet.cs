@@ -13,7 +13,7 @@ public class PlayerFeet : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private PlayerController m_Player;
+    private PlayerController m_PlayerController;
 
     private Collider m_Collider;
 
@@ -22,7 +22,7 @@ public class PlayerFeet : MonoBehaviour
 
     private void Awake()
     {
-        m_Player = GetComponentInParent<PlayerController>();
+        m_PlayerController = GetComponentInParent<PlayerController>();
         m_Collider = transform.parent.GetComponent<Collider>();
     }
 
@@ -36,7 +36,7 @@ public class PlayerFeet : MonoBehaviour
             IHealth otherHealth = other.GetComponent<IHealth>();
             if (otherHealth != null)
             {
-                otherHealth.TakeDamage(1, m_Player.gameObject);
+                otherHealth.TakeDamage(1, m_PlayerController.gameObject);
                 Bounce();
             }
             
@@ -44,7 +44,7 @@ public class PlayerFeet : MonoBehaviour
             WeaponBlock weaponBlock = other.GetComponent<WeaponBlock>();
             if (weaponBlock != null)
             {
-                weaponBlock.Break(m_Player.GetComponent<WeaponManager>());
+                weaponBlock.Break(m_PlayerController.GetComponent<WeaponManager>());
                 Bounce();
             }
         }
@@ -52,6 +52,6 @@ public class PlayerFeet : MonoBehaviour
 
     private void Bounce()
     {
-        m_Player.Jump(m_BounceHeight);
+        m_PlayerController.Jump(m_BounceHeight);
     }
 }

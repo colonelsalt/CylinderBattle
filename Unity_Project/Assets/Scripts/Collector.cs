@@ -26,14 +26,14 @@ public class Collector : MonoBehaviour
     public static event CollectibleEvent OnMatchPoint;
 
     // --------------------------------------------------------------
-    
+
+    private int m_PlayerNum;
+
     // Number of Pluses collected
     private int m_NumPluses = 0;
 
     // Number of Pis collected
     private int m_NumPis = 0;
-
-    private PlayerController m_Player;
 
     private PowerupManager m_PowerupManager;
 
@@ -67,7 +67,7 @@ public class Collector : MonoBehaviour
         PlayerHealth.OnPlayerDamaged += OnPlayerDamaged;
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
 
-        m_Player = GetComponent<PlayerController>();
+        m_PlayerNum = GetComponent<IPlayer>().PlayerNum();
         m_PowerupManager = GetComponent<PowerupManager>();
     }
 
@@ -85,19 +85,19 @@ public class Collector : MonoBehaviour
         {
             case Collectible.Type.PLUS:
                 m_NumPluses++;
-                OnPlusPickup(m_Player.PlayerNum);
+                OnPlusPickup(m_PlayerNum);
                 m_PowerupManager.CheckForPlusBonus(m_NumPluses);
                 break;
             case Collectible.Type.PI:
                 m_NumPis++;
-                OnPiPickup(m_Player.PlayerNum);
+                OnPiPickup(m_PlayerNum);
                 if (m_NumPis >= GameManager.MAX_NUM_PIS)
                 {
-                    OnAllPisCollected(m_Player.PlayerNum);
+                    OnAllPisCollected(m_PlayerNum);
                 }
                 else if (m_NumPis == GameManager.MAX_NUM_PIS - 1)
                 {
-                    OnMatchPoint(m_Player.PlayerNum);
+                    OnMatchPoint(m_PlayerNum);
                 }
                 break;
         }
@@ -105,7 +105,7 @@ public class Collector : MonoBehaviour
 
     private void OnPlayerDamaged(int playerNum, GameObject attacker)
     {
-        if (playerNum == m_Player.PlayerNum)
+        if (playerNum == m_PlayerNum)
         {
             CheckForPiDrop();
         }
@@ -113,7 +113,7 @@ public class Collector : MonoBehaviour
     
     private void OnPlayerDeath(int playerNum, GameObject attacker)
     {
-        if (playerNum == m_Player.PlayerNum)
+        if (playerNum == m_PlayerNum)
         {
             // Reset Plus count when Player dies
             m_NumPluses = 0;
@@ -142,7 +142,7 @@ public class Collector : MonoBehaviour
         GameObject pi = Instantiate(m_PiPrefab, transform.position + (2f * transform.up), Quaternion.identity) as GameObject;
         pi.GetComponent<Rigidbody>().AddForce(dropDirection * m_DropForce);
 
-        OnPiDrop(m_Player.PlayerNum);
+        OnPiDrop(m_PlayerNum);
     }
 
     private void OnDisable()

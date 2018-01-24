@@ -33,7 +33,7 @@ public class PowerupManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private PlayerController m_Player;
+    private int m_PlayerNum;
 
     private PlayerHealth m_Health;
 
@@ -41,7 +41,7 @@ public class PowerupManager : MonoBehaviour
 
     private void Awake()
     {
-        m_Player = GetComponent<PlayerController>();
+        m_PlayerNum = GetComponent<IPlayer>().PlayerNum();
         m_Health = GetComponent<PlayerHealth>();
     }
 
@@ -59,18 +59,18 @@ public class PowerupManager : MonoBehaviour
                 // Receive Jetpack
                 Instantiate(m_JetpackPrefab, transform.GetChild(0));
                 Instantiate(m_PowerupEffects[(int)Powerup.JETPACK], transform);
-                OnPowerupReceived(Powerup.JETPACK, m_Player.PlayerNum);
+                OnPowerupReceived(Powerup.JETPACK, m_PlayerNum);
                 break;
             case 30:
                 // Receive Lightning Sprint
                 Instantiate(m_LightningSprintPrefab, transform.GetChild(0));
                 Instantiate(m_PowerupEffects[(int)Powerup.LIGHTNING_SPRINT], transform);
-                OnPowerupReceived(Powerup.LIGHTNING_SPRINT, m_Player.PlayerNum);
+                OnPowerupReceived(Powerup.LIGHTNING_SPRINT, m_PlayerNum);
                 break;
             default:
                 // Get extra life
                 Instantiate(m_PowerupEffects[(int)Powerup.EXTRA_LIFE], transform);
-                OnPowerupReceived(Powerup.EXTRA_LIFE, m_Player.PlayerNum);
+                OnPowerupReceived(Powerup.EXTRA_LIFE, m_PlayerNum);
                 m_Health.GetExtraLife();
                 break;
         }

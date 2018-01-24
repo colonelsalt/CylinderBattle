@@ -12,7 +12,7 @@ public class Jetpack : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private PlayerController m_Player;
+    private PlayerController m_PlayerController;
 
     private ParticleSystem m_JetpackFire;
 
@@ -23,11 +23,15 @@ public class Jetpack : MonoBehaviour
 
     private float m_RemainingFloatTime;
 
+    private int m_PlayerNum;
+
     // --------------------------------------------------------------
 
     private void Awake()
     {
-        m_Player = GetComponentInParent<PlayerController>();
+        m_PlayerNum = GetComponentInParent<IPlayer>().PlayerNum();
+
+        m_PlayerController = GetComponentInParent<PlayerController>();
         m_JetpackFire = GetComponentInChildren<ParticleSystem>();
         m_Audio = GetComponent<AudioSource>();
 
@@ -38,15 +42,15 @@ public class Jetpack : MonoBehaviour
     {
         if (m_IsFloating) m_RemainingFloatTime -= Time.deltaTime;
 
-        if (InputHelper.JumpButtonPressed(m_Player.PlayerNum) && m_Player.IsAirBorne && m_RemainingFloatTime > 0f)
+        if (InputHelper.JumpButtonPressed(m_PlayerNum) && m_PlayerController.IsAirBorne && m_RemainingFloatTime > 0f)
         {
             Activate();
         }
-        if (InputHelper.JumpButtonReleased(m_Player.PlayerNum) || m_RemainingFloatTime <= 0f)
+        if (InputHelper.JumpButtonReleased(m_PlayerNum) || m_RemainingFloatTime <= 0f)
         {
             Deactivate();
         }
-        if (!m_Player.IsAirBorne)
+        if (!m_PlayerController.IsAirBorne)
         {
             m_RemainingFloatTime = m_FloatTime;
         }
@@ -58,7 +62,7 @@ public class Jetpack : MonoBehaviour
         m_Audio.Play();
 
         m_IsFloating = true;
-        m_Player.IsFloating = true;
+        m_PlayerController.IsFloating = true;
         m_JetpackFire.Play();
     }
 
@@ -67,7 +71,7 @@ public class Jetpack : MonoBehaviour
         SoundManager.Instance.FadeOut(m_Audio);
 
         m_IsFloating = false;
-        m_Player.IsFloating = false;
+        m_PlayerController.IsFloating = false;
         m_JetpackFire.Stop();
     }
 

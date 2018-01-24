@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Middleman class between UI / backend class and Player stats
-public class ScoreRetriever : MonoBehaviour
+public class PlayerStats : MonoBehaviour, IPlayer
 {
     // --------------------------------------------------------------
 
-    [SerializeField] private GameObject m_Player;
+    [SerializeField] private int m_PlayerNum;
 
     // --------------------------------------------------------------
 
     // References to all relevant Player components
-
-    private PlayerController m_PlayerController;
-
     private PlayerHealth m_PlayerHealth;
 
     private Collector m_Collector;
@@ -28,15 +25,6 @@ public class ScoreRetriever : MonoBehaviour
     // --------------------------------------------------------------
 
     // Public accessors for retrieving Player stats
-
-    public int PlayerNum
-    {
-        get
-        {
-            return m_PlayerController.PlayerNum;
-        }
-    }
-
     public int NumPis
     {
         get
@@ -119,35 +107,36 @@ public class ScoreRetriever : MonoBehaviour
         }
     }
 
-    public Vector3 PlayerPosition
+    // --------------------------------------------------------------
+
+    public int PlayerNum()
     {
-        get
-        {
-            return m_Player.transform.position;
-        }
+        return m_PlayerNum;
     }
 
-    // --------------------------------------------------------------
+    public Vector3 Position()
+    {
+        return transform.position;
+    }
 
     private void Awake()
     {
-        m_PlayerController = m_Player.GetComponent<PlayerController>();
-        m_PlayerHealth = m_Player.GetComponent<PlayerHealth>();
-        m_Collector = m_Player.GetComponent<Collector>();
+        m_PlayerHealth = GetComponent<PlayerHealth>();
+        m_Collector = GetComponent<Collector>();
     }
 
     private void GetGun()
     {
-        m_Gun = m_Player.GetComponentInChildren<Gun>();
+        m_Gun = GetComponentInChildren<Gun>();
     }
 
     private void GetBoxingGloves()
     {
-        m_BoxingGloves = m_Player.GetComponentInChildren<BoxingGlove>();
+        m_BoxingGloves = GetComponentInChildren<BoxingGlove>();
     }
 
     private void GetLightningSprint()
     {
-        m_LightningSprint = m_Player.GetComponentInChildren<LightningSprint>();
+        m_LightningSprint = GetComponentInChildren<LightningSprint>();
     }
 }

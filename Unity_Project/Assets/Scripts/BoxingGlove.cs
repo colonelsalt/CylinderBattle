@@ -26,8 +26,8 @@ public class BoxingGlove : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    // Reference to PlayerController this is attached to
-    private PlayerController m_Player;
+    // Player who holds Gloves
+    private int m_PlayerNum;
 
     private Animator m_Animator;
 
@@ -58,7 +58,7 @@ public class BoxingGlove : MonoBehaviour
     private void Awake()
     {
         m_Animator = GetComponent<Animator>();
-        m_Player = GetComponentInParent<PlayerController>();
+        m_PlayerNum = GetComponentInParent<IPlayer>().PlayerNum();
         m_GloveColliders = GetComponentsInChildren<Collider>();
         m_Sparks = GetComponentsInChildren<ParticleSystem>();
         m_TimeRemaining = GameManager.POWERUP_DURATION;
@@ -67,12 +67,12 @@ public class BoxingGlove : MonoBehaviour
 
     private void Update()
     {
-        if (InputHelper.FireButtonPressed(m_Player.PlayerNum) && !m_IsPunching)
+        if (InputHelper.FireButtonPressed(m_PlayerNum) && !m_IsPunching)
         {
             m_IsPunching = true;
             InvokeRepeating("Punch", 0.00001f, m_TimeBetweenPunches);
         }
-        if (InputHelper.FireButtonReleased(m_Player.PlayerNum))
+        if (InputHelper.FireButtonReleased(m_PlayerNum))
         {
             m_IsPunching = false;
             CancelInvoke("Punch");
@@ -118,17 +118,17 @@ public class BoxingGlove : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // Do nothing if we just collided with ourselves
-        PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+        IPlayer player = collision.gameObject.GetComponent<IPlayer>();
         if (player != null)
         {
-            if (player.PlayerNum == m_Player.PlayerNum) return;
+            if (player.PlayerNum() == m_PlayerNum) return;
         }
         
         // If struck a Kinematic Rigidbody, make it temporarily affected by physics
         PhysicsSwitch manualMovedObject = collision.gameObject.GetComponent<PhysicsSwitch>();
         if (manualMovedObject != null)
         {
-            manualMovedObject.ActivatePhysicsReactions(true, m_Player.gameObject);
+            manualMovedObject.ActivatePhysicsReactions(true, transform.parent.gameObject);
         }
 
         // If object struck has Rigidbody, apply force to it
@@ -143,7 +143,7 @@ public class BoxingGlove : MonoBehaviour
         IHealth health = collision.gameObject.GetComponent<IHealth>();
         if (health != null)
         {
-            health.TakeDamage(m_Damage, m_Player.gameObject);
+            health.TakeDamage(m_Damage, transform.parent.gameObject);
             SoundManager.Instance.PlayRandom(m_FleshImpactSounds);
         }
         else
@@ -158,7 +158,7 @@ public class BoxingGlove : MonoBehaviour
         IHealth health = other.GetComponent<IHealth>();
         if (health != null)
         {
-            health.TakeDamage(m_Damage, m_Player.gameObject);
+            health.TakeDamage(m_Damage, transform.parent.gameObject);
             SoundManager.Instance.PlayRandom(m_FleshImpactSounds);
         }
     }
@@ -184,7 +184,7 @@ public class BoxingGlove : MonoBehaviour
 
     private void Deactivate()
     {
-        m_Player.GetComponent<WeaponManager>().DisableWeapon();
+        GetComponentInParent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
     }
 }

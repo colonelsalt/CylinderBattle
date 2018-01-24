@@ -23,8 +23,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float m_BackFlipHeight = 8f;
 
-    [SerializeField] private int m_PlayerNum;
-
     // --------------------------------------------------------------
 
     // Sounds
@@ -61,15 +59,9 @@ public class PlayerController : MonoBehaviour
 
     private bool m_IsBackFlipping = false;
 
-    // --------------------------------------------------------------
+    private int m_PlayerNum;
 
-    public int PlayerNum
-    {
-        get
-        {
-            return m_PlayerNum;
-        }
-    }
+    // --------------------------------------------------------------
 
     public bool IsRunning
     {
@@ -109,6 +101,7 @@ public class PlayerController : MonoBehaviour
         m_Animator = GetComponentInChildren<Animator>();
 
         m_MovementSpeed = m_WalkSpeed;
+        m_PlayerNum = GetComponent<IPlayer>().PlayerNum();
     }
 
     public void Jump(float heightToJump)

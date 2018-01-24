@@ -15,7 +15,9 @@ public class LightningSprint : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    private PlayerController m_Player;
+    private int m_PlayerNum;
+
+    private PlayerController m_PlayerController;
 
     private Renderer m_Rend;
 
@@ -61,7 +63,8 @@ public class LightningSprint : MonoBehaviour
 
     private void Awake()
     {
-        m_Player = GetComponentInParent<PlayerController>();
+        m_PlayerNum = GetComponentInParent<IPlayer>().PlayerNum();
+        m_PlayerController = GetComponentInParent<PlayerController>();
         m_Rend = GetComponent<Renderer>();
         m_Lightning = GetComponentInChildren<ParticleSystem>();
         m_Animator = transform.parent.GetComponent<Animator>();
@@ -72,7 +75,7 @@ public class LightningSprint : MonoBehaviour
 
     private void Update()
     {
-        if (InputHelper.SprintButtonPressed(m_Player.PlayerNum))
+        if (InputHelper.SprintButtonPressed(m_PlayerNum))
         {
             if (m_HasStamina && m_RemainingSprintTime > 0)
             {
@@ -114,7 +117,7 @@ public class LightningSprint : MonoBehaviour
             m_PlayingSprintSound = true;
         }
 
-        m_Player.IsRunning = true;
+        m_PlayerController.IsRunning = true;
         m_Animator.SetBool("IsSprinting", true);
 
         m_Rend.enabled = true;
@@ -126,7 +129,7 @@ public class LightningSprint : MonoBehaviour
         SoundManager.Instance.FadeOut(m_Audio);
         m_PlayingSprintSound = false;
 
-        m_Player.IsRunning = false;
+        m_PlayerController.IsRunning = false;
         m_Animator.SetBool("IsSprinting", false);
 
         m_Rend.enabled = false;

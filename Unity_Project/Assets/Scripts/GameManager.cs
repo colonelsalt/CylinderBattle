@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     private float m_TimeUntilLevelStart;
 
-    private PlayerController[] m_Players;
+    private PlayerController[] m_PlayerControllers;
 
     private float m_GameOverTime;
 
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         Collector.OnAllPisCollected += OnGameOver;
 
-        m_Players = FindObjectsOfType<PlayerController>();
+        m_PlayerControllers = FindObjectsOfType<PlayerController>();
         SetPlayersActive(false);
 
         m_TimeUntilLevelStart = m_StartupTime;
@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
 
     private void SetPlayersActive(bool enabled)
     {
-        foreach (PlayerController player in m_Players)
+        foreach (PlayerController player in m_PlayerControllers)
         {
             player.enabled = enabled;
         }

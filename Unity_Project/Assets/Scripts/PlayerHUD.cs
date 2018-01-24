@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(ScoreRetriever))]
+[RequireComponent(typeof(PlayerStats))]
 public class PlayerHUD : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    [SerializeField] private ScoreRetriever m_Score;
+    [SerializeField] private PlayerStats m_PlayerStats;
 
     [SerializeField] private Text m_NumPisText;
 
@@ -62,12 +62,12 @@ public class PlayerHUD : MonoBehaviour
     {
         if (m_WeaponTimerActive)
         {
-            m_TimerImage.fillAmount = m_Score.BoxingTimeRemaining / GameManager.POWERUP_DURATION;
+            m_TimerImage.fillAmount = m_PlayerStats.BoxingTimeRemaining / GameManager.POWERUP_DURATION;
         }
 
         if (m_LightningSprintActive)
         {
-            m_StaminaBar.fillAmount = m_Score.SprintTimeRemaining / m_Score.MaxSprintTime;
+            m_StaminaBar.fillAmount = m_PlayerStats.SprintTimeRemaining / m_PlayerStats.MaxSprintTime;
         }
     }
 
@@ -80,7 +80,7 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdatePis(bool withAnimation)
     {
-        m_NumPisText.text = m_Score.NumPis.ToString();
+        m_NumPisText.text = m_PlayerStats.NumPis.ToString();
         if (withAnimation)
         {
             m_PiAnimator.SetTrigger("flashTrigger");
@@ -89,7 +89,7 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdatePluses(bool withAnimation)
     {
-        m_NumPlusesText.text = m_Score.NumPluses.ToString();
+        m_NumPlusesText.text = m_PlayerStats.NumPluses.ToString();
         if (withAnimation)
         {
             m_PlusAnimator.SetTrigger("flashTrigger");
@@ -98,7 +98,7 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdateHealthDisplay(bool withAnimation, bool tookDamage)
     {
-        m_HealthText.text = m_Score.Health.ToString();
+        m_HealthText.text = m_PlayerStats.Health.ToString();
         if (withAnimation)
         {
             string animationTrigger = tookDamage ? "damageTrigger" : "extraLifeTrigger";
@@ -126,7 +126,7 @@ public class PlayerHUD : MonoBehaviour
                 break;
             case Weapon.GUN:
                 m_AmmoText.enabled = true;
-                m_AmmoText.text = m_Score.RemainingAmmo.ToString();
+                m_AmmoText.text = m_PlayerStats.RemainingAmmo.ToString();
                 break;
             case Weapon.BOXING_GLOVES:
                 m_TimerImage.enabled = true;
@@ -151,7 +151,7 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdateAmmoDisplay()
     {
-        m_AmmoText.text = m_Score.RemainingAmmo.ToString();
+        m_AmmoText.text = m_PlayerStats.RemainingAmmo.ToString();
     }
 
     public void ActivateLightningSprint()

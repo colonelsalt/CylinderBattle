@@ -36,13 +36,15 @@ public class PlayerHealth : MonoBehaviour, IHealth
 
     // --------------------------------------------------------------
 
-    private PlayerController m_Player;
+    private PlayerController m_PlayerController;
 
     private Animator m_PlayerAnim;
 
     private Renderer[] m_Renderers;
 
     private Vector3 m_SpawningPosition;
+
+    private int m_PlayerNum;
 
     private int m_CurrentHealth;
 
@@ -76,7 +78,8 @@ public class PlayerHealth : MonoBehaviour, IHealth
 
     private void Awake()
     {
-        m_Player = GetComponent<PlayerController>();
+        m_PlayerNum = GetComponent<IPlayer>().PlayerNum();
+        m_PlayerController = GetComponent<PlayerController>();
         m_PlayerAnim = GetComponentInChildren<Animator>();
         m_Renderers = GetComponentsInChildren<Renderer>();
 
@@ -87,7 +90,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
     public void GetExtraLife()
     {
         m_CurrentHealth++;
-        OnPlayerExtraLife(m_Player.PlayerNum);
+        OnPlayerExtraLife(m_PlayerNum);
     }
 
     public void TakeDamage(int damage, GameObject attacker)
@@ -97,7 +100,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
         SoundManager.Instance.PlayRandom(m_DamageSounds);
 
         m_CurrentHealth = Mathf.Max(0, m_CurrentHealth - damage);
-        OnPlayerDamaged(m_Player.PlayerNum, attacker);
+        OnPlayerDamaged(m_PlayerNum, attacker);
         if (m_CurrentHealth <= 0)
         {
             Die(attacker);
@@ -163,9 +166,9 @@ public class PlayerHealth : MonoBehaviour, IHealth
     {
         m_CurrentHealth = m_StartHealth;
         m_IsAlive = true;
-        m_Player.enabled = true;
+        m_PlayerController.enabled = true;
 
-        OnPlayerRespawn(m_Player.PlayerNum);
+        OnPlayerRespawn(m_PlayerNum);
     }
 
     public void Die(GameObject killer)
@@ -179,10 +182,10 @@ public class PlayerHealth : MonoBehaviour, IHealth
         Instantiate(m_DeathExplosionEffect, transform.position, Quaternion.identity);
 
         m_IsAlive = false;
-        m_Player.enabled = false;
+        m_PlayerController.enabled = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
 
-        OnPlayerDeath(m_Player.PlayerNum, killer);
+        OnPlayerDeath(m_PlayerNum, killer);
         BroadcastMessage("OnDeath");
 
         StartCoroutine(MoveToSpawnPos());
