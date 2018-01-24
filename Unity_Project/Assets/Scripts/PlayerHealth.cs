@@ -26,11 +26,13 @@ public class PlayerHealth : MonoBehaviour, IHealth
     // --------------------------------------------------------------
 
     // Events
-    public delegate void PlayerHealthEvent(int playerNum);
-    public static event PlayerHealthEvent OnPlayerDamaged;
-    public static event PlayerHealthEvent OnPlayerExtraLife;
-    public static event PlayerHealthEvent OnPlayerDeath;
-    public static event PlayerHealthEvent OnPlayerRespawn;
+    public delegate void PlayerHealthIncreaseEvent(int playerNum);
+    public static event PlayerHealthIncreaseEvent OnPlayerExtraLife;
+    public static event PlayerHealthIncreaseEvent OnPlayerRespawn;
+
+    public delegate void PlayerDamagedEvent(int playerNum, GameObject attacker);
+    public static event PlayerDamagedEvent OnPlayerDamaged;
+    public static event PlayerDamagedEvent OnPlayerDeath;
 
     // --------------------------------------------------------------
 
@@ -88,17 +90,17 @@ public class PlayerHealth : MonoBehaviour, IHealth
         OnPlayerExtraLife(m_Player.PlayerNum);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, GameObject attacker)
     {
         if (m_IsInvincible || !m_IsAlive) return;
 
         SoundManager.Instance.PlayRandom(m_DamageSounds);
 
         m_CurrentHealth = Mathf.Max(0, m_CurrentHealth - damage);
-        OnPlayerDamaged(m_Player.PlayerNum);
+        OnPlayerDamaged(m_Player.PlayerNum, attacker);
         if (m_CurrentHealth <= 0)
         {
-            Die();
+            Die(attacker);
         }
         else if (m_IsAlive)
         {
@@ -166,7 +168,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
         OnPlayerRespawn(m_Player.PlayerNum);
     }
 
-    public void Die()
+    public void Die(GameObject killer)
     {
         // Prevent multiple calls before Player has respawned
         if (!m_IsAlive) return;
@@ -180,7 +182,9 @@ public class PlayerHealth : MonoBehaviour, IHealth
         m_Player.enabled = false;
         m_RespawnTime = MAX_RESPAWN_TIME;
 
-        OnPlayerDeath(m_Player.PlayerNum);
+        OnPlayerDeath(m_Player.PlayerNum, killer);
+        BroadcastMessage("OnDeath");
+
         StartCoroutine(MoveToSpawnPos());
     }
 }

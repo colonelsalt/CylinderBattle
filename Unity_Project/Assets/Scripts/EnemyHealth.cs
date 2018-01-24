@@ -8,11 +8,18 @@ public class EnemyHealth : MonoBehaviour, IHealth
 
     [SerializeField] private int m_StartHealth = 1;
 
-    // Item to spawn when Object knocked out
+    // Item to spawn when Enemy knocked out
     [SerializeField] private GameObject m_DropItemPrefab;
 
     // --------------------------------------------------------------
 
+    // Events
+    public delegate void EnemyDamageEvent(GameObject attacker);
+    public static event EnemyDamageEvent OnEnemyDeath;
+
+    // --------------------------------------------------------------
+
+    // Sounds
     [SerializeField] private AudioClip[] m_DamageSounds;
 
     [SerializeField] private AudioClip[] m_DeathSounds;
@@ -31,13 +38,13 @@ public class EnemyHealth : MonoBehaviour, IHealth
         m_CurrentHealth = m_StartHealth;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, GameObject attacker)
     {
         m_CurrentHealth -= damage;
         if (m_CurrentHealth <= 0)
         {
             m_CurrentHealth = 0;
-            Die();
+            Die(attacker);
         }
         else
         {
@@ -45,9 +52,11 @@ public class EnemyHealth : MonoBehaviour, IHealth
         }
     }
 
-    public void Die()
+    public void Die(GameObject killer)
     {
         SoundManager.Instance.PlayRandom(m_DeathSounds);
+
+        OnEnemyDeath(killer);
 
         // Instantiate drop item
         if (m_DropItemPrefab != null)

@@ -73,7 +73,7 @@ public class SpikeTrap : MonoBehaviour
             PhysicsSwitch manualMovedObject = other.GetComponent<PhysicsSwitch>();
             if (manualMovedObject != null)
             {
-                manualMovedObject.ActivatePhysicsReactions(true);
+                manualMovedObject.ActivatePhysicsReactions(true, gameObject);
             }
 
             // Apply knockback force
@@ -87,7 +87,7 @@ public class SpikeTrap : MonoBehaviour
             IHealth otherHealth = other.GetComponent<IHealth>();
             if (otherHealth != null)
             {
-                otherHealth.TakeDamage(1);
+                otherHealth.TakeDamage(1, gameObject);
             }
         }
     }

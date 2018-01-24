@@ -54,8 +54,6 @@ public class WeaponManager : MonoBehaviour
 
     private void Awake()
     {
-        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
-
         m_Player = GetComponent<PlayerController>();
     }
 
@@ -77,7 +75,8 @@ public class WeaponManager : MonoBehaviour
         {
             case Weapon.BOMB:
                 // Spawn bomb 1m in front of Player with fuse pointing up (x=-90 deg. angle)
-                Instantiate(m_BombPrefab, transform.position + transform.forward, Quaternion.Euler(-90f, 0f, 0f));
+                GameObject bomb = Instantiate(m_BombPrefab, transform.position + transform.forward, Quaternion.Euler(-90f, 0f, 0f)) as GameObject;
+                bomb.GetComponent<Bomb>().AssignOwner(m_Player.gameObject);
                 m_WeaponIsActive = false;
                 break;
             case Weapon.GUN:
@@ -119,22 +118,14 @@ public class WeaponManager : MonoBehaviour
         OnWeaponPickup(weapon, m_Player.PlayerNum);
     }
 
-    private void OnPlayerDeath(int playerNum)
+    private void OnDeath()
     {
-        if (playerNum == m_Player.PlayerNum)
-        {
-            DisableWeapon();
-        }
+        DisableWeapon();
     }
 
     public void DisableWeapon()
     {
         m_WeaponIsActive = false;
         OnWeaponDisabled(m_Weapon, m_Player.PlayerNum);
-    }
-
-    private void OnDisable()
-    {
-        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
     }
 }

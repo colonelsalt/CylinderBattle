@@ -63,6 +63,8 @@ public class StatsDisplayManager : MonoBehaviour
             m_PiTexts[i].text = m_Stats[i].NumPis.ToString();
             m_DeathsTexts[i].text = m_Stats[i].NumDeaths.ToString();
             m_TotalPlusesTexts[i].text = m_Stats[i].NumTotalPluses.ToString();
+            m_PlayerKillsTexts[i].text = m_Stats[i].NumPlayerKills.ToString();
+            m_EnemyKillsTexts[i].text = m_Stats[i].NumEnemyKills.ToString();
             m_DistanceTexts[i].text = m_Stats[i].DistanceCovered + " m";
         }
 

@@ -61,8 +61,6 @@ public class LightningSprint : MonoBehaviour
 
     private void Awake()
     {
-        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
-
         m_Player = GetComponentInParent<PlayerController>();
         m_Rend = GetComponent<Renderer>();
         m_Lightning = GetComponentInChildren<ParticleSystem>();
@@ -87,7 +85,7 @@ public class LightningSprint : MonoBehaviour
                 {
                     SoundManager.Instance.PlayRandom(m_OutOfStaminaSounds);
                 }
-                
+
                 m_HasStamina = false;
                 Stop();
             }
@@ -115,7 +113,7 @@ public class LightningSprint : MonoBehaviour
             m_Audio.Play();
             m_PlayingSprintSound = true;
         }
-        
+
         m_Player.IsRunning = true;
         m_Animator.SetBool("IsSprinting", true);
 
@@ -135,18 +133,9 @@ public class LightningSprint : MonoBehaviour
         m_Lightning.Stop();
     }
 
-    private void OnPlayerDeath(int playerNum)
+    private void OnDeath()
     {
-        if (playerNum == m_Player.PlayerNum)
-        {
-            Stop();
-            Destroy(gameObject);
-        }
+        Stop();
+        Destroy(gameObject);
     }
-
-    private void OnDisable()
-    {
-        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
-    }
-
 }

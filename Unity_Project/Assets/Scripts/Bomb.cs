@@ -22,9 +22,14 @@ public class Bomb : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // Sounds
     [SerializeField] private AudioClip[] m_FuseSounds;
 
     [SerializeField] private AudioClip[] m_ExplosionSounds;
+
+    // --------------------------------------------------------------
+
+    private GameObject m_BombOwner;
 
     // --------------------------------------------------------------
 
@@ -32,6 +37,11 @@ public class Bomb : MonoBehaviour
     {
         SoundManager.Instance.PlayRandom(m_FuseSounds);
         Invoke("Explode", m_ExplosionTime);
+    }
+
+    public void AssignOwner(GameObject attacker)
+    {
+        m_BombOwner = attacker;
     }
 
     private void Explode()
@@ -45,7 +55,7 @@ public class Bomb : MonoBehaviour
             PhysicsSwitch manualMovedObject = hit.GetComponent<PhysicsSwitch>();
             if (manualMovedObject != null)
             {
-                manualMovedObject.ActivatePhysicsReactions(true);
+                manualMovedObject.ActivatePhysicsReactions(true, m_BombOwner);
             }
 
             // Apply explosion force to each Rigidbody hit
@@ -59,7 +69,7 @@ public class Bomb : MonoBehaviour
             IHealth health = hit.GetComponent<IHealth>();
             if (health != null)
             {
-                health.TakeDamage(m_Damage);
+                health.TakeDamage(m_Damage, m_BombOwner);
             }
         }
 

@@ -102,7 +102,7 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
         PhysicsSwitch manualMovedObject = other.GetComponent<PhysicsSwitch>();
         if (manualMovedObject != null && m_IsAttacking)
         {
-            manualMovedObject.ActivatePhysicsReactions(true);
+            manualMovedObject.ActivatePhysicsReactions(true, gameObject);
         }
 
         Rigidbody body = other.GetComponent<Rigidbody>();
@@ -115,7 +115,7 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
         PlayerHealth player = other.GetComponent<PlayerHealth>();
         if (player != null)
         {
-            player.TakeDamage(1);
+            player.TakeDamage(1, gameObject);
         }
     }
 

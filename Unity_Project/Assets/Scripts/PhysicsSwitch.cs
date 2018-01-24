@@ -14,6 +14,11 @@ public class PhysicsSwitch : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    public delegate void KnockBackEvent(GameObject victim, GameObject attacker);
+    public static event KnockBackEvent OnObjectKnockedBack;
+
+    // --------------------------------------------------------------
+
     private Rigidbody m_Body;
 
     private NavMeshAgent m_NavMeshAgent;
@@ -29,8 +34,10 @@ public class PhysicsSwitch : MonoBehaviour
         m_CharacterController = GetComponent<CharacterController>();
     }
 
-    public void ActivatePhysicsReactions(bool reactivateAfter)
+    public void ActivatePhysicsReactions(bool reactivateAfter, GameObject attacker)
     {
+        OnObjectKnockedBack(gameObject, attacker);
+
         // Temporarily remove manual position control from NavMeshAgent/CharacterController
         if (m_NavMeshAgent != null)
         {

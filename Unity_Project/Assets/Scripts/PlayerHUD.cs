@@ -75,7 +75,7 @@ public class PlayerHUD : MonoBehaviour
     {
         UpdatePis(false);
         UpdatePluses(false);
-        UpdateHealthDisplay(false);
+        UpdateHealthDisplay(false, false);
     }
 
     public void UpdatePis(bool withAnimation)
@@ -96,13 +96,12 @@ public class PlayerHUD : MonoBehaviour
         }
     }
 
-    public void UpdateHealthDisplay(bool withAnimation)
+    public void UpdateHealthDisplay(bool withAnimation, bool tookDamage)
     {
-        int oldHealth = int.Parse(m_HealthText.text);
         m_HealthText.text = m_Score.Health.ToString();
         if (withAnimation)
         {
-            string animationTrigger = (oldHealth < m_Score.Health) ? "extraLifeTrigger" : "damageTrigger";
+            string animationTrigger = tookDamage ? "damageTrigger" : "extraLifeTrigger";
             m_HealthAnimator.SetTrigger(animationTrigger);
         }
     }

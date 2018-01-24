@@ -109,7 +109,12 @@ public class UIManager : MonoBehaviour
     // Update and display new Player health
     private void OnUpdateHealth(int playerNum)
     {
-        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(true);
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(true, false);
+    }
+
+    private void OnUpdateHealth(int playerNum, GameObject attacker)
+    {
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(true, true);
     }
 
     // Display new weapon received
@@ -129,10 +134,10 @@ public class UIManager : MonoBehaviour
         m_PlayerHUDs[playerNum - 1].UpdateAmmoDisplay();
     }
 
-    private void OnPlayerDeath(int playerNum)
+    private void OnPlayerDeath(int playerNum, GameObject killer)
     {
         // Reset health count
-        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(true);
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(true, true);
 
         // Reset plus count
         m_PlayerHUDs[playerNum - 1].UpdatePluses(false);
@@ -144,7 +149,7 @@ public class UIManager : MonoBehaviour
     private void OnPlayerRespawn(int playerNum)
     {
         // Reset number of lives
-        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(false);
+        m_PlayerHUDs[playerNum - 1].UpdateHealthDisplay(false, false);
     }
 
     private void OnPowerupReceived(Powerup type, int playerNum)

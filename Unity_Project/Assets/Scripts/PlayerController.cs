@@ -127,6 +127,7 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyGravity()
     {
+        // If Player is floating, gravity should have no effect in either direction
         if (IsFloating)
         {
             m_VerticalSpeed = 0f;
@@ -152,7 +153,6 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateJumpState()
     {
-       
         // Character can jump when standing on the ground
         if (InputHelper.JumpButtonPressed(m_PlayerNum) && m_CharacterController.isGrounded)
         {

@@ -64,9 +64,8 @@ public class Collector : MonoBehaviour
 
     private void Awake()
     {
-        PlayerHealth.OnPlayerDeath += OnResetPlusCount;
-        PlayerHealth.OnPlayerDeath += OnCheckForPiDrop;
-        PlayerHealth.OnPlayerDamaged += OnCheckForPiDrop;
+        PlayerHealth.OnPlayerDamaged += OnPlayerDamaged;
+        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
 
         m_Player = GetComponent<PlayerController>();
         m_PowerupManager = GetComponent<PowerupManager>();
@@ -104,19 +103,29 @@ public class Collector : MonoBehaviour
         }
     }
 
-    // Reset Plus count when Player dies
-    private void OnResetPlusCount(int playerNum)
+    private void OnPlayerDamaged(int playerNum, GameObject attacker)
     {
-        if (m_Player.PlayerNum == playerNum)
+        if (playerNum == m_Player.PlayerNum)
         {
-            m_NumPluses = 0;
+            CheckForPiDrop();
         }
+    }
+    
+    private void OnPlayerDeath(int playerNum, GameObject attacker)
+    {
+        if (playerNum == m_Player.PlayerNum)
+        {
+            // Reset Plus count when Player dies
+            m_NumPluses = 0;
+            CheckForPiDrop();
+        }
+       
     }
 
     // If this Player died or took damage, drop one of their Pis
-    private void OnCheckForPiDrop(int playerNum)
+    private void CheckForPiDrop()
     {
-        if (playerNum == m_Player.PlayerNum && m_NumPis > 0)
+        if (m_NumPis > 0 && m_TimeSinceLastPiDrop >= TIME_BETWEEN_PI_DROPS)
         {
             DropPi();
         }
@@ -125,7 +134,6 @@ public class Collector : MonoBehaviour
     // Instantiate Pi in random (upwards) direction
     private void DropPi()
     {
-        if (m_TimeSinceLastPiDrop < TIME_BETWEEN_PI_DROPS) return;
         m_TimeSinceLastPiDrop = 0f;
 
         m_NumPis--;
@@ -139,8 +147,6 @@ public class Collector : MonoBehaviour
 
     private void OnDisable()
     {
-        PlayerHealth.OnPlayerDeath -= OnResetPlusCount;
-        PlayerHealth.OnPlayerDeath -= OnCheckForPiDrop;
-        PlayerHealth.OnPlayerDamaged -= OnCheckForPiDrop;
+        PlayerHealth.OnPlayerDamaged -= OnPlayerDamaged;
     }
 }

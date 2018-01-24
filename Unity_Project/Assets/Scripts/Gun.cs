@@ -50,7 +50,6 @@ public class Gun : MonoBehaviour
 
     private void Awake()
     {
-        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         m_RemainingAmmo = MAX_AMMO;
         m_Player = GetComponentInParent<PlayerController>();
     }
@@ -75,7 +74,9 @@ public class Gun : MonoBehaviour
         m_RemainingAmmo--;
         OnGunFired(m_Player.PlayerNum);
         Vector3 spawnPos = transform.position + (2.5f * transform.forward);
-        Instantiate(m_LaserPrefab, spawnPos, transform.rotation);
+
+        GameObject laser = Instantiate(m_LaserPrefab, spawnPos, transform.rotation) as GameObject;
+        laser.GetComponent<Laser>().AssignOwner(m_Player.gameObject);
 
         SoundManager.Instance.PlayRandom(m_GunSounds);
 
@@ -91,22 +92,14 @@ public class Gun : MonoBehaviour
         m_RemainingAmmo = MAX_AMMO;
     }
 
-    private void OnPlayerDeath(int playerNum)
+    private void Death()
     {
-        if (playerNum == m_Player.PlayerNum)
-        {
-            Deactivate();
-        }
+         Deactivate();
     }
 
     private void Deactivate()
     {
         m_Player.GetComponent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
-    }
-
-    private void OnDisable()
-    {
-        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
     }
 }

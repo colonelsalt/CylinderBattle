@@ -5,8 +5,8 @@ using UnityEngine;
 public interface IHealth
 {
 
-    void TakeDamage(int amount);
+    void TakeDamage(int amount, GameObject attacker);
 
-    void Die();
+    void Die(GameObject killer);
 
 }

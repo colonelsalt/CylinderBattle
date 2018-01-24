@@ -36,10 +36,10 @@ public class PlayerFeet : MonoBehaviour
             IHealth otherHealth = other.GetComponent<IHealth>();
             if (otherHealth != null)
             {
-                otherHealth.TakeDamage(1);
+                otherHealth.TakeDamage(1, m_Player.gameObject);
                 Bounce();
             }
-
+            
             // Break Weapon Block
             WeaponBlock weaponBlock = other.GetComponent<WeaponBlock>();
             if (weaponBlock != null)

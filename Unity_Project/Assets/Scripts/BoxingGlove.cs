@@ -57,7 +57,6 @@ public class BoxingGlove : MonoBehaviour
 
     private void Awake()
     {
-        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         m_Animator = GetComponent<Animator>();
         m_Player = GetComponentInParent<PlayerController>();
         m_GloveColliders = GetComponentsInChildren<Collider>();
@@ -119,7 +118,6 @@ public class BoxingGlove : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // Do nothing if we just collided with ourselves
-        if (collision.gameObject.GetComponent<BoxingGlove>() != null) return;
         PlayerController player = collision.gameObject.GetComponent<PlayerController>();
         if (player != null)
         {
@@ -130,7 +128,7 @@ public class BoxingGlove : MonoBehaviour
         PhysicsSwitch manualMovedObject = collision.gameObject.GetComponent<PhysicsSwitch>();
         if (manualMovedObject != null)
         {
-            manualMovedObject.ActivatePhysicsReactions(true);
+            manualMovedObject.ActivatePhysicsReactions(true, m_Player.gameObject);
         }
 
         // If object struck has Rigidbody, apply force to it
@@ -145,7 +143,7 @@ public class BoxingGlove : MonoBehaviour
         IHealth health = collision.gameObject.GetComponent<IHealth>();
         if (health != null)
         {
-            health.TakeDamage(m_Damage);
+            health.TakeDamage(m_Damage, m_Player.gameObject);
             SoundManager.Instance.PlayRandom(m_FleshImpactSounds);
         }
         else
@@ -160,7 +158,7 @@ public class BoxingGlove : MonoBehaviour
         IHealth health = other.GetComponent<IHealth>();
         if (health != null)
         {
-            health.TakeDamage(m_Damage);
+            health.TakeDamage(m_Damage, m_Player.gameObject);
             SoundManager.Instance.PlayRandom(m_FleshImpactSounds);
         }
     }
@@ -179,12 +177,9 @@ public class BoxingGlove : MonoBehaviour
         m_TimeRemaining = GameManager.POWERUP_DURATION;
     }
 
-    private void OnPlayerDeath(int playerNum)
+    private void OnDeath()
     {
-        if (playerNum == m_Player.PlayerNum)
-        {
-            Deactivate();
-        }
+        Deactivate();
     }
 
     private void Deactivate()
@@ -192,10 +187,4 @@ public class BoxingGlove : MonoBehaviour
         m_Player.GetComponent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
     }
-
-    private void OnDisable()
-    {
-        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
-    }
-
 }

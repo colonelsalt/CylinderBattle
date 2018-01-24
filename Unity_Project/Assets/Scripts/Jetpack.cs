@@ -27,8 +27,6 @@ public class Jetpack : MonoBehaviour
 
     private void Awake()
     {
-        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
-
         m_Player = GetComponentInParent<PlayerController>();
         m_JetpackFire = GetComponentInChildren<ParticleSystem>();
         m_Audio = GetComponent<AudioSource>();
@@ -73,18 +71,10 @@ public class Jetpack : MonoBehaviour
         m_JetpackFire.Stop();
     }
 
-    private void OnPlayerDeath(int playerNum)
+    private void OnDeath()
     {
-        if (playerNum == m_Player.PlayerNum)
-        {
-            Deactivate();
-            Destroy(gameObject);
-        }
-    }
-
-    private void OnDisable()
-    {
-        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
+        Deactivate();
+        Destroy(gameObject);
     }
 
 }

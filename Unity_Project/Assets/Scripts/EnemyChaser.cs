@@ -70,7 +70,6 @@ public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
         }
     }
 
-
     private void OnTriggerEnter(Collider other)
     {
         PlayerHealth player = other.GetComponent<PlayerHealth>();
@@ -81,7 +80,7 @@ public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
             // Unless Player is above us (presumably jumping on our head), deal damage
             if (other.bounds.min.y < m_Colliders[0].bounds.center.y)
             {
-                player.TakeDamage(1);
+                player.TakeDamage(1, gameObject);
             }
         }
     }

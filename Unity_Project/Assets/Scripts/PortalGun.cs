@@ -34,8 +34,6 @@ public class PortalGun : MonoBehaviour
 
     private void Awake()
     {
-        PlayerHealth.OnPlayerDeath += OnPlayerDeath;
-
         m_Player = GetComponentInParent<PlayerController>();
         m_AimLine = GetComponentInChildren<LineRenderer>();
     }
@@ -113,10 +111,8 @@ public class PortalGun : MonoBehaviour
         }
     }
 
-    private void OnPlayerDeath(int playerNum)
+    private void OnDeath()
     {
-        if (playerNum != m_Player.PlayerNum) return;
-
         // If only one portal has been fired, destroy it
         if (m_PortalsFired == 1)
         {
@@ -130,11 +126,6 @@ public class PortalGun : MonoBehaviour
     {
         m_Player.GetComponent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
-    }
-
-    private void OnDisable()
-    {
-        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
     }
 
 }

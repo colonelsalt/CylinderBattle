@@ -6,10 +6,12 @@ public class DeathTrigger : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    // Explosion effect to spawn when Player drops in lava
     [SerializeField] private GameObject m_ExplosionEffect;
 
     // --------------------------------------------------------------
 
+    // Sounds
     [SerializeField] private AudioClip[] m_DeathSounds;
 
     // --------------------------------------------------------------
@@ -25,7 +27,7 @@ public class DeathTrigger : MonoBehaviour
             Instantiate(m_ExplosionEffect, other.transform.position + (3f * transform.up), Quaternion.identity);
 
             // Kill object
-            player.Die();
+            player.Die(gameObject);
         }
         else if (other.GetComponent<PlayerFeet>() == null)
         {

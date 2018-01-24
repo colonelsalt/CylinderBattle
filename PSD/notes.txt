@@ -1,7 +1,7 @@
-SOUNDS
--Game start sound (whistle / gun)
--Game over / success sound
-
+proposal:
+-IAttacker interface, which PlayerController and enemies implement
+-Whenever an IHealth takes damage or dies, a reference to the
+ IAttacker that did it will be passed in
 
 
 REFACTORING TODOS:
@@ -10,16 +10,20 @@ REFACTORING TODOS:
  methods
 -Place starting Pi + some WeaponBlocks in level from start of game
 -Get and insert Game Over screen music
--Solve "Invalid world AABB" glitch (something about Boxing Glove
- spark particles?)
-
+-Insert "Main Menu" and "Quit Game" buttons in appropriate places
+-Solve "Invalid world AABB" glitch
+-Clean up unused tags and layers
+-Abstract away PlayerController behind IPlayer interface?
+ OR INDEED: Make ScoreRetriever a component of Player?
 
 ACHIEVEMENTS:
 -Fucking (Hidden); "Dirty Boi"
 -Jumping out of map (Hidden); "What are you doing here?"
 -50 pluses collected without dying
+-Moved more than 10,000m in one level; "Metric Mile"
 -Broken all crates in scene
 -Surviving entire game without dying
+-Kill yourself with your own bomb
 
 17 march 10.20am 
 
