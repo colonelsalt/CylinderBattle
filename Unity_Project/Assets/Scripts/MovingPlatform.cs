@@ -77,7 +77,6 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Player left platform!");
         if (other.GetComponent<Rigidbody>() != null)
         {
             other.transform.SetParent(null);
