@@ -148,5 +148,6 @@ public class Collector : MonoBehaviour
     private void OnDisable()
     {
         PlayerHealth.OnPlayerDamaged -= OnPlayerDamaged;
+        PlayerHealth.OnPlayerDeath -= OnPlayerDeath;
     }
 }
