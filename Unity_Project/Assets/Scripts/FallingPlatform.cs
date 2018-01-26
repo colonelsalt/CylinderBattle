@@ -21,11 +21,21 @@ public class FallingPlatform : MonoBehaviour
 
     private float m_RemainingFloatTime;
 
+    private Renderer m_Rend;
+
+    private Collider[] m_Colliders;
+
+    private Vector3 m_StartingPosition;
+
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_Anim = GetComponent<Animator>();
+        m_Rend = GetComponentInChildren<Renderer>();
+        m_Colliders = GetComponentsInChildren<Collider>();
+
+        m_StartingPosition = transform.position;
     }
 
     private void Update()
@@ -44,12 +54,15 @@ public class FallingPlatform : MonoBehaviour
     {
         m_IsDropping = true;
         m_Anim.SetTrigger("dropTrigger");
+        StartCoroutine(Fade(false));
         Invoke("Reset", m_TimeBeforeRespawn);
     }
 
     private void Reset()
     {
-        m_Anim.SetTrigger("respawnTrigger");
+        transform.position = m_StartingPosition;
+
+        StartCoroutine(Fade(true));
         m_Activated = m_IsDropping = false;
     }
 
@@ -61,6 +74,36 @@ public class FallingPlatform : MonoBehaviour
             m_Anim.SetTrigger("activationTrigger");
             m_Activated = true;
         }
+    }
+
+    // Manual fade to prevent Mechanim system taking control of Renderer
+    private IEnumerator Fade(bool fadeIn)
+    {
+        if (fadeIn) m_Rend.enabled = true;
+
+        float remainingFadeTime = 0.4f;
+        while (remainingFadeTime > 0f)
+        {
+            Color colour = m_Rend.material.color;
+            if (fadeIn)
+            {
+                colour.a = 1f - remainingFadeTime / 0.4f;
+            }
+            else
+            {
+                colour.a = remainingFadeTime / 0.4f;
+            }
+            
+            m_Rend.material.color = colour;
+
+            remainingFadeTime -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        foreach (Collider col in m_Colliders)
+        {
+            col.enabled = fadeIn;
+        }
+        if (!fadeIn) m_Rend.enabled = false;
     }
 
 

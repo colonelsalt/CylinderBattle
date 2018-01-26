@@ -11,6 +11,8 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField] private Animator m_FadePanelAnim;
 
+    [SerializeField] private GameObject m_LevelSelectPanel;
+
     // --------------------------------------------------------------
 
     private void ButtonSound()
@@ -22,7 +24,7 @@ public class MenuManager : MonoBehaviour
     public void OnPlayButtonClicked()
     {
         ButtonSound();
-        FadeOutBeforeLevelLoad();
+        m_LevelSelectPanel.SetActive(true);
     }
 
     public void OnTutorialButtonClicked()
@@ -35,6 +37,18 @@ public class MenuManager : MonoBehaviour
     {
         ButtonSound();
         // TODO
+    }
+
+    public void OnLevel1ButtonClicked()
+    {
+        ButtonSound();
+        SceneManager.LoadScene("MainScene");
+    }
+
+    public void OnLevel2ButtonClicked()
+    {
+        ButtonSound();
+        SceneManager.LoadScene("SecondScene");
     }
 
     public void OnMainMenuButtonClicked()

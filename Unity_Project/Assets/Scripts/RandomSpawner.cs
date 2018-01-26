@@ -12,12 +12,17 @@ public class RandomSpawner : MonoBehaviour
 
     [SerializeField] private float m_MaxTimeBetweenSpawns;
 
-    // Max. number of allowed objects of this type in this level
+    // Max. number of allowed objects of this type for this set of Spawn points
     [SerializeField] private int m_MaxNumObjects;
+
+    // Set if object will be on top of a transparent platform (and needs priority rendering to be visible)
+    [SerializeField] private bool m_UsePriorityRendering = false;
 
     // --------------------------------------------------------------
 
     private Transform[] m_SpawnPositions;
+
+    private int m_NumSpawned = 0;
 
     // How many seconds until next spawn
     private float m_NextSpawnTime;
@@ -30,11 +35,12 @@ public class RandomSpawner : MonoBehaviour
     {
         if (transform.childCount <= 0)
         {
-            Debug.LogError("No Spawn positions set for " + gameObject + "!");
+            Debug.LogError("RandomSpawner: No Spawn positions set for " + gameObject + "!");
         }
         if (m_MaxNumObjects > transform.childCount)
         {
-            Debug.LogError("Cannot spawn more objects than spawn positions available!");
+            Debug.LogError("RandomSpawner: Cannot spawn more objects than spawn positions available!");
+            gameObject.SetActive(false);
         }
 
         Collector.OnAllPisCollected += OnGameOver;
@@ -73,7 +79,12 @@ public class RandomSpawner : MonoBehaviour
         }
         while (IsOccupied(spawnPoint));
 
-        Instantiate(m_ObjectToSpawn, spawnPoint);
+        GameObject spawnedObject = Instantiate(m_ObjectToSpawn, spawnPoint) as GameObject;
+
+        if (m_UsePriorityRendering)
+        {
+            SetPriorityRendering(spawnedObject);
+        }
     }
 
     // Whether a given spawn position already in use by another object of this type
@@ -90,6 +101,15 @@ public class RandomSpawner : MonoBehaviour
             if (IsOccupied(child)) sum++;
         }
         return sum;
+    }
+
+    // Increase rendering priority for object
+    private void SetPriorityRendering(GameObject g)
+    {
+        foreach (Renderer rend in g.GetComponentsInChildren<Renderer>())
+        {
+            rend.material.renderQueue = 3100;
+        }
     }
 
     private void OnGameOver(int numOfWinner)
