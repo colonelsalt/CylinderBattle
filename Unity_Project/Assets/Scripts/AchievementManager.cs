@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AchievementManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class AchievementManager : MonoBehaviour
         SURVIVOR,
         TEN_THOUSAND_METRES,
         FIFTY_PLUSES,
-        TEN_KILLS,
+        FIVE_KILLS,
         OUT_OF_BOUNDS,
         SUICIDE,
         INDECENCY
@@ -41,6 +42,8 @@ public class AchievementManager : MonoBehaviour
 
     private StatsTracker[] m_StatsTrackers;
 
+    private Achievement m_PostGameAchievement;
+
     private bool m_GameRunning = false;
 
     // --------------------------------------------------------------
@@ -65,11 +68,6 @@ public class AchievementManager : MonoBehaviour
 
     private void Awake()
     {
-        if (m_DeleteAllOnStart)
-        {
-            PlayerPrefsManager.DeleteAll();
-        }
-
         if (m_Instance == null)
         {
             m_Instance = this;
@@ -84,10 +82,18 @@ public class AchievementManager : MonoBehaviour
 
     private void Initialise()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
         StatsTracker.OnFiftyPlusesCollected += OnFiftyPlusesCollected;
         StatsTracker.OnPlayerOutOfBounds += OnPlayerOutOfBounds;
         StatsTracker.OnTenThousandMetresMoved += OnPlayerWalkedTenThousandMeters;
-        StatsTracker.OnTenPlayerKills += OnTenPlayerKills;
+        StatsTracker.OnFivePlayerKills += OnTenPlayerKills;
+        StatsTracker.OnSurvivedLevelWithoutDeath += OnSurvivedLevelWithoutDeath;
+
+        if (m_DeleteAllOnStart)
+        {
+            PlayerPrefsManager.DeleteAll();
+        }
 
         m_Achievements[AchievementType.TEST] = new Achievement(
             "TEST",
@@ -109,9 +115,9 @@ public class AchievementManager : MonoBehaviour
             "Collect 50 Pluses in one game without dying"
             );
 
-        m_Achievements[AchievementType.TEN_KILLS] = new Achievement(
+        m_Achievements[AchievementType.FIVE_KILLS] = new Achievement(
             "Ruthless",
-            "Kill your fellow player ten times"
+            "Kill your fellow player five times in one game"
             );
 
         m_Achievements[AchievementType.SUICIDE] = new Achievement(
@@ -131,6 +137,19 @@ public class AchievementManager : MonoBehaviour
             "Perform indecent actions on your fellow player",
             true
             );
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "GameOver" && m_PostGameAchievement != null)
+        {
+            TryUnlock(m_PostGameAchievement);
+        }
+    }
+
+    private void OnSurvivedLevelWithoutDeath()
+    {
+        m_PostGameAchievement = m_Achievements[AchievementType.SURVIVOR];
     }
 
     // TODO: Remove this once done testing achievement system
@@ -160,7 +179,7 @@ public class AchievementManager : MonoBehaviour
 
     private void OnTenPlayerKills()
     {
-        TryUnlock(m_Achievements[AchievementType.TEN_KILLS]);
+        TryUnlock(m_Achievements[AchievementType.FIVE_KILLS]);
     }
 
     private void TryUnlock(Achievement a)
@@ -171,5 +190,10 @@ public class AchievementManager : MonoBehaviour
             OnAchievementUnlocked(a);
             SoundManager.Instance.Play(m_AchievementSound);
         }
+    }
+
+    private void OnDisable()
+    {
+        // TODO: Remove listeners
     }
 }

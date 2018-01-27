@@ -188,6 +188,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
         OnPlayerDeath(m_PlayerNum, killer);
         BroadcastMessage("OnDeath");
 
+        StopAllCoroutines();
         StartCoroutine(MoveToSpawnPos());
     }
 }

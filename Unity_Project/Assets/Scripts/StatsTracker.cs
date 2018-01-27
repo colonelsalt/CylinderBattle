@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +13,8 @@ public class StatsTracker : MonoBehaviour
     public static event PlayerStatEvent OnPlayerOutOfBounds;
     public static event PlayerStatEvent OnFiftyPlusesCollected;
     public static event PlayerStatEvent OnTenThousandMetresMoved;
-    public static event PlayerStatEvent OnTenPlayerKills;
+    public static event PlayerStatEvent OnFivePlayerKills;
+    public static event PlayerStatEvent OnSurvivedLevelWithoutDeath;
 
     // --------------------------------------------------------------
 
@@ -20,7 +22,6 @@ public class StatsTracker : MonoBehaviour
 
     // How long after Player X knocks over Player Y to consider Y's death as X's kill
     [SerializeField] private float m_KnockBackTime = 3f;
-
 
     // --------------------------------------------------------------
 
@@ -114,7 +115,10 @@ public class StatsTracker : MonoBehaviour
 
     private void OnGameStart()
     {
+        GameManager.OnGameStart -= OnGameStart;
+
         GameManager.OnGameOver += OnGameOver;
+        GameManager.OnGameExit += OnGameExit;
         Collector.OnPlusPickup += OnPlusPickup;
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         EnemyHealth.OnEnemyDeath += OnEnemyDeath;
@@ -122,6 +126,11 @@ public class StatsTracker : MonoBehaviour
 
         m_LastPlayerPos = m_Player.Position();
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnGameExit()
+    {
+        Destroy(gameObject);
     }
 
     private void LateUpdate()
@@ -149,9 +158,14 @@ public class StatsTracker : MonoBehaviour
     {
         m_PlayerWinner = playerNum;
 
-        RemoveListeners();
+        RemoveInGameListeners();
 
         m_Pis = m_Player.NumPis();
+
+        if (m_Deaths == 0)
+        {
+            OnSurvivedLevelWithoutDeath();
+        }
     }
 
     private void OnPlusPickup(int playerNum)
@@ -188,9 +202,9 @@ public class StatsTracker : MonoBehaviour
                 if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
                 {
                     m_PlayerKills++;
-                    if (m_PlayerKills >= 10)
+                    if (m_PlayerKills >= 5)
                     {
-                        OnTenPlayerKills();
+                        OnFivePlayerKills();
                     }
                 }
             }
@@ -233,17 +247,17 @@ public class StatsTracker : MonoBehaviour
         }
     }
 
-    private void RemoveListeners()
+    private void RemoveInGameListeners()
     {
         GameManager.OnGameOver -= OnGameOver;
+        GameManager.OnGameExit -= OnGameExit;
         Collector.OnPlusPickup -= OnPlusPickup;
-        GameManager.OnGameStart -= OnGameStart;
         PhysicsSwitch.OnObjectKnockedBack -= OnObjectKnockedBack;
     }
 
     private void OnDisable()
     {
-        RemoveListeners();
+        RemoveInGameListeners();
     }
 
 }

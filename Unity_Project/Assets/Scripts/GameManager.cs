@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public static event GameStateEvent OnGameResumed;
     public static event GameStateEvent OnMatchPoint;
     public static event GameStateEvent OnMatchPointEnded;
+    public static event GameStateEvent OnGameExit;
 
     public delegate void GameOverEvent(int numOfWinner);
     public static event GameOverEvent OnGameOver;
@@ -128,21 +129,7 @@ public class GameManager : MonoBehaviour
         }
         else if (InputHelper.PauseButtonPressed())
         {
-            if (m_State == GameState.PAUSED)
-            {
-                Time.timeScale = 1f;
-                m_State = GameState.PLAYING;
-                SetPlayerControllersActive(true);
-                OnGameResumed();
-                
-            }
-            else if (m_State == GameState.PLAYING)
-            {
-                Time.timeScale = 0f;
-                m_State = GameState.PAUSED;
-                SetPlayerControllersActive(false);
-                OnGamePaused();
-            }
+            TogglePause();
         }
         else if (m_State == GameState.GAME_OVER)
         {
@@ -157,6 +144,46 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void TogglePause()
+    {
+        if (m_State == GameState.PAUSED)
+        {
+            Time.timeScale = 1f;
+            m_State = GameState.PLAYING;
+            SetPlayerControllersActive(true);
+            OnGameResumed();
+
+        }
+        else if (m_State == GameState.PLAYING)
+        {
+            Time.timeScale = 0f;
+            m_State = GameState.PAUSED;
+            SetPlayerControllersActive(false);
+            OnGamePaused();
+        }
+    }
+
+    public void OnPrematureExit(bool quitGame)
+    {
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        OnGameExit();
+
+        string methodToInvoke = quitGame ? "QuitGame" : "ReturnToTitleScreen";
+
+        Invoke(methodToInvoke, 1f);
+    }
+
+    private void ReturnToTitleScreen()
+    {
+        SceneManager.LoadScene("TitleScreen");
+    }
+
+    private void QuitGame()
+    {
+        Application.Quit();
+    }
+
     private void SetPlayerControllersActive(bool enabled)
     {
         foreach (PlayerController controller in m_PlayerControllers)
@@ -167,13 +194,23 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+        RemoveListeners();
+
         Time.timeScale = 0.3f;
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
         m_State = GameState.GAME_OVER;
         m_GameOverTime = Time.realtimeSinceStartup;
     }
 
+    private void RemoveListeners()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        Collector.OnPiPickup -= OnCheckForWinState;
+        Collector.OnPiDrop -= OnCheckIfMatchPointEnded;
+    }
 
-
-
+    private void OnDisable()
+    {
+        RemoveListeners();
+    }
 }

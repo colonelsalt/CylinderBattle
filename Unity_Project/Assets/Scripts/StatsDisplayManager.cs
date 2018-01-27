@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class StatsDisplayManager : MonoBehaviour
 {
@@ -29,6 +31,16 @@ public class StatsDisplayManager : MonoBehaviour
 
     [SerializeField] private Text[] m_DistanceTexts;
 
+    [SerializeField] private Animator m_FadePanelAnim;
+
+    [SerializeField] private Animator m_AchievementAnim;
+
+    [SerializeField] private Button m_MainMenuButton;
+
+    // --------------------------------------------------------------
+
+    [SerializeField] private AudioClip m_ClickSound;
+
     // --------------------------------------------------------------
 
     private StatsTracker[] m_Stats;
@@ -37,6 +49,10 @@ public class StatsDisplayManager : MonoBehaviour
 
     private void Awake()
     {
+        AchievementManager.OnAchievementUnlocked += OnAchievementUnlocked;
+
+        EventSystem.current.SetSelectedGameObject(m_MainMenuButton.gameObject);
+
         m_WinnerTitle.text = "Player " + StatsTracker.PlayerWinner + " wins!";
 
         if (StatsTracker.PlayerWinner == 1)
@@ -72,7 +88,35 @@ public class StatsDisplayManager : MonoBehaviour
         {
             Destroy(tracker.gameObject);
         }
+    }
 
+    private void OnAchievementUnlocked(Achievement a)
+    {
+        m_AchievementAnim.SetTrigger("showTrigger");
+    }
+
+    public void OnMainMenuButtonClicked()
+    {
+        SoundManager.Instance.Play(m_ClickSound);
+        m_FadePanelAnim.SetTrigger("fadeOutTrigger");
+        Invoke("LoadMainMenu", 1f);
+    }
+
+    public void OnQuitButtonClicked()
+    {
+        SoundManager.Instance.Play(m_ClickSound);
+        m_FadePanelAnim.SetTrigger("fadeOutTrigger");
+        Invoke("QuitGame", 1f);
+    }
+
+    private void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    private void LoadMainMenu()
+    {
+        SceneManager.LoadScene("TitleScreen");
     }
 
 }

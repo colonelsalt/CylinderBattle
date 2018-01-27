@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
@@ -18,19 +19,13 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Text m_PauseTitle;
 
-    [SerializeField] private Text m_AchievementTitle;
-
-    [SerializeField] private Image m_AchievementImage;
+    [SerializeField] private Button[] m_PauseButtons;
 
     [SerializeField] private Animator m_ObjectiveTitleAnim;
 
     [SerializeField] private Animator m_FadePanelAnim;
 
     [SerializeField] private Animator m_MatchPointAnim;
-
-    [SerializeField] private Animator m_AchievementAnim;
-
-    // --------------------------------------------------------------
 
     // --------------------------------------------------------------
 
@@ -41,8 +36,7 @@ public class UIManager : MonoBehaviour
         GameManager.OnGameResumed += OnGameResumed;
         GameManager.OnGameOver += OnGameOver;
         GameManager.OnMatchPoint += OnMatchPoint;
-
-        AchievementManager.OnAchievementUnlocked += OnAchievementUnlocked;
+        GameManager.OnGameExit += OnGameExit;
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -69,6 +63,18 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    private void OnGameExit()
+    {
+        m_PauseTitle.enabled = false;
+
+        foreach (Button button in m_PauseButtons)
+        {
+            button.gameObject.SetActive(false);
+        }
+
+        m_FadePanelAnim.SetTrigger("fadeOutTrigger");
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         m_ObjectiveTitleAnim.SetTrigger("showTrigger");
@@ -85,12 +91,25 @@ public class UIManager : MonoBehaviour
     {
         m_PauseTitle.enabled = true;
         m_FadePanelAnim.SetBool("isPaused", true);
+
+        foreach (Button button in m_PauseButtons)
+        {
+            button.gameObject.SetActive(true);
+            button.interactable = true;
+        }
+        EventSystem.current.SetSelectedGameObject(m_PauseButtons[0].gameObject);
     }
 
     private void OnGameResumed()
     {
         m_PauseTitle.enabled = false;
         m_FadePanelAnim.SetBool("isPaused", false);
+
+        foreach (Button button in m_PauseButtons)
+        {
+            button.interactable = false;
+            button.gameObject.SetActive(false);
+        }
     }
 
     private void OnPiPickup(int playerNum)
@@ -173,22 +192,20 @@ public class UIManager : MonoBehaviour
         m_MatchPointAnim.SetTrigger("showTrigger");
     }
 
-    private void OnAchievementUnlocked(Achievement a)
+    private void OnGameOver(int numOfWinner)
     {
-        m_AchievementTitle.text = a.Title;
-        m_AchievementImage.sprite = a.Icon ?? Achievement.DefaultIcon;
-        m_AchievementAnim.SetTrigger("showTrigger");
+        m_GameOverTitle.enabled = true;
+        m_FadePanelAnim.SetTrigger("fadeOutTrigger");
     }
 
-    private void OnGameOver(int numOfWinner)
+    private void OnDisable()
     {
         GameManager.OnGameStart -= OnGameStart;
         GameManager.OnGamePaused -= OnGamePaused;
         GameManager.OnGameResumed -= OnGameResumed;
         GameManager.OnGameOver -= OnGameOver;
         GameManager.OnMatchPoint -= OnMatchPoint;
-
-        AchievementManager.OnAchievementUnlocked -= OnAchievementUnlocked;
+        GameManager.OnGameExit -= OnGameExit;
 
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
@@ -208,8 +225,6 @@ public class UIManager : MonoBehaviour
         PlayerHealth.OnPlayerRespawn -= OnPlayerRespawn;
 
         PowerupManager.OnPowerupReceived -= OnPowerupReceived;
-
-        m_GameOverTitle.enabled = true;
-        m_FadePanelAnim.SetTrigger("fadeOutTrigger");
     }
+
 }

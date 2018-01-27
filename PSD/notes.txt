@@ -1,12 +1,11 @@
 
 REFACTORING TODOS:
 -Simplify and thoroughly comment VoronoiSplitScreen => CameraManager
--Adjust MiniMap size for Level 2
--Find names for Levels
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
 -Deal with post-game over NullReferenceExceptions
 -Insert Level 2 music
+-Adjust size of Level 2 MiniMap camera
 -Hide Spike Trap spikes while idle
 -Get and insert Game Over screen music
 -Insert "Main Menu" and "Quit Game" buttons in appropriate places
@@ -15,6 +14,7 @@ REFACTORING TODOS:
 -Clean up unused tags and layers
 -Add square blob shadow under Weapon Blocks?
 -Add blob shadows to Pis on transparent platforms?
+-Insert Search for a Star logo in appropriate place
 -Remove direct call by weapons to WeaponManager.DisableWeapon in favour
  of SendMessageUpwards?
 

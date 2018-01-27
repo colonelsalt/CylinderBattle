@@ -25,7 +25,7 @@ public class MenuManager : MonoBehaviour
 
     private GameObject m_LastSelectedMenuItem;
 
-    private Scene m_SelectedScene;
+    private string m_SelectedScene;
 
     // --------------------------------------------------------------
 
@@ -45,6 +45,7 @@ public class MenuManager : MonoBehaviour
     {
         ButtonSound();
         m_LastSelectedMenuItem = EventSystem.current.currentSelectedGameObject;
+        SetPrimaryButtonsActive(false);
         m_LevelSelectPanel.SetActive(true);
     }
 
@@ -62,30 +63,18 @@ public class MenuManager : MonoBehaviour
         m_AchievementsPanel.SetActive(true);
     }
 
-    public void OnLevel1ButtonClicked()
+    public void OnLevelSelected(int level)
     {
         ButtonSound();
-        SceneManager.LoadScene("MainScene");
-    }
-
-    public void OnLevel2ButtonClicked()
-    {
-        ButtonSound();
-        SceneManager.LoadScene("SecondScene");
+        m_SelectedScene = (level == 1) ? "MainScene" : "SecondScene";
+        FadeOutBeforeLevelLoad();
     }
 
     public void OnMainMenuButtonClicked()
     {
         ButtonSound();
-        if (SceneManager.GetActiveScene().name == "TitleScreen")
-        {
-            // TODO: Show level select options
-
-        }
-        else
-        {
-            FadeOutBeforeLevelLoad();
-        }
+        m_SelectedScene = "MainMenu";
+        FadeOutBeforeLevelLoad();
     }
 
     public void OnDismissSubMenu()
@@ -93,6 +82,7 @@ public class MenuManager : MonoBehaviour
         ButtonSound();
         SetPrimaryButtonsActive(true);
         m_AchievementsPanel.SetActive(false);
+        m_LevelSelectPanel.SetActive(false);
         EventSystem.current.SetSelectedGameObject(m_LastSelectedMenuItem);
     }
 
@@ -104,16 +94,27 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    public void OnQuitButtonPressed()
+    {
+        ButtonSound();
+        m_FadePanelAnim.SetTrigger("fadeOutTrigger");
+        Invoke("QuitGame", 1f);
+    }
+
+    private void QuitGame()
+    {
+        Application.Quit();
+    }
+
     private void FadeOutBeforeLevelLoad()
     {
         m_FadePanelAnim.SetTrigger("fadeOutTrigger");
-        Invoke("LoadNextLevel", 1.2f);
+        Invoke("LoadLevel", 1f);
     }
 
-    private void LoadNextLevel()
+    private void LoadLevel()
     {
-        int levelIndex = (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings;
-        SceneManager.LoadScene(levelIndex);
+        SceneManager.LoadScene(m_SelectedScene);
     }
 
 }
