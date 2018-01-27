@@ -84,6 +84,11 @@ public class AchievementManager : MonoBehaviour
 
     private void Initialise()
     {
+        StatsTracker.OnFiftyPlusesCollected += OnFiftyPlusesCollected;
+        StatsTracker.OnPlayerOutOfBounds += OnPlayerOutOfBounds;
+        StatsTracker.OnTenThousandMetresMoved += OnPlayerWalkedTenThousandMeters;
+        StatsTracker.OnTenPlayerKills += OnTenPlayerKills;
+
         m_Achievements[AchievementType.TEST] = new Achievement(
             "TEST",
             "Herp derp schmerp"
@@ -128,7 +133,7 @@ public class AchievementManager : MonoBehaviour
             );
     }
 
-    // TODO: Remove this once done testing achievemnt system
+    // TODO: Remove this once done testing achievement system
     private void Update()
     {
         if (InputHelper.JumpButtonPressed(1))
@@ -138,24 +143,29 @@ public class AchievementManager : MonoBehaviour
     }
 
 
-    public void OnPlayerOutOfBounds()
+    private void OnPlayerOutOfBounds()
     {
         TryUnlock(m_Achievements[AchievementType.OUT_OF_BOUNDS]);
     }
 
-    public void OnPlayerWalkedTenThousandMeters()
+    private void OnPlayerWalkedTenThousandMeters()
     {
         TryUnlock(m_Achievements[AchievementType.TEN_THOUSAND_METRES]);
     }
 
-    public void OnFiftyPlusesCollected()
+    private void OnFiftyPlusesCollected()
     {
         TryUnlock(m_Achievements[AchievementType.FIFTY_PLUSES]);
     }
 
+    private void OnTenPlayerKills()
+    {
+        TryUnlock(m_Achievements[AchievementType.TEN_KILLS]);
+    }
+
     private void TryUnlock(Achievement a)
     {
-        if (!a.IsUnlocked())
+        if (!a.IsUnlocked)
         {
             a.Unlock();
             OnAchievementUnlocked(a);

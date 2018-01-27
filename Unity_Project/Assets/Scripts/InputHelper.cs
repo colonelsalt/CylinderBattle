@@ -8,7 +8,9 @@ public enum ButtonAction
     JUMP,
     FIRE,
     CROUCH,
-    SPRINT
+    SPRINT,
+    PAUSE,
+    CANCEL
 }
 
 // Wrapper around XboxControllerInput and Unity Input classes
@@ -143,6 +145,17 @@ public static class InputHelper
     public static bool PauseButtonPressed()
     {
         return XCI.GetButtonDown(XboxButton.Start) || Input.GetButtonDown("Cancel");
+    }
+
+    public static bool GetButtonDown(ButtonAction button)
+    {
+        switch(button)
+        {
+            case ButtonAction.CANCEL:
+                return XCI.GetButtonDown(XboxButton.B) || Input.GetButtonDown("Cancel");
+            default:
+                return false;
+        }
     }
 
     public static string GetButtonName(ButtonAction button, int playerNum)

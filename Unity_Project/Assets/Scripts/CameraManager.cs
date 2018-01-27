@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VoronoiSplitScreen : MonoBehaviour
+public class CameraManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
@@ -26,10 +26,6 @@ public class VoronoiSplitScreen : MonoBehaviour
     // Midpoint between Players
     private Vector3 m_Midpoint;
 
-    private Renderer m_Player1Rend;
-
-    private Renderer m_Player2Rend;
-
     // Whether screen is currently split
     private bool m_SplitScreenActive = false;
 
@@ -41,9 +37,6 @@ public class VoronoiSplitScreen : MonoBehaviour
     private void Awake()
     {
         m_SecondaryCamera.enabled = false;
-
-        m_Player1Rend = m_Player1.GetComponentInChildren<Renderer>();
-        m_Player2Rend = m_Player2.GetComponentInChildren<Renderer>();
 
         m_MaskOffset = m_PrimaryCamera.nearClipPlane + 0.1f;
     }
@@ -102,9 +95,16 @@ public class VoronoiSplitScreen : MonoBehaviour
         m_SplitScreenMask.transform.localScale = new Vector3(scaleAmount, scaleAmount, 1f);
 
         // Rotate mask based on split screen angle
+
+
         Vector3 cameraDisplacement = (m_Midpoint - m_Player1.position).normalized * m_ActivationDistance;
+
         Vector3 screenDisplacement = m_SecondaryCamera.WorldToScreenPoint(m_Player2.position) - m_SecondaryCamera.WorldToScreenPoint(m_Player2.position + cameraDisplacement);
         m_SplitScreenMask.transform.rotation = m_SecondaryCamera.transform.rotation;
+
+
+
+        // Rotate by this amount around z-axis
         m_SplitScreenMask.transform.Rotate(m_SplitScreenMask.transform.forward, Mathf.Atan2(screenDisplacement.y, screenDisplacement.x) * Mathf.Rad2Deg, Space.World);
 
         // Place mask in front of camera

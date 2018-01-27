@@ -8,10 +8,19 @@ public class StatsTracker : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    public delegate void PlayerStatEvent();
+    public static event PlayerStatEvent OnPlayerOutOfBounds;
+    public static event PlayerStatEvent OnFiftyPlusesCollected;
+    public static event PlayerStatEvent OnTenThousandMetresMoved;
+    public static event PlayerStatEvent OnTenPlayerKills;
+
+    // --------------------------------------------------------------
+
     [SerializeField] private PlayerStats m_Player;
 
     // How long after Player X knocks over Player Y to consider Y's death as X's kill
     [SerializeField] private float m_KnockBackTime = 3f;
+
 
     // --------------------------------------------------------------
 
@@ -35,6 +44,8 @@ public class StatsTracker : MonoBehaviour
     private Vector3 m_LastPlayerPos;
 
     private float m_TimeSinceKnockOver;
+
+    private bool m_ReachedTenThousandMetres = false;
 
     // --------------------------------------------------------------
 
@@ -121,9 +132,10 @@ public class StatsTracker : MonoBehaviour
             m_Distance += Vector3.Distance(m_LastPlayerPos, m_Player.Position());
             m_LastPlayerPos = m_Player.Position();
 
-            if (m_Distance >= 10000f)
+            if (m_Distance >= 10000f && !m_ReachedTenThousandMetres)
             {
-                AchievementManager.Instance.OnPlayerOutOfBounds();
+                OnTenThousandMetresMoved();
+                m_ReachedTenThousandMetres = true;
             }
         }
 
@@ -149,7 +161,7 @@ public class StatsTracker : MonoBehaviour
             m_TotalPluses++;
             if (m_Player.NumPluses >= 50)
             {
-                AchievementManager.Instance.OnFiftyPlusesCollected();
+                OnFiftyPlusesCollected();
             }
         }
     }
@@ -176,6 +188,10 @@ public class StatsTracker : MonoBehaviour
                 if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
                 {
                     m_PlayerKills++;
+                    if (m_PlayerKills >= 10)
+                    {
+                        OnTenPlayerKills();
+                    }
                 }
             }
 

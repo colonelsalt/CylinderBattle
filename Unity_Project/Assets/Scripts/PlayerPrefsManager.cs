@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Safe wrapper class around Unity PlayerPrefs
 public static class PlayerPrefsManager
 {
     // --------------------------------------------------------------
@@ -10,6 +11,7 @@ public static class PlayerPrefsManager
 
     // --------------------------------------------------------------
 
+    // Use 1 or 0 to denote true or false
     public static void UnlockAchievement(Achievement achivement)
     {
         PlayerPrefs.SetInt(ACHIEVEMENT_KEY + achivement, 1);
@@ -28,6 +30,7 @@ public static class PlayerPrefsManager
         }
     }
 
+    // DEBUG ONLY: Delete everything in PlayerPrefs
     public static void DeleteAll()
     {
         PlayerPrefs.DeleteAll();

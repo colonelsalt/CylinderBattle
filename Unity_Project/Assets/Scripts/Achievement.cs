@@ -38,6 +38,14 @@ public class Achievement
         }
     }
 
+    public bool IsUnlocked
+    {
+        get
+        {
+            return PlayerPrefsManager.IsAchievementUnlocked(this);
+        }
+    }
+
     public Sprite Icon
     {
         get
@@ -54,6 +62,22 @@ public class Achievement
         }
     }
 
+    public static Sprite LockedIcon
+    {
+        get
+        {
+            return Resources.Load<Sprite>("AchievementIcons/Locked");
+        }
+    }
+
+    public static Sprite HiddenIcon
+    {
+        get
+        {
+            return Resources.Load<Sprite>("AchievementIcons/Hidden");
+        }
+    }
+
     // --------------------------------------------------------------
 
     public Achievement(string title, string description, bool isHidden = false)
@@ -66,11 +90,6 @@ public class Achievement
     public void Unlock()
     {
         PlayerPrefsManager.UnlockAchievement(this);
-    }
-
-    public bool IsUnlocked()
-    {
-        return PlayerPrefsManager.IsAchievementUnlocked(this);
     }
 
     public override string ToString()

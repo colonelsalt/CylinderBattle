@@ -1,10 +1,11 @@
 
 REFACTORING TODOS:
--Simplify and thoroughly comment VoronoiSplitScreen
+-Simplify and thoroughly comment VoronoiSplitScreen => CameraManager
 -Adjust MiniMap size for Level 2
 -Find names for Levels
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
+-Deal with post-game over NullReferenceExceptions
 -Insert Level 2 music
 -Hide Spike Trap spikes while idle
 -Get and insert Game Over screen music
