@@ -6,8 +6,17 @@ public class DeathTrigger : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    // Events
+    public delegate void DeathTriggerEvent();
+    public static event DeathTriggerEvent OnPlayerOutOfBounds;
+
+    // --------------------------------------------------------------
+
     // Explosion effect to spawn when Player drops in lava
     [SerializeField] private GameObject m_ExplosionEffect;
+
+    // Set if this DeathTrigger is outside bounds of LevelMesh
+    [SerializeField] private bool m_OutOfBounds = false;
 
     // --------------------------------------------------------------
 
@@ -28,6 +37,12 @@ public class DeathTrigger : MonoBehaviour
 
             // Kill object
             player.Die(gameObject);
+
+            if (m_OutOfBounds)
+            {
+                OnPlayerOutOfBounds();
+            }
+
         }
         else if (other.GetComponent<PlayerFeet>() == null)
         {

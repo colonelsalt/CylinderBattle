@@ -10,15 +10,20 @@ public class StatsTracker : MonoBehaviour
     // --------------------------------------------------------------
 
     public delegate void PlayerStatEvent();
-    public static event PlayerStatEvent OnPlayerOutOfBounds;
     public static event PlayerStatEvent OnFiftyPlusesCollected;
     public static event PlayerStatEvent OnTenThousandMetresMoved;
     public static event PlayerStatEvent OnFivePlayerKills;
+    public static event PlayerStatEvent OnTenEnemyKills;
     public static event PlayerStatEvent OnSurvivedLevelWithoutDeath;
+    public static event PlayerStatEvent OnFiveZeroGame;
+    public static event PlayerStatEvent OnPlayerIndecency;
+    public static event PlayerStatEvent OnPlayerSuicide;
 
     // --------------------------------------------------------------
 
     [SerializeField] private PlayerStats m_Player;
+
+    [SerializeField] private PlayerStats m_OtherPlayer;
 
     // How long after Player X knocks over Player Y to consider Y's death as X's kill
     [SerializeField] private float m_KnockBackTime = 3f;
@@ -42,11 +47,15 @@ public class StatsTracker : MonoBehaviour
 
     private float m_Distance = 0;
 
+    private bool m_GameStarted = false;
+
     private Vector3 m_LastPlayerPos;
 
     private float m_TimeSinceKnockOver;
 
     private bool m_ReachedTenThousandMetres = false;
+
+    private PlayerController m_PlayerController;
 
     // --------------------------------------------------------------
 
@@ -116,6 +125,7 @@ public class StatsTracker : MonoBehaviour
     private void OnGameStart()
     {
         GameManager.OnGameStart -= OnGameStart;
+        m_GameStarted = true;
 
         GameManager.OnGameOver += OnGameOver;
         GameManager.OnGameExit += OnGameExit;
@@ -123,6 +133,8 @@ public class StatsTracker : MonoBehaviour
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         EnemyHealth.OnEnemyDeath += OnEnemyDeath;
         PhysicsSwitch.OnObjectKnockedBack += OnObjectKnockedBack;
+
+        m_PlayerController = m_Player.GetComponent<PlayerController>();
 
         m_LastPlayerPos = m_Player.Position();
         DontDestroyOnLoad(gameObject);
@@ -135,6 +147,8 @@ public class StatsTracker : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!m_GameStarted) return;
+
         // If Player alive, update their "distance covered" measure (don't count respawn movement)
         if (m_Player.IsPlayerAlive)
         {
@@ -152,6 +166,18 @@ public class StatsTracker : MonoBehaviour
         {
             m_TimeSinceKnockOver += Time.deltaTime;
         }
+
+        if (m_PlayerController.IsCrouching)
+        {
+            if (Mathf.Abs(InputHelper.GetMovementX(m_Player.PlayerNum())) > 0 || Mathf.Abs(InputHelper.GetMovementY(m_Player.PlayerNum())) > 0)
+            {
+                if (Vector3.Distance(m_Player.Position(), m_OtherPlayer.Position()) < 1.5f)
+                {
+                    OnPlayerIndecency();
+                }
+            }
+        }
+
     }
 
     private void OnGameOver(int playerNum)
@@ -165,6 +191,10 @@ public class StatsTracker : MonoBehaviour
         if (m_Deaths == 0)
         {
             OnSurvivedLevelWithoutDeath();
+        }
+        if (m_Pis == 5 && m_OtherPlayer.NumPis() == 0)
+        {
+            OnFiveZeroGame();
         }
     }
 
@@ -185,12 +215,14 @@ public class StatsTracker : MonoBehaviour
         if (playerNum == m_Player.PlayerNum())
         {
             m_Deaths++;
-
-            if (killer.GetComponent<DeathTrigger>() != null)
+            IPlayer playerAttacker = killer.GetComponent<IPlayer>();
+            if (playerAttacker != null)
             {
-                // Check if Player out of bounds of LevelMesh
+                if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
+                {
+                    OnPlayerSuicide();
+                }
             }
-
         }
         else
         {
@@ -202,10 +234,6 @@ public class StatsTracker : MonoBehaviour
                 if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
                 {
                     m_PlayerKills++;
-                    if (m_PlayerKills >= 5)
-                    {
-                        OnFivePlayerKills();
-                    }
                 }
             }
 
@@ -216,6 +244,11 @@ public class StatsTracker : MonoBehaviour
                 {
                     m_PlayerKills++;
                 }
+            }
+
+            if (m_PlayerKills >= 5)
+            {
+                OnFivePlayerKills();
             }
         }
     }
@@ -228,6 +261,10 @@ public class StatsTracker : MonoBehaviour
             if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
             {
                 m_EnemyKills++;
+                if (m_EnemyKills >= 10)
+                {
+                    OnTenEnemyKills();
+                }
             }
         }
     }

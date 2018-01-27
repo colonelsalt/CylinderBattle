@@ -10,11 +10,13 @@ public class AchievementManager : MonoBehaviour
 
     private enum AchievementType
     {
-        TEST,
         SURVIVOR,
         TEN_THOUSAND_METRES,
         FIFTY_PLUSES,
-        FIVE_KILLS,
+        FIVE_PLAYER_KILLS,
+        TEN_ENEMY_KILLS,
+        FIVE_ZERO_GAME,
+        BROKE_ALL_CRATES,
         OUT_OF_BOUNDS,
         SUICIDE,
         INDECENCY
@@ -23,7 +25,7 @@ public class AchievementManager : MonoBehaviour
     // --------------------------------------------------------------
 
     // Events
-    public delegate void AchievementEvent(Achievement achievement);
+    public delegate void AchievementEvent(Achievement a);
     public static event AchievementEvent OnAchievementUnlocked;
 
     // --------------------------------------------------------------
@@ -42,9 +44,7 @@ public class AchievementManager : MonoBehaviour
 
     private StatsTracker[] m_StatsTrackers;
 
-    private Achievement m_PostGameAchievement;
-
-    private bool m_GameRunning = false;
+    private List<Achievement> m_PostGameAchievements;
 
     // --------------------------------------------------------------
 
@@ -84,21 +84,21 @@ public class AchievementManager : MonoBehaviour
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
 
+        DeathTrigger.OnPlayerOutOfBounds += OnPlayerOutOfBounds;
+        Breakable.OnAllObjectsBroken += OnAllCratesBroken;
         StatsTracker.OnFiftyPlusesCollected += OnFiftyPlusesCollected;
-        StatsTracker.OnPlayerOutOfBounds += OnPlayerOutOfBounds;
         StatsTracker.OnTenThousandMetresMoved += OnPlayerWalkedTenThousandMeters;
-        StatsTracker.OnFivePlayerKills += OnTenPlayerKills;
+        StatsTracker.OnFivePlayerKills += OnFivePlayerKills;
+        StatsTracker.OnTenEnemyKills += OnTenEnemyKills;
         StatsTracker.OnSurvivedLevelWithoutDeath += OnSurvivedLevelWithoutDeath;
+        StatsTracker.OnFiveZeroGame += OnFiveZeroGame;
+        StatsTracker.OnPlayerIndecency += OnPlayerIndeceny;
+        StatsTracker.OnPlayerSuicide += OnPlayerSuicide;
 
         if (m_DeleteAllOnStart)
         {
             PlayerPrefsManager.DeleteAll();
         }
-
-        m_Achievements[AchievementType.TEST] = new Achievement(
-            "TEST",
-            "Herp derp schmerp"
-            );
 
         m_Achievements[AchievementType.SURVIVOR] = new Achievement(
             "Survivor",
@@ -115,9 +115,24 @@ public class AchievementManager : MonoBehaviour
             "Collect 50 Pluses in one game without dying"
             );
 
-        m_Achievements[AchievementType.FIVE_KILLS] = new Achievement(
+        m_Achievements[AchievementType.TEN_ENEMY_KILLS] = new Achievement(
+            "Vigilante",
+            "Kill ten enemies in one game"
+            );
+
+        m_Achievements[AchievementType.FIVE_PLAYER_KILLS] = new Achievement(
             "Ruthless",
             "Kill your fellow player five times in one game"
+            );
+
+        m_Achievements[AchievementType.FIVE_ZERO_GAME] = new Achievement(
+            "Unfair Match",
+            "Beat your opponent 5-0"
+            );
+
+        m_Achievements[AchievementType.BROKE_ALL_CRATES] = new Achievement(
+            "Demolition Man",
+            "Break all the crates in a level"
             );
 
         m_Achievements[AchievementType.SUICIDE] = new Achievement(
@@ -137,28 +152,39 @@ public class AchievementManager : MonoBehaviour
             "Perform indecent actions on your fellow player",
             true
             );
+
+        m_PostGameAchievements = new List<Achievement>();
+    }
+
+    private void OnAllCratesBroken()
+    {
+        TryUnlock(m_Achievements[AchievementType.BROKE_ALL_CRATES]);
+    }
+
+    private void OnPlayerSuicide()
+    {
+        TryUnlock(m_Achievements[AchievementType.SUICIDE]);
+    }
+
+    private void OnPlayerIndeceny()
+    {
+        TryUnlock(m_Achievements[AchievementType.INDECENCY]);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "GameOver" && m_PostGameAchievement != null)
+        if (scene.name == "GameOver" && m_PostGameAchievements.Count > 0)
         {
-            TryUnlock(m_PostGameAchievement);
+            foreach (Achievement a in m_PostGameAchievements)
+            {
+                TryUnlock(a);
+            }
         }
     }
 
     private void OnSurvivedLevelWithoutDeath()
     {
-        m_PostGameAchievement = m_Achievements[AchievementType.SURVIVOR];
-    }
-
-    // TODO: Remove this once done testing achievement system
-    private void Update()
-    {
-        if (InputHelper.JumpButtonPressed(1))
-        {
-            TryUnlock(m_Achievements[AchievementType.TEST]);
-        }
+        m_PostGameAchievements.Add(m_Achievements[AchievementType.SURVIVOR]);
     }
 
 
@@ -177,9 +203,19 @@ public class AchievementManager : MonoBehaviour
         TryUnlock(m_Achievements[AchievementType.FIFTY_PLUSES]);
     }
 
-    private void OnTenPlayerKills()
+    private void OnFivePlayerKills()
     {
-        TryUnlock(m_Achievements[AchievementType.FIVE_KILLS]);
+        TryUnlock(m_Achievements[AchievementType.FIVE_PLAYER_KILLS]);
+    }
+
+    private void OnTenEnemyKills()
+    {
+        TryUnlock(m_Achievements[AchievementType.TEN_ENEMY_KILLS]);
+    }
+
+    private void OnFiveZeroGame()
+    {
+        m_PostGameAchievements.Add(m_Achievements[AchievementType.FIVE_ZERO_GAME]);
     }
 
     private void TryUnlock(Achievement a)

@@ -95,7 +95,7 @@ public class PlayerStats : MonoBehaviour, IPlayer
     {
         get
         {
-            return m_PlayerHealth.IsAlive;
+            return m_PlayerHealth.IsAlive();
         }
     }
 
@@ -136,4 +136,5 @@ public class PlayerStats : MonoBehaviour, IPlayer
     {
         m_LightningSprint = GetComponentInChildren<LightningSprint>();
     }
+
 }

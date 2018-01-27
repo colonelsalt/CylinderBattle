@@ -57,7 +57,7 @@ public class AchievementMenu : MonoBehaviour
             displayBlock.transform.GetChild(1).GetComponent<Text>().text = title;
 
             // Assign achievement description
-            displayBlock.transform.GetChild(2).GetComponent<Text>().text = (a.IsHidden) ? string.Empty : a.Description;
+            displayBlock.transform.GetChild(2).GetComponent<Text>().text = (a.IsHidden && !a.IsUnlocked) ? string.Empty : a.Description;
         }
     }
 

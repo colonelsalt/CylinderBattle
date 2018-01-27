@@ -27,10 +27,6 @@ public class MovingPlatform : MonoBehaviour
 
     private Vector3 m_MovementDirection;
 
-    private bool m_Waiting = true;
-
-    private bool m_GoingBack = false;
-
     private float m_WaitTimeRemaining = 0f;
 
     // --------------------------------------------------------------
@@ -69,7 +65,7 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<Rigidbody>() != null)
+        if (other.GetComponent<IPlayer>() != null)
         {
             other.transform.SetParent(transform);
         }
@@ -77,35 +73,10 @@ public class MovingPlatform : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Rigidbody>() != null)
+        if (other.GetComponent<IPlayer>() != null)
         {
             other.transform.SetParent(null);
         }
-    }
-
-    private Transform GetFirstChild(Transform t)
-    {
-        Transform firstChild = t;
-        Transform parentCrawler = t;
-        while (parentCrawler.parent != null)
-        {
-            firstChild = parentCrawler;
-            parentCrawler = parentCrawler.parent;
-        }
-        return firstChild;
-    }
-
-    private Transform GetRootObject(Transform t)
-    {
-        Transform rootObject = t;
-        Transform parentCrawler = t;
-        while (parentCrawler != null)
-        {
-            rootObject = parentCrawler;
-            parentCrawler = parentCrawler.parent;
-        }
-
-        return rootObject;
     }
 
 }

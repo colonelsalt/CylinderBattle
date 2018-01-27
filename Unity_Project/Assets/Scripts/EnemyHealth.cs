@@ -52,6 +52,11 @@ public class EnemyHealth : MonoBehaviour, IHealth
         }
     }
 
+    public bool IsAlive()
+    {
+        return (m_CurrentHealth > 0);
+    }
+
     public void Die(GameObject killer)
     {
         SoundManager.Instance.PlayRandom(m_DeathSounds);

@@ -9,4 +9,6 @@ public interface IHealth
 
     void Die(GameObject killer);
 
+    bool IsAlive();
+
 }

@@ -90,7 +90,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool IsFloating = false;
+    public bool IsCrouching
+    {
+        get
+        {
+            return m_IsCrouching;
+        }
+    }
+
+    public bool IsFloating { get; set; }
 
     // --------------------------------------------------------------
 

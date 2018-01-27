@@ -33,8 +33,6 @@ public class StatsDisplayManager : MonoBehaviour
 
     [SerializeField] private Animator m_FadePanelAnim;
 
-    [SerializeField] private Animator m_AchievementAnim;
-
     [SerializeField] private Button m_MainMenuButton;
 
     // --------------------------------------------------------------
@@ -49,7 +47,6 @@ public class StatsDisplayManager : MonoBehaviour
 
     private void Awake()
     {
-        AchievementManager.OnAchievementUnlocked += OnAchievementUnlocked;
 
         EventSystem.current.SetSelectedGameObject(m_MainMenuButton.gameObject);
 
@@ -88,11 +85,6 @@ public class StatsDisplayManager : MonoBehaviour
         {
             Destroy(tracker.gameObject);
         }
-    }
-
-    private void OnAchievementUnlocked(Achievement a)
-    {
-        m_AchievementAnim.SetTrigger("showTrigger");
     }
 
     public void OnMainMenuButtonClicked()

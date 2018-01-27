@@ -66,14 +66,6 @@ public class PlayerHealth : MonoBehaviour, IHealth
         }
     }
 
-    public bool IsAlive
-    {
-        get
-        {
-            return m_IsAlive;
-        }
-    }
-
     // --------------------------------------------------------------
 
     private void Awake()
@@ -85,6 +77,11 @@ public class PlayerHealth : MonoBehaviour, IHealth
 
         m_CurrentHealth = m_StartHealth;
         m_SpawningPosition = transform.position;
+    }
+
+    public bool IsAlive()
+    {
+        return m_IsAlive;
     }
 
     public void GetExtraLife()

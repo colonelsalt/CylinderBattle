@@ -6,6 +6,11 @@ public class Breakable : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    public delegate void BreakableEvent();
+    public static event BreakableEvent OnAllObjectsBroken;
+
+    // --------------------------------------------------------------
+
     [SerializeField] private GameObject m_ShatteredVersion;
 
     // How large change in object's velocity in one frame should be for it to break 
@@ -20,6 +25,8 @@ public class Breakable : MonoBehaviour
     private Rigidbody m_Body;
 
     private Vector3 m_LastVelocity;
+
+    private Collider m_Collider;
 
     private static int m_NumBreakables = 0;
 
@@ -37,6 +44,13 @@ public class Breakable : MonoBehaviour
 
     private void Awake()
     {
+        if (m_NumBreakables == 0)
+        {
+            GameManager.OnGameOver += OnGameOver;
+            GameManager.OnGameExit += OnResetBreakableCount;
+        }
+
+        m_Collider = GetComponent<Collider>();
         m_Body = GetComponent<Rigidbody>();
         m_NumBreakables++;
     }
@@ -55,7 +69,25 @@ public class Breakable : MonoBehaviour
     {
         SoundManager.Instance.PlayRandom(m_BreakSounds);
         Instantiate(m_ShatteredVersion, transform.position, transform.rotation);
-        Destroy(gameObject);
+        m_NumBreakables--;
+        if (m_NumBreakables <= 0)
+        {
+            OnAllObjectsBroken();
+        }
+        
+
+    }
+
+    private static void OnResetBreakableCount()
+    {
+        m_NumBreakables = 0;
+        GameManager.OnGameOver -= OnGameOver;
+        GameManager.OnGameExit -= OnResetBreakableCount;
+    }
+
+    private static void OnGameOver(int winnerNum)
+    {
+        OnResetBreakableCount();
     }
 
 }
