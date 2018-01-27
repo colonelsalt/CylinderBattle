@@ -18,11 +18,17 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Text m_PauseTitle;
 
+    [SerializeField] private Text m_AchievementTitle;
+
+    [SerializeField] private Image m_AchievementImage;
+
     [SerializeField] private Animator m_ObjectiveTitleAnim;
 
     [SerializeField] private Animator m_FadePanelAnim;
 
     [SerializeField] private Animator m_MatchPointAnim;
+
+    [SerializeField] private Animator m_AchievementAnim;
 
     // --------------------------------------------------------------
 
@@ -33,20 +39,22 @@ public class UIManager : MonoBehaviour
         GameManager.OnGameStart += OnGameStart;
         GameManager.OnGamePaused += OnGamePaused;
         GameManager.OnGameResumed += OnGameResumed;
+        GameManager.OnGameOver += OnGameOver;
+        GameManager.OnMatchPoint += OnMatchPoint;
+
+        AchievementManager.OnAchievementUnlocked += OnAchievementUnlocked;
 
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         Collector.OnPiPickup += OnPiPickup;
         Collector.OnPiDrop += OnPiDrop;
         Collector.OnPlusPickup += OnUpdatePluses;
-        Collector.OnAllPisCollected += OnGameOver;
-        Collector.OnMatchPoint += OnMatchPoint;
 
         Gun.OnGunFired += OnUpdateAmmo;
 
         WeaponManager.OnWeaponPickup += OnWeaponPickup;
         WeaponManager.OnWeaponActivated += OnActivateWeapon;
-        WeaponManager.OnWeaponDisabled += OnHideWeapon;
+        WeaponManager.OnWeaponDisabled += OnWeaponDisabled;
 
         PlayerHealth.OnPlayerDamaged += OnUpdateHealth;
         PlayerHealth.OnPlayerExtraLife += OnUpdateHealth;
@@ -101,7 +109,7 @@ public class UIManager : MonoBehaviour
     }
 
     // Hide weapon images and text
-    private void OnHideWeapon(Weapon type, int playerNum)
+    private void OnWeaponDisabled(Weapon type, int playerNum)
     {
         m_PlayerHUDs[playerNum - 1].HideWeapon();
     }
@@ -160,9 +168,16 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnMatchPoint(int playerNum)
+    private void OnMatchPoint()
     {
         m_MatchPointAnim.SetTrigger("showTrigger");
+    }
+
+    private void OnAchievementUnlocked(Achievement a)
+    {
+        m_AchievementTitle.text = a.Title;
+        m_AchievementImage.sprite = a.Icon ?? Achievement.DefaultIcon;
+        m_AchievementAnim.SetTrigger("showTrigger");
     }
 
     private void OnGameOver(int numOfWinner)
@@ -170,20 +185,22 @@ public class UIManager : MonoBehaviour
         GameManager.OnGameStart -= OnGameStart;
         GameManager.OnGamePaused -= OnGamePaused;
         GameManager.OnGameResumed -= OnGameResumed;
+        GameManager.OnGameOver -= OnGameOver;
+        GameManager.OnMatchPoint -= OnMatchPoint;
+
+        AchievementManager.OnAchievementUnlocked -= OnAchievementUnlocked;
 
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
         Collector.OnPiPickup -= OnPiPickup;
         Collector.OnPiDrop -= OnPiDrop;
         Collector.OnPlusPickup -= OnUpdatePluses;
-        Collector.OnAllPisCollected -= OnGameOver;
-        Collector.OnMatchPoint -= OnMatchPoint;
 
         Gun.OnGunFired -= OnUpdateAmmo;
 
         WeaponManager.OnWeaponPickup -= OnWeaponPickup;
         WeaponManager.OnWeaponActivated -= OnActivateWeapon;
-        WeaponManager.OnWeaponDisabled -= OnHideWeapon;
+        WeaponManager.OnWeaponDisabled -= OnWeaponDisabled;
 
         PlayerHealth.OnPlayerDamaged -= OnUpdateHealth;
         PlayerHealth.OnPlayerExtraLife -= OnUpdateHealth;

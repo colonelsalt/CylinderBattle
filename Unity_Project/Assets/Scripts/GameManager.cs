@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour
     public static event GameStateEvent OnGameStart;
     public static event GameStateEvent OnGamePaused;
     public static event GameStateEvent OnGameResumed;
+    public static event GameStateEvent OnMatchPoint;
+    public static event GameStateEvent OnMatchPointEnded;
+
+    public delegate void GameOverEvent(int numOfWinner);
+    public static event GameOverEvent OnGameOver;
 
     // --------------------------------------------------------------
 
@@ -39,17 +44,29 @@ public class GameManager : MonoBehaviour
 
     private PlayerController[] m_PlayerControllers;
 
+    private IPlayer[] m_Players;
+
     private float m_GameOverTime;
+
+    private bool m_MatchPointReached = false;
 
     // --------------------------------------------------------------
 
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        Collector.OnAllPisCollected += OnGameOver;
+        Collector.OnPiPickup += OnCheckForWinState;
+        Collector.OnPiDrop += OnCheckIfMatchPointEnded;
 
         m_PlayerControllers = FindObjectsOfType<PlayerController>();
-        SetPlayersActive(false);
+
+        m_Players = new IPlayer[m_PlayerControllers.Length];
+        for (int i = 0; i < m_PlayerControllers.Length; i++)
+        {
+            m_Players[i] = m_PlayerControllers[i].GetComponent<IPlayer>();
+        }
+
+        SetPlayerControllersActive(false);
 
         m_TimeUntilLevelStart = m_StartupTime;
     }
@@ -57,6 +74,44 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         m_State = GameState.PRE_GAME;
+    }
+
+    private void OnCheckForWinState(int playerNum)
+    {
+        foreach (IPlayer player in m_Players)
+        {
+            if (player.PlayerNum() == playerNum)
+            {
+                if (player.NumPis() >= MAX_NUM_PIS)
+                {
+                    OnGameOver(playerNum);
+                    GameOver();
+                }
+                else if (player.NumPis() == MAX_NUM_PIS - 1 && !m_MatchPointReached)
+                {
+                    m_MatchPointReached = true;
+                    OnMatchPoint();
+                }
+                break;
+            }
+        }
+    }
+
+    private void OnCheckIfMatchPointEnded(int playerNum)
+    {
+        if (!m_MatchPointReached) return;
+
+        bool matchPointEnded = false;
+
+        foreach (IPlayer player in m_Players)
+        {
+            matchPointEnded |= (player.NumPis() == MAX_NUM_PIS - 1);
+        }
+        if (!matchPointEnded)
+        {
+            m_MatchPointReached = false;
+            OnMatchPointEnded();
+        }
     }
 
     private void Update()
@@ -68,7 +123,7 @@ public class GameManager : MonoBehaviour
             {
                 m_State = GameState.PLAYING;
                 OnGameStart();
-                SetPlayersActive(true);
+                SetPlayerControllersActive(true);
             }
         }
         else if (InputHelper.PauseButtonPressed())
@@ -77,7 +132,7 @@ public class GameManager : MonoBehaviour
             {
                 Time.timeScale = 1f;
                 m_State = GameState.PLAYING;
-                SetPlayersActive(true);
+                SetPlayerControllersActive(true);
                 OnGameResumed();
                 
             }
@@ -85,7 +140,7 @@ public class GameManager : MonoBehaviour
             {
                 Time.timeScale = 0f;
                 m_State = GameState.PAUSED;
-                SetPlayersActive(false);
+                SetPlayerControllersActive(false);
                 OnGamePaused();
             }
         }
@@ -102,15 +157,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetPlayersActive(bool enabled)
+    private void SetPlayerControllersActive(bool enabled)
     {
-        foreach (PlayerController player in m_PlayerControllers)
+        foreach (PlayerController controller in m_PlayerControllers)
         {
-            player.enabled = enabled;
+            controller.enabled = enabled;
         }
     }
 
-    private void OnGameOver(int playerNum)
+    private void GameOver()
     {
         Time.timeScale = 0.3f;
         Time.fixedDeltaTime = 0.02f * Time.timeScale;

@@ -22,8 +22,6 @@ public class Collector : MonoBehaviour
     public static event CollectibleEvent OnPiPickup;
     public static event CollectibleEvent OnPiDrop;
     public static event CollectibleEvent OnPlusPickup;
-    public static event CollectibleEvent OnAllPisCollected;
-    public static event CollectibleEvent OnMatchPoint;
 
     // --------------------------------------------------------------
 
@@ -91,14 +89,6 @@ public class Collector : MonoBehaviour
             case Collectible.Type.PI:
                 m_NumPis++;
                 OnPiPickup(m_PlayerNum);
-                if (m_NumPis >= GameManager.MAX_NUM_PIS)
-                {
-                    OnAllPisCollected(m_PlayerNum);
-                }
-                else if (m_NumPis == GameManager.MAX_NUM_PIS - 1)
-                {
-                    OnMatchPoint(m_PlayerNum);
-                }
                 break;
         }
     }

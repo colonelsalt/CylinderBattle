@@ -7,6 +7,8 @@ public interface IPlayer
 
     int PlayerNum();
 
+    int NumPis();
+
     Vector3 Position();
 
 }

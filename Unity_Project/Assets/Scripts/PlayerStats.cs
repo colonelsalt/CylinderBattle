@@ -25,14 +25,6 @@ public class PlayerStats : MonoBehaviour, IPlayer
     // --------------------------------------------------------------
 
     // Public accessors for retrieving Player stats
-    public int NumPis
-    {
-        get
-        {
-            return m_Collector.NumPis;
-        }
-    }
-
     public int NumPluses
     {
         get
@@ -112,6 +104,11 @@ public class PlayerStats : MonoBehaviour, IPlayer
     public int PlayerNum()
     {
         return m_PlayerNum;
+    }
+
+    public int NumPis()
+    {
+        return m_Collector.NumPis;
     }
 
     public Vector3 Position()

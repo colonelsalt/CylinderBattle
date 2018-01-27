@@ -1,16 +1,19 @@
 
 REFACTORING TODOS:
 -Simplify and thoroughly comment VoronoiSplitScreen
+-Adjust MiniMap size for Level 2
+-Find names for Levels
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
 -Insert Level 2 music
 -Hide Spike Trap spikes while idle
 -Get and insert Game Over screen music
 -Insert "Main Menu" and "Quit Game" buttons in appropriate places
+-Make menu navigatable with controller
 -Solve "Invalid world AABB" glitch
 -Clean up unused tags and layers
 -Add square blob shadow under Weapon Blocks?
--Add blob shadows to Pis and Pluses on transparent platforms?
+-Add blob shadows to Pis on transparent platforms?
 -Remove direct call by weapons to WeaponManager.DisableWeapon in favour
  of SendMessageUpwards?
 

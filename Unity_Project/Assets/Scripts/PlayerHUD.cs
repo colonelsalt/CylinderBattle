@@ -80,7 +80,7 @@ public class PlayerHUD : MonoBehaviour
 
     public void UpdatePis(bool withAnimation)
     {
-        m_NumPisText.text = m_PlayerStats.NumPis.ToString();
+        m_NumPisText.text = m_PlayerStats.NumPis().ToString();
         if (withAnimation)
         {
             m_PiAnimator.SetTrigger("flashTrigger");

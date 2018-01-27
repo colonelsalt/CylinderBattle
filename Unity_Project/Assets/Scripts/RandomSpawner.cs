@@ -43,7 +43,7 @@ public class RandomSpawner : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        Collector.OnAllPisCollected += OnGameOver;
+        GameManager.OnGameOver += OnGameOver;
 
         m_SpawnPositions = new Transform[transform.childCount];
         for (int i = 0; i < transform.childCount; i++)
@@ -119,7 +119,7 @@ public class RandomSpawner : MonoBehaviour
 
     private void OnDisable()
     {
-        Collector.OnAllPisCollected -= OnGameOver;
+        GameManager.OnGameOver -= OnGameOver;
     }
 
 

@@ -103,7 +103,7 @@ public class StatsTracker : MonoBehaviour
 
     private void OnGameStart()
     {
-        Collector.OnAllPisCollected += OnGameOver;
+        GameManager.OnGameOver += OnGameOver;
         Collector.OnPlusPickup += OnPlusPickup;
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         EnemyHealth.OnEnemyDeath += OnEnemyDeath;
@@ -120,6 +120,11 @@ public class StatsTracker : MonoBehaviour
         {
             m_Distance += Vector3.Distance(m_LastPlayerPos, m_Player.Position());
             m_LastPlayerPos = m_Player.Position();
+
+            if (m_Distance >= 10000f)
+            {
+                AchievementManager.Instance.OnPlayerOutOfBounds();
+            }
         }
 
         if (m_TimeSinceKnockOver < m_KnockBackTime)
@@ -134,7 +139,7 @@ public class StatsTracker : MonoBehaviour
 
         RemoveListeners();
 
-        m_Pis = m_Player.NumPis;
+        m_Pis = m_Player.NumPis();
     }
 
     private void OnPlusPickup(int playerNum)
@@ -142,6 +147,10 @@ public class StatsTracker : MonoBehaviour
         if (playerNum == m_Player.PlayerNum())
         {
             m_TotalPluses++;
+            if (m_Player.NumPluses >= 50)
+            {
+                AchievementManager.Instance.OnFiftyPlusesCollected();
+            }
         }
     }
 
@@ -202,7 +211,7 @@ public class StatsTracker : MonoBehaviour
             {
                 if (victim.GetComponent<IPlayer>() != null)
                 {
-                    m_TimeSinceKnockOver = m_KnockBackTime;
+                    m_TimeSinceKnockOver = 0f;
                 }
             }
         }
@@ -210,7 +219,7 @@ public class StatsTracker : MonoBehaviour
 
     private void RemoveListeners()
     {
-        Collector.OnAllPisCollected -= OnGameOver;
+        GameManager.OnGameOver -= OnGameOver;
         Collector.OnPlusPickup -= OnPlusPickup;
         GameManager.OnGameStart -= OnGameStart;
         PhysicsSwitch.OnObjectKnockedBack -= OnObjectKnockedBack;
