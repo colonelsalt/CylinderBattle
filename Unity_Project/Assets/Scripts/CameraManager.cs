@@ -74,7 +74,7 @@ public class CameraManager : MonoBehaviour
             // If splitscreen not active, just place primary camera at midpoint
             m_PrimaryCamera.transform.position = m_Midpoint - (m_PrimaryCamera.transform.forward * m_CameraDistance);
 
-            // Update secondary camera position as well (important for correct screen space coordinates for TutorialManager)
+            // Update secondary camera position as well (needed for correct screen space coordinates for TutorialManager)
             m_SecondaryCamera.transform.position = m_PrimaryCamera.transform.position;
         }
     }
@@ -101,7 +101,7 @@ public class CameraManager : MonoBehaviour
     {
         m_SplitScreenMask.transform.rotation = m_SecondaryCamera.transform.rotation;
 
-        // Vector between screen midpoint and Player 2
+        // Perpendicular between screen midpoint and Player 2
         Vector3 screenOffset = m_SecondaryCamera.WorldToScreenPoint(m_Player2.position) - m_SecondaryCamera.WorldToScreenPoint(m_Player2.position + m_CameraOffset);   
 
         // Rotate mask away from camera by this angle

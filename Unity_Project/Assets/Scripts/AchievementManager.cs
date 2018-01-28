@@ -34,7 +34,7 @@ public class AchievementManager : MonoBehaviour
     // --------------------------------------------------------------
 
     // DEBUG ONLY: If set, delete all achievement progress on game start
-    [SerializeField] private bool m_DeleteAllOnStart = false;
+    //[SerializeField] private bool m_DeleteAllOnStart = false;
 
     [SerializeField] private AudioClip m_AchievementSound;
 
@@ -93,11 +93,6 @@ public class AchievementManager : MonoBehaviour
         StatsTracker.OnPlayerIndecency += OnPlayerIndeceny;
         StatsTracker.OnPlayerSuicide += OnPlayerSuicide;
         StatsTracker.OnPlayerStolePi += OnPiStolen;
-
-        if (m_DeleteAllOnStart)
-        {
-            PlayerPrefsManager.DeleteAll();
-        }
 
         // Create Achievement instances
         m_Achievements[AchievementType.SURVIVOR] = new Achievement(
