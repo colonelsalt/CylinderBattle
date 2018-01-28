@@ -26,7 +26,7 @@ public static class InputHelper
         return XCI.IsPluggedIn((XboxController)playerNum);
     }
 
-    public static float GetMovementX(int playerNum)
+    public static float GetAxisX(int playerNum)
     {
         if (GamePadConnected(playerNum))
         {
@@ -38,7 +38,7 @@ public static class InputHelper
         }
     }
 
-    public static float GetMovementY(int playerNum)
+    public static float GetAxisY(int playerNum)
     {
         if (GamePadConnected(playerNum))
         {
@@ -149,15 +149,9 @@ public static class InputHelper
         return XCI.GetButtonDown(XboxButton.Start) || Input.GetButtonDown("Cancel");
     }
 
-    public static bool GetButtonDown(ButtonAction button)
+    public static bool CancelButtonPressed()
     {
-        switch(button)
-        {
-            case ButtonAction.CANCEL:
-                return XCI.GetButtonDown(XboxButton.B) || Input.GetButtonDown("Cancel");
-            default:
-                return false;
-        }
+        return XCI.GetButtonDown(XboxButton.B) || Input.GetButtonDown("Cancel");
     }
 
     public static string GetButtonName(ButtonAction button, int playerNum)

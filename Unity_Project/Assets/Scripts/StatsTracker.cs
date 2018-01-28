@@ -190,7 +190,7 @@ public class StatsTracker : MonoBehaviour
         // If Player is crouching, moving up and down and touching their opponent simultaneously, they must be up to something dirty
         if (m_PlayerController.IsCrouching)
         {
-            if (Mathf.Abs(InputHelper.GetMovementX(m_Player.PlayerNum())) > 0 || Mathf.Abs(InputHelper.GetMovementY(m_Player.PlayerNum())) > 0)
+            if (Mathf.Abs(InputHelper.GetAxisX(m_Player.PlayerNum())) > 0 || Mathf.Abs(InputHelper.GetAxisY(m_Player.PlayerNum())) > 0)
             {
                 if (Vector3.Distance(m_Player.Position(), m_OtherPlayer.Position()) < 1.5f)
                 {

@@ -146,8 +146,8 @@ public class PlayerController : MonoBehaviour
     private void UpdateMovementDirection()
     {
         // Get Player's movement input and determine direction
-        float horizontalInput = InputHelper.GetMovementX(m_PlayerNum);
-        float verticalInput = InputHelper.GetMovementY(m_PlayerNum);
+        float horizontalInput = InputHelper.GetAxisX(m_PlayerNum);
+        float verticalInput = InputHelper.GetAxisY(m_PlayerNum);
 
         m_MovementDirection = new Vector3(horizontalInput, 0, verticalInput);
     }

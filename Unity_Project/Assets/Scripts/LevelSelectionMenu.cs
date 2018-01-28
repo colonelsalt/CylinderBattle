@@ -28,7 +28,7 @@ public class LevelSelectionMenu : MonoBehaviour
 
     private void Update()
     {
-        if (InputHelper.GetButtonDown(ButtonAction.CANCEL))
+        if (InputHelper.CancelButtonPressed())
         {
             m_ExitButton.onClick.Invoke();
         }

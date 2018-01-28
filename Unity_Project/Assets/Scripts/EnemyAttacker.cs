@@ -29,6 +29,8 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
 
     private AudioSource m_Audio;
 
+    private Collider m_Collider;
+
     // --------------------------------------------------------------
 
     private void Awake()
@@ -36,6 +38,7 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
         m_Patrol = GetComponent<WaypointPatroller>();
         m_Animator = GetComponent<Animator>();
         m_Audio = GetComponent<AudioSource>();
+        m_Collider = GetComponent<Collider>();
 
         foreach (ParticleSystem ps in GetComponentsInChildren<ParticleSystem>())
         {
@@ -114,11 +117,15 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
             body.AddForce(transform.forward * m_ImpactForce);
         }
 
-        // Damage Players
         PlayerHealth player = other.GetComponent<PlayerHealth>();
         if (player != null)
         {
-            player.TakeDamage(1, gameObject);
+            // Unless Player is above us (presumably jumping on our head), deal damage
+            if (other.bounds.min.y < m_Collider.bounds.center.y)
+            {
+                player.TakeDamage(1, gameObject);
+            }
+
         }
     }
 
