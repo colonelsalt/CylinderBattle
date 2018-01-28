@@ -1,12 +1,8 @@
 SUBMISSION TODOS:
--Insert appropriate Achievement icons
-
-
 -Simplify and thoroughly comment VoronoiSplitScreen => CameraManager
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
 -Deal with post-game over NullReferenceExceptions
--Insert Level 2 music
 -Adjust size of Level 2 MiniMap camera
 -Hide Spike Trap spikes while idle
 -Get and insert Game Over screen music
