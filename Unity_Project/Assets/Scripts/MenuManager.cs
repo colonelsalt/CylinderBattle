@@ -17,6 +17,8 @@ public class MenuManager : MonoBehaviour
 
     [SerializeField] private GameObject m_LevelSelectPanel;
 
+    [SerializeField] private GameObject m_TutorialPanel;
+
     [SerializeField] private GameObject m_AchievementsPanel;
 
     // --------------------------------------------------------------
@@ -35,7 +37,7 @@ public class MenuManager : MonoBehaviour
         m_LastSelectedMenuItem = m_PrimaryButtons[0].gameObject;
     }
 
-    private void ButtonSound()
+    public void ButtonSound()
     {
         SoundManager.Instance.Play(m_ButtonClickSound);
     }
@@ -52,7 +54,9 @@ public class MenuManager : MonoBehaviour
     public void OnTutorialButtonClicked()
     {
         ButtonSound();
-        // TODO
+        m_LastSelectedMenuItem = EventSystem.current.currentSelectedGameObject;
+        SetPrimaryButtonsActive(false);
+        m_TutorialPanel.SetActive(true);
     }
 
     public void OnAchievementsButtonClicked()
@@ -83,6 +87,7 @@ public class MenuManager : MonoBehaviour
         SetPrimaryButtonsActive(true);
         m_AchievementsPanel.SetActive(false);
         m_LevelSelectPanel.SetActive(false);
+        m_TutorialPanel.SetActive(false);
         EventSystem.current.SetSelectedGameObject(m_LastSelectedMenuItem);
     }
 
