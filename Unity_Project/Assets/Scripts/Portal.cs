@@ -81,6 +81,8 @@ public class Portal : MonoBehaviour
         if (PORTALS_IN_PLAY[1] != null) PORTALS_IN_PLAY[1].Deactivate();
     }
 
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (!m_PortalActivated) return;
