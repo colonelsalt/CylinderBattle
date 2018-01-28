@@ -157,7 +157,7 @@ public class AchievementManager : MonoBehaviour
             );
 
         m_Achievements[AchievementType.OUT_OF_BOUNDS] = new Achievement(
-            "What are you doing here?",
+            "Not here, buddy",
             "Step outside the bounds of the level",
             true
             );

@@ -1,7 +1,5 @@
 SUBMISSION TODOS:
--Implement all remaining achievements
 -Insert appropriate Achievement icons
--Insert Achievement sound
 
 
 -Simplify and thoroughly comment VoronoiSplitScreen => CameraManager
@@ -12,23 +10,12 @@ SUBMISSION TODOS:
 -Adjust size of Level 2 MiniMap camera
 -Hide Spike Trap spikes while idle
 -Get and insert Game Over screen music
--Insert "Main Menu" and "Quit Game" buttons in appropriate places
--Make menu navigatable with controller
 -Solve "Invalid world AABB" glitch
 -Clean up unused tags and layers
 -Add square blob shadow under Weapon Blocks?
 -Add blob shadows to Pis on transparent platforms?
 -Remove direct call by weapons to WeaponManager.DisableWeapon in favour
  of SendMessageUpwards?
-
-ACHIEVEMENTS:
--Fucking (Hidden); "Dirty Boi"
--Jumping out of map (Hidden); "What are you doing here?"
--50 pluses collected without dying
--Moved more than 10,000m in one level; "Metric Mile"
--Broken all crates in scene
--Surviving entire game without dying
--Kill yourself with your own bomb
 
 17 march 10.20am 
 
