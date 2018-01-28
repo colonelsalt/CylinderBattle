@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 
+// Displays game stats on Game Over scene and handles transition back to Title Screen
 public class StatsDisplayManager : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -41,17 +42,19 @@ public class StatsDisplayManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // Ref. to StatsTrackers carried over from level that just ended; all stats retrieved from here
     private StatsTracker[] m_Stats;
 
     // --------------------------------------------------------------
 
     private void Awake()
     {
-
         EventSystem.current.SetSelectedGameObject(m_MainMenuButton.gameObject);
 
+        // Update title to reflect winner
         m_WinnerTitle.text = "Player " + StatsTracker.PlayerWinner + " wins!";
 
+        // Show appropriate win/lose icon for each Player
         if (StatsTracker.PlayerWinner == 1)
         {
             m_Player1Icon.sprite = m_PlayerWinSprites[0];
@@ -63,7 +66,7 @@ public class StatsDisplayManager : MonoBehaviour
             m_Player2Icon.sprite = m_PlayerWinSprites[1];
         }
 
-        // TODO: Retrieve stats from StatsTrackers and display
+        // Retrieve stats from StatsTrackers and display in appropriate Text elements
         m_Stats = FindObjectsOfType<StatsTracker>();
         if (m_Stats.Length != GameManager.NUM_PLAYERS)
         {
@@ -80,7 +83,8 @@ public class StatsDisplayManager : MonoBehaviour
             m_EnemyKillsTexts[i].text = m_Stats[i].NumEnemyKills.ToString();
             m_DistanceTexts[i].text = m_Stats[i].DistanceCovered + " m";
         }
-
+        
+        // Destroy StatsTrackers to ensure they don't carry on old stats into new level
         foreach (StatsTracker tracker in m_Stats)
         {
             Destroy(tracker.gameObject);

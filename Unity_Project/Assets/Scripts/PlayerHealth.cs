@@ -36,6 +36,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
 
     // --------------------------------------------------------------
 
+    // Ref. to PlayerController to temporarily remove control on death
     private PlayerController m_PlayerController;
 
     private Animator m_PlayerAnim;
@@ -96,7 +97,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
 
         SoundManager.Instance.PlayRandom(m_DamageSounds);
 
-        m_CurrentHealth = Mathf.Max(0, m_CurrentHealth - damage);
+        m_CurrentHealth = Mathf.Max(0, m_CurrentHealth - damage); // Don't allow health to fall below zero
         OnPlayerDamaged(m_PlayerNum, attacker);
         if (m_CurrentHealth <= 0)
         {
@@ -109,6 +110,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
         }
     }
 
+    // Flashes Player's Renderer to indicate invincibility immediately following damage
     private IEnumerator InvincibilityFlash()
     {
         Renderer rend = m_Renderers[0];
@@ -121,6 +123,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
         m_IsInvincible = false;
     }
 
+    // Lerp movement back to spawn position, then respawn
     private IEnumerator MoveToSpawnPos()
     {
         SetVisibility(false);
@@ -131,6 +134,8 @@ public class PlayerHealth : MonoBehaviour, IHealth
         Vector3 startPosition = transform.position;
         float distanceToTarget = Vector3.Distance(startPosition, m_SpawningPosition);
         float startTime = Time.time;
+
+        // Adjust speed to ensure it covers necessary distance in desired respawn time
         float speed = Vector3.Distance(transform.position, m_SpawningPosition) / (m_RespawnTime - 1f);
         float distanceCovered = 0f;
 

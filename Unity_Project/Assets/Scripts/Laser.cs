@@ -6,7 +6,6 @@ using UnityEngine;
 public class Laser : MonoBehaviour
 {
     // --------------------------------------------------------------
-
     [SerializeField] private float m_Speed;
 
     [SerializeField] private int m_Damage;
@@ -33,6 +32,7 @@ public class Laser : MonoBehaviour
         m_Animator = GetComponent<Animator>();
     }
 
+    // Called by Gun when Laser instantiated
     public void AssignOwner(GameObject owner)
     {
         m_GunFiredBy = owner;
@@ -62,7 +62,7 @@ public class Laser : MonoBehaviour
             otherHealth.TakeDamage(m_Damage, m_GunFiredBy);
         }
 
-        // Unless collided with a Portal, laser beam vanishes
+        // Unless collided with a Portal, laser beam vanishes against anything else
         if (other.GetComponent<Portal>() == null)
         {
             Vanish();

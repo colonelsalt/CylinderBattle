@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// Present in every game level; keeps track of game state and transitions in and out of scene
 public class GameManager : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -34,7 +35,6 @@ public class GameManager : MonoBehaviour
 
     public const int MAX_NUM_PIS = 5;
     public const int NUM_PLAYERS = 2;
-    public const int PLAYER_HEALTH = 3;
     public const float POWERUP_DURATION = 15f;
 
     // --------------------------------------------------------------
@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
 
     private float m_TimeUntilLevelStart;
 
+    // Reference to PlayerControllers to disable movement outside of PLAYING state
     private PlayerController[] m_PlayerControllers;
 
     private IPlayer[] m_Players;

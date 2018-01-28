@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Middleman class between UI / backend class and Player stats
+// Middleman class between UI / backend classes and Player stats
 public class PlayerStats : MonoBehaviour, IPlayer
 {
     // --------------------------------------------------------------

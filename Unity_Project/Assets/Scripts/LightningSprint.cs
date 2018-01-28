@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Component for LightningSprint powerup (30 Pluses)
 [RequireComponent(typeof(AudioSource))]
 public class LightningSprint : MonoBehaviour
 {
@@ -17,10 +18,13 @@ public class LightningSprint : MonoBehaviour
 
     private int m_PlayerNum;
 
+    // Reference to PlayerController to synchronise movement
     private PlayerController m_PlayerController;
 
+    // Renderer to show on top of Player when sprinting
     private Renderer m_Rend;
 
+    // Lightning effect to loop while sprinting
     private ParticleSystem m_Lightning;
 
     private Animator m_Animator;
@@ -29,8 +33,10 @@ public class LightningSprint : MonoBehaviour
 
     private float m_RemainingSprintTime;
 
+    // Whether Player has left sprint time fall to zero and needs rest before they can sprint again
     private bool m_HasStamina = true;
 
+    // Flag to prevent constantly replaying audio
     private bool m_PlayingSprintSound = false;
 
     // --------------------------------------------------------------
@@ -84,6 +90,7 @@ public class LightningSprint : MonoBehaviour
             }
             else
             {
+                // If Player let sprint time fall to zero, full recharge is needed before another sprint
                 if (m_HasStamina)
                 {
                     SoundManager.Instance.PlayRandom(m_OutOfStaminaSounds);
@@ -92,7 +99,6 @@ public class LightningSprint : MonoBehaviour
                 m_HasStamina = false;
                 Stop();
             }
-
         }
         else
         {

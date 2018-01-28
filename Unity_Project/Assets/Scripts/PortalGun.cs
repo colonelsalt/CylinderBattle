@@ -111,6 +111,9 @@ public class PortalGun : MonoBehaviour
         }
     }
 
+    // Broadcast from WeaponManager
+    private void OnWeaponReset() { }
+
     private void OnDeath()
     {
         // If only one portal has been fired, destroy it

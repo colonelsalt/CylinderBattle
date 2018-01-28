@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// Sets up achievements 
 public class AchievementManager : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -39,30 +40,23 @@ public class AchievementManager : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // Private singleton instance
     private static AchievementManager m_Instance;
 
-    // List of all achievements
+    // Dictionary containing all achievements in game
     private Dictionary<AchievementType, Achievement> m_Achievements = new Dictionary<AchievementType, Achievement>();
 
-    private StatsTracker[] m_StatsTrackers;
-
-    private List<Achievement> m_PostGameAchievements;
+    // Achievements to unlock on Game Over screen after level finished
+    private Queue<Achievement> m_PostGameAchievementQ;
 
     // --------------------------------------------------------------
 
-    public static AchievementManager Instance
+    // For retrieving full list of Achievements on Title Screen sub-menu
+    public static List<Achievement> AchievementList
     {
         get
         {
-            return m_Instance;
-        }
-    }
-
-    public List<Achievement> AchievementList
-    {
-        get
-        {
-            return m_Achievements.Values.ToList();
+            return m_Instance.m_Achievements.Values.ToList();
         }
     }
 
@@ -84,6 +78,7 @@ public class AchievementManager : MonoBehaviour
 
     private void Initialise()
     {
+        // Set up listeners
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         DeathTrigger.OnPlayerOutOfBounds += OnPlayerOutOfBounds;
@@ -104,6 +99,7 @@ public class AchievementManager : MonoBehaviour
             PlayerPrefsManager.DeleteAll();
         }
 
+        // Create Achievement instances
         m_Achievements[AchievementType.SURVIVOR] = new Achievement(
             "Survivor",
             "Survive an entire game without dying"
@@ -168,7 +164,19 @@ public class AchievementManager : MonoBehaviour
             true
             );
 
-        m_PostGameAchievements = new List<Achievement>();
+        m_PostGameAchievementQ = new Queue<Achievement>();
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // If Game Over screen, unlock all queued-up Achievements
+        if (scene.name == "GameOver" && m_PostGameAchievementQ.Count > 0)
+        {
+            while (m_PostGameAchievementQ.Count > 0)
+            {
+                TryUnlock(m_PostGameAchievementQ.Dequeue());
+            }
+        }
     }
 
     private void OnPiStolen()
@@ -196,20 +204,9 @@ public class AchievementManager : MonoBehaviour
         TryUnlock(m_Achievements[AchievementType.INDECENCY]);
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "GameOver" && m_PostGameAchievements.Count > 0)
-        {
-            foreach (Achievement a in m_PostGameAchievements)
-            {
-                TryUnlock(a);
-            }
-        }
-    }
-
     private void OnSurvivedLevelWithoutDeath()
     {
-        m_PostGameAchievements.Add(m_Achievements[AchievementType.SURVIVOR]);
+        m_PostGameAchievementQ.Enqueue(m_Achievements[AchievementType.SURVIVOR]);
     }
 
 
@@ -240,9 +237,10 @@ public class AchievementManager : MonoBehaviour
 
     private void OnFiveZeroGame()
     {
-        m_PostGameAchievements.Add(m_Achievements[AchievementType.FIVE_ZERO_GAME]);
+        m_PostGameAchievementQ.Enqueue(m_Achievements[AchievementType.FIVE_ZERO_GAME]);
     }
 
+    // Unlock achievement if it hasn't been already
     private void TryUnlock(Achievement a)
     {
         if (!a.IsUnlocked)
@@ -255,6 +253,20 @@ public class AchievementManager : MonoBehaviour
 
     private void OnDisable()
     {
-        // TODO: Remove listeners
+        // Remove listeners
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        DeathTrigger.OnPlayerOutOfBounds -= OnPlayerOutOfBounds;
+        Breakable.OnAllObjectsBroken -= OnAllCratesBroken;
+        AchievementCollectible.OnAllSpecialCollectiblesGrabbed -= OnAllSpikePlusesCollected;
+        StatsTracker.OnFiftyPlusesCollected -= OnFiftyPlusesCollected;
+        StatsTracker.OnTenThousandMetresMoved -= OnPlayerWalkedTenThousandMeters;
+        StatsTracker.OnFivePlayerKills -= OnFivePlayerKills;
+        StatsTracker.OnTenEnemyKills -= OnTenEnemyKills;
+        StatsTracker.OnSurvivedLevelWithoutDeath -= OnSurvivedLevelWithoutDeath;
+        StatsTracker.OnFiveZeroGame -= OnFiveZeroGame;
+        StatsTracker.OnPlayerIndecency -= OnPlayerIndeceny;
+        StatsTracker.OnPlayerSuicide -= OnPlayerSuicide;
+        StatsTracker.OnPlayerStolePi -= OnPiStolen;
     }
 }

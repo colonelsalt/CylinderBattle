@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 
+// Manages camera movement; toggles between midpoint-centred single camera and dynamically rotating split-screen (Voronoi) using shader mask
 public class CameraManager : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -12,6 +12,9 @@ public class CameraManager : MonoBehaviour
 
     // Distance to maintain between Players and each camera
     [SerializeField] private float m_CameraDistance = 20f;
+
+    // Distance in front of secondary camera to place render mask
+    [SerializeField] private float m_MaskOffset;
 
     // Mask to place in front of secondary camera to display primary camera feed through
     [SerializeField] private GameObject m_SplitScreenMask;
@@ -37,15 +40,11 @@ public class CameraManager : MonoBehaviour
     // Whether split screen is currently active
     private bool m_SplitScreenActive = false;
 
-    // Distance in front of secondary camera to place render mask
-    private float m_MaskOffset;
-
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_SecondaryCamera.enabled = false;
-        m_MaskOffset = m_PrimaryCamera.nearClipPlane + 0.1f;
     }
 
     private void LateUpdate()
@@ -73,7 +72,10 @@ public class CameraManager : MonoBehaviour
         else
         {
             // If splitscreen not active, just place primary camera at midpoint
-            m_PrimaryCamera.transform.position = m_Midpoint - (m_PrimaryCamera.transform.forward * m_CameraDistance);;
+            m_PrimaryCamera.transform.position = m_Midpoint - (m_PrimaryCamera.transform.forward * m_CameraDistance);
+
+            // Update secondary camera position as well (important for correct screen space coordinates for TutorialManager)
+            m_SecondaryCamera.transform.position = m_PrimaryCamera.transform.position;
         }
     }
 
@@ -106,10 +108,10 @@ public class CameraManager : MonoBehaviour
         m_SplitScreenMask.transform.Rotate(m_SplitScreenMask.transform.forward, Mathf.Atan2(screenOffset.y, screenOffset.x) * Mathf.Rad2Deg, Space.World);
 
         // Movement of mask so it covers half of secondary camera
-        Vector3 horizontalOffset = (m_SplitScreenMask.transform.right * m_SplitScreenMask.transform.lossyScale.x / 2f);
+        Vector3 horizontalShift = m_SplitScreenMask.transform.right * m_SplitScreenMask.transform.lossyScale.x / 2f;
 
         // Place mask in front of camera
-        m_SplitScreenMask.transform.position = m_SecondaryCamera.transform.position + (m_SecondaryCamera.transform.forward * m_MaskOffset) + horizontalOffset; 
+        m_SplitScreenMask.transform.position = m_SecondaryCamera.transform.position + (m_SecondaryCamera.transform.forward * m_MaskOffset) + horizontalShift; 
     }
 
 }

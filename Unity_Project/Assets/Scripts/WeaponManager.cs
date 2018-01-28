@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Controller for Player's weapons; receives them and spawns them, then hands over control to respective Weapon components
 public class WeaponManager : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -95,7 +96,7 @@ public class WeaponManager : MonoBehaviour
         m_HasWeapon = false;
     }
 
-    // If collected weapon block while holding weapon, refill it
+    // If collected weapon block while holding weapon, "refill" it
     private void RefillWeapon()
     {
         BroadcastMessage("OnWeaponReset");
@@ -117,6 +118,7 @@ public class WeaponManager : MonoBehaviour
         OnWeaponPickup(weapon, m_PlayerNum);
     }
 
+    // Broadcast from PlayerHealth
     private void OnDeath()
     {
         DisableWeapon();

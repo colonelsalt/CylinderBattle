@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Rigidbody))]
+// Controls Enemy with NavmeshAgent to navigate Waypoints
 public class WaypointPatroller : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -39,6 +40,7 @@ public class WaypointPatroller : MonoBehaviour
     // Behaviour to execute once Enemy spots Player
     private IEnemyBehaviour m_EnemyBehaviour;
 
+    // Exclamation effect to show on spotting Player
     private ParticleSystem m_Exclamation;
 
     // --------------------------------------------------------------
@@ -75,6 +77,7 @@ public class WaypointPatroller : MonoBehaviour
         StartCoroutine(LookForPlayer());
     }
 
+    // Retrieve ref. to each Player's collider for AABB checks
     private void SetupPlayerReferences()
     {
         PlayerController[] players = FindObjectsOfType<PlayerController>();

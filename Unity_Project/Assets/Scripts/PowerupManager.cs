@@ -9,7 +9,7 @@ public enum Powerup
     JETPACK = 2
 }
 
-[RequireComponent(typeof(PlayerController))]
+// Checks for and generates Player Powerup bonuses when Pluses collected
 public class PowerupManager : MonoBehaviour
 {
     // --------------------------------------------------------------

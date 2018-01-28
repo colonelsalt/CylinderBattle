@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+// Controller for Title Screen sub-menu
 public class LevelSelectionMenu : MonoBehaviour
 {
     // --------------------------------------------------------------

@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Sound effects singleton
 [RequireComponent(typeof(AudioSource))]
 public class SoundManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    // Random variation in sound effect pitch
     [SerializeField] private float m_LowPitch = 0.95f;
-
     [SerializeField] private float m_HighPitch = 1.05f;
 
+    // Time taken to fade out a passed-in audio source
     [SerializeField] private float m_FadeOutTime = 0.3f;
 
     // --------------------------------------------------------------
@@ -65,6 +67,7 @@ public class SoundManager : MonoBehaviour
         m_Audio.PlayOneShot(clip);
     }
 
+    // Plays one of clips passed in with slight random variation in pitch
     public void PlayRandom(params AudioClip[] clips)
     {
         if (clips.Length <= 0) return;
@@ -75,6 +78,7 @@ public class SoundManager : MonoBehaviour
         m_Audio.PlayOneShot(clipToPlay);
     }
 
+    // Called by objects with their own looping audio source to prevent jarring breaks when playback stops
     public void FadeOut(AudioSource audio)
     {
         if (!audio.isPlaying) return;

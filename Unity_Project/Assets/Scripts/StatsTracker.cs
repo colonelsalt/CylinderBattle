@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Keeps track of Player stats
+// Keeps track of hidden Player stats throughout game, for display on Game Over screen and for notifying Achievement system
 public class StatsTracker : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -31,8 +31,8 @@ public class StatsTracker : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    // TODO: Set this to 0 before release
-    private static int m_PlayerWinner = 2;
+    // Set when level ended
+    private static int m_PlayerWinner = 0;
 
     // --------------------------------------------------------------
 
@@ -142,6 +142,7 @@ public class StatsTracker : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    // Check for Pi steal
     private void OnDroppedPiPickup(GameObject owner, GameObject receiver)
     {
         int ownerNum = owner.GetComponent<IPlayer>()?.PlayerNum() ?? 0;
@@ -158,6 +159,7 @@ public class StatsTracker : MonoBehaviour
         }
     }
 
+    // Ensure StatsTracker is destroyed if level quit prematurely, to prevent stats carrying over into new level
     private void OnGameExit()
     {
         Destroy(gameObject);
@@ -185,6 +187,7 @@ public class StatsTracker : MonoBehaviour
             m_TimeSinceKnockOver += Time.deltaTime;
         }
 
+        // If Player is crouching, moving up and down and touching their opponent simultaneously, they must be up to something dirty
         if (m_PlayerController.IsCrouching)
         {
             if (Mathf.Abs(InputHelper.GetMovementX(m_Player.PlayerNum())) > 0 || Mathf.Abs(InputHelper.GetMovementY(m_Player.PlayerNum())) > 0)
@@ -197,6 +200,7 @@ public class StatsTracker : MonoBehaviour
         }
 
     }
+
 
     private void OnGameOver(int playerNum)
     {
@@ -228,6 +232,8 @@ public class StatsTracker : MonoBehaviour
         }
     }
 
+    
+    // Check if Death increments death count, kill count, or counts as suicide
     private void OnPlayerDeath(int playerNum, GameObject killer)
     {
         if (playerNum == m_Player.PlayerNum())
@@ -271,6 +277,7 @@ public class StatsTracker : MonoBehaviour
         }
     }
 
+    // Increment enemy kill count if this tracker's Player killed enemy
     private void OnEnemyDeath(GameObject killer)
     {
         IPlayer playerAttacker = killer.GetComponent<IPlayer>();
@@ -287,6 +294,7 @@ public class StatsTracker : MonoBehaviour
         }
     }
 
+    // If this tracker's Player knocked opponent over, keep track of it for a few seconds in case it leads to an indirect kill
     private void OnObjectKnockedBack(GameObject victim, GameObject attacker)
     {
         IPlayer playerAttacker = attacker.GetComponent<IPlayer>();

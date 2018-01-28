@@ -1,19 +1,17 @@
 
 cameraOffset: vector that points from midpoint to player 1
 	of length splitDistance
+	(exactly the negative of a vector that
+ 	points from midpoint to player 2)
 
 SUBMISSION TODOS:
--Simplify and thoroughly comment VoronoiSplitScreen => CameraManager
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
--Set priority render queue for line renderer?
 -Deal with post-game over NullReferenceExceptions
 -Solve "Invalid world AABB" glitch
 -Clean up unused tags and layers
 -Drop direct call to WeaponManager.disableWeapon in favour of
  sendmessageupwards?
--Make RandomSpawner prefer not to spawn in same location
- consecutively?
 -Test build
 -Thoroughly comment remaining code
 -Remove unused assets

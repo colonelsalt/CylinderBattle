@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Object that can be broken when enough force applied to it
 public class Breakable : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -11,6 +12,7 @@ public class Breakable : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // Identical version of object consisting of splintered mini-meshes; to be spawned when object broken
     [SerializeField] private GameObject m_ShatteredVersion;
 
     // How large change in object's velocity in one frame should be for it to break 
@@ -22,6 +24,7 @@ public class Breakable : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    // Ref. to RigidBody to keep track of velocity change
     private Rigidbody m_Body;
 
     private Vector3 m_LastVelocity;
@@ -30,7 +33,8 @@ public class Breakable : MonoBehaviour
 
     private bool m_IsBroken = false;
 
-    private static int m_NumBreakables = 0;
+    // Counter for no. of Breakable instances in level (tracked for achievement)
+    private static int NUM_BREAKABLES = 0;
 
     // --------------------------------------------------------------
 
@@ -38,7 +42,7 @@ public class Breakable : MonoBehaviour
     {
         get
         {
-            return m_NumBreakables;
+            return NUM_BREAKABLES;
         }
     }
 
@@ -46,7 +50,8 @@ public class Breakable : MonoBehaviour
 
     private void Awake()
     {
-        if (m_NumBreakables == 0)
+        // Ensure static listeners only set up once per scene
+        if (NUM_BREAKABLES == 0)
         {
             GameManager.OnGameOver += OnGameOver;
             GameManager.OnGameExit += OnResetBreakableCount;
@@ -54,7 +59,7 @@ public class Breakable : MonoBehaviour
 
         m_Collider = GetComponent<Collider>();
         m_Body = GetComponent<Rigidbody>();
-        m_NumBreakables++;
+        NUM_BREAKABLES++;
     }
 
     private void Update()
@@ -75,8 +80,8 @@ public class Breakable : MonoBehaviour
         m_IsBroken = true;
         m_Collider.enabled = false;
         Instantiate(m_ShatteredVersion, transform.position, transform.rotation);
-        m_NumBreakables--;
-        if (m_NumBreakables <= 0)
+        NUM_BREAKABLES--;
+        if (NUM_BREAKABLES <= 0)
         {
             OnAllObjectsBroken();
         }
@@ -84,9 +89,10 @@ public class Breakable : MonoBehaviour
         Destroy(gameObject);
     }
 
+    // Ensure count reset on level left
     private static void OnResetBreakableCount()
     {
-        m_NumBreakables = 0;
+        NUM_BREAKABLES = 0;
         GameManager.OnGameOver -= OnGameOver;
         GameManager.OnGameExit -= OnResetBreakableCount;
     }

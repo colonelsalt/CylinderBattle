@@ -13,7 +13,9 @@ public enum ButtonAction
     CANCEL
 }
 
-// Wrapper around XboxControllerInput and Unity Input classes
+// Wrapper around XboxControllerInput and Unity Input classes; dynamically switches between taking input from either depending on no. of controllers plugged in
+// XboxCtrlrInput library imported from https://github.com/JISyed/Unity-XboxCtrlrInput
+
 public static class InputHelper
 {
     public const string PLAYER1_INPUT_STRING = "_P1";

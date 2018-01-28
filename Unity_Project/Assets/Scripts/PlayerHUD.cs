@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(PlayerStats))]
+// Updates PlayerHUD canvas UI elements throughout course of game
 public class PlayerHUD : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    // Ref. to PlayerStats attached to this HUD's Player, from which it retrieves all information
     [SerializeField] private PlayerStats m_PlayerStats;
 
     [SerializeField] private Text m_NumPisText;

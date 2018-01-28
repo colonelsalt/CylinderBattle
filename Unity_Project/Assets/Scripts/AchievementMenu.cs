@@ -4,17 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+// Controller for Achievements sub-menu on Title Screen
 public class AchievementMenu : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    // Parent object (Grid Layout) in which to store Achivement blocks
     [SerializeField] private Transform m_AchievementsGrid;
 
+    // UI element with placeholders for Achievement title, icon and description
     [SerializeField] private GameObject m_AchievementBlockPrefab;
 
     // Background colour of unlocked achievements
     [SerializeField] private Color m_UnlockedColour;
 
+    // Button to click to dismiss sub-menu
     [SerializeField] private Button m_ExitButton;
 
     // --------------------------------------------------------------
@@ -28,7 +32,8 @@ public class AchievementMenu : MonoBehaviour
 
     private void Awake()
     {
-        List<Achievement> achivements = AchievementManager.Instance.AchievementList;
+        // Only direct call to AchievementManager class; retrieve list of all achievements
+        List<Achievement> achivements = AchievementManager.AchievementList;
 
         foreach (Achievement a in achivements)
         {

@@ -7,13 +7,15 @@ public class Jetpack : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    // How long Player can float in the air
+    // How long Player can float in the air before dropping
     [SerializeField] private float m_FloatTime;
 
     // --------------------------------------------------------------
 
+    // PlayerController reference needed to synchronise movement
     private PlayerController m_PlayerController;
 
+    // Fire effects to loop when floating
     private ParticleSystem m_JetpackFire;
 
     // AudioSource that plays looping jetpack engine sound
@@ -21,6 +23,7 @@ public class Jetpack : MonoBehaviour
 
     private bool m_IsFloating = false;
 
+    // Time left before player drops
     private float m_RemainingFloatTime;
 
     private int m_PlayerNum;
@@ -52,10 +55,12 @@ public class Jetpack : MonoBehaviour
         }
         if (!m_PlayerController.IsAirBorne)
         {
+            // Once touched ground again, return float time to max
             m_RemainingFloatTime = m_FloatTime;
         }
     }
 
+    // Begin floating
     private void Activate()
     {
         m_Audio.volume = 1f;
@@ -66,6 +71,7 @@ public class Jetpack : MonoBehaviour
         m_JetpackFire.Play();
     }
 
+    // Stop floating
     private void Deactivate()
     {
         SoundManager.Instance.FadeOut(m_Audio);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Separate component attached to child of Player to detect if Player jumped on something's head
 public class PlayerFeet : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -9,6 +10,7 @@ public class PlayerFeet : MonoBehaviour
     // After striking an Enemy/Player/WeaponBlock, how strongly does Player bounce up
     [SerializeField] private float m_BounceHeight;
 
+    // Wiggle room for determining if Player is on top of object
     [SerializeField] private float m_Epsilon = 0.1f;
 
     // --------------------------------------------------------------

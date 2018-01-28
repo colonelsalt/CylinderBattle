@@ -15,6 +15,7 @@ public class WeaponBlock : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    // Renderer material doesn't cast shadown, so spawn blob shadow prefab to follow Block's position
     [SerializeField] private GameObject m_ShadowPrefab;
 
     // --------------------------------------------------------------
@@ -29,6 +30,7 @@ public class WeaponBlock : MonoBehaviour
     {
         m_Animator = GetComponent<Animator>();
         m_Shadow = Instantiate(m_ShadowPrefab) as GameObject;
+        m_Shadow.GetComponent<Projector>().enabled = true;
         m_Shadow.GetComponent<FollowObject>().SetTarget(transform);
     }
 
@@ -37,8 +39,10 @@ public class WeaponBlock : MonoBehaviour
         return (Weapon)Random.Range(0, 4);
     }
 
+    // Called by PlayerFeet when triggered against from above
     public void Break(WeaponManager brokenBy)
     {
+        // Send random Weapon to WeaponManager who broke Block
         brokenBy.PickupWeapon(RandomWeapon());
 
         m_Animator.SetTrigger("BreakTrigger");

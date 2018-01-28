@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Interface for objects with health
 public interface IHealth
 {
 

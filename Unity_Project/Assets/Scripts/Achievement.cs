@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Data structure for Achievement information that also interacts with PlayerPrefs to unlock itself
 public class Achievement
 {
     // --------------------------------------------------------------

@@ -31,16 +31,19 @@ public class BoxingGlove : MonoBehaviour
 
     private Animator m_Animator;
 
-    // For animator to keep track of how many times Player has pressed Fire button in a row
+    // For animator to keep track of no. times Player pressed Fire button in a row
     private int m_NumPunches = 0;
 
-    // Flag to keep track of whether Fire button held down
+    // Flag for whether Fire button held down
     private bool m_IsPunching = false;
-
+    
+    // Effect to play at impact position when object hit
     private ParticleSystem[] m_Sparks;
 
+    // Time until gloves disable
     private float m_TimeRemaining;
 
+    // Ref. to each glove's Collider, to be enabled on punch
     private Collider[] m_GloveColliders;
 
     // --------------------------------------------------------------
@@ -156,6 +159,7 @@ public class BoxingGlove : MonoBehaviour
         }
     }
 
+    // Move spark effect to impact position and play
     private void ShowSparks(Vector3 atPosition)
     {
         foreach (ParticleSystem spark in m_Sparks)
@@ -165,11 +169,13 @@ public class BoxingGlove : MonoBehaviour
         }
     }
 
+    // Broadcast from WeaponManager; reset time remaining
     private void OnWeaponReset()
     {
         m_TimeRemaining = GameManager.POWERUP_DURATION;
     }
 
+    // Broadcast from PlayerHealth
     private void OnDeath()
     {
         Deactivate();
@@ -177,7 +183,8 @@ public class BoxingGlove : MonoBehaviour
 
     private void Deactivate()
     {
-        GetComponentInParent<WeaponManager>().DisableWeapon();
+        SendMessageUpwards("DisableWeapon");
+        //GetComponentInParent<WeaponManager>().DisableWeapon();
         Destroy(gameObject);
     }
 }

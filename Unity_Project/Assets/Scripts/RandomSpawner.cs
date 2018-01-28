@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Spawns objects of any type in a random selection of its Transform children
 public class RandomSpawner : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -22,7 +23,11 @@ public class RandomSpawner : MonoBehaviour
 
     private Transform[] m_SpawnPositions;
 
-    private int m_NumSpawned = 0;
+    // Index in above array where last object was spawned
+    private int m_LastSpawnIndex;
+
+    // 
+    private int m_NumVacantPositions = 0;
 
     // How many seconds until next spawn
     private float m_NextSpawnTime;
@@ -35,7 +40,7 @@ public class RandomSpawner : MonoBehaviour
     {
         if (transform.childCount <= 0)
         {
-            Debug.LogError("RandomSpawner: No Spawn positions set for " + gameObject + "!");
+            Debug.LogError("RandomSpawner: No Spawn positions set for " + name + "!");
         }
         if (m_MaxNumObjects > transform.childCount)
         {
@@ -67,18 +72,22 @@ public class RandomSpawner : MonoBehaviour
     {
         m_TimeSinceLastSpawn = 0f;
         m_NextSpawnTime = Random.Range(m_MinTimeBetweenSpawns, m_MaxTimeBetweenSpawns);
+        UpdateVacantCount();
 
-        // Do not spawn if exceeded number of allowed objects
-        if (NumSpawnedObjects() >= m_MaxNumObjects) return;
+        // Do not spawn if already occupied all allowed positions
+        if (m_NumVacantPositions <= 0) return;
 
-        // Ensure another object isn't currently at position to spawn
+        // Ensure another object isn't currently at position to spawn, and avoid spawning at same place as last time if possible
         Transform spawnPoint;
+        int spawnIndex;
         do
         {
-            spawnPoint = m_SpawnPositions[Random.Range(0, m_SpawnPositions.Length)];
+            spawnIndex = Random.Range(0, m_SpawnPositions.Length);
+            spawnPoint = m_SpawnPositions[spawnIndex];
         }
-        while (IsOccupied(spawnPoint));
+        while (IsOccupied(spawnPoint) || (spawnIndex == m_LastSpawnIndex && m_NumVacantPositions > 1));
 
+        m_LastSpawnIndex = spawnIndex;
         GameObject spawnedObject = Instantiate(m_ObjectToSpawn, spawnPoint) as GameObject;
 
         if (m_UsePriorityRendering)
@@ -93,14 +102,15 @@ public class RandomSpawner : MonoBehaviour
         return (t.childCount != 0);
     }
 
-    private int NumSpawnedObjects()
+    // Check each spawn position (in case spawned object was destroyed), and update count of vacant positions
+    private void UpdateVacantCount()
     {
-        int sum = 0;
+        int numOccupied = 0;
         foreach (Transform child in transform)
         {
-            if (IsOccupied(child)) sum++;
+            if (IsOccupied(child)) numOccupied++;
         }
-        return sum;
+        m_NumVacantPositions = m_MaxNumObjects - numOccupied;
     }
 
     // Increase rendering priority for object

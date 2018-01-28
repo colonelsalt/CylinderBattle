@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
+// Controller for Tutorial Canvas in level; queues and displays in-game button prompts at appropriate times
 public class TutorialManager : MonoBehaviour
 {
     private enum TutorialAction
@@ -20,6 +20,7 @@ public class TutorialManager : MonoBehaviour
 
     [SerializeField] private PlayerStats m_Player;
 
+    // The camera that follows this Player
     [SerializeField] private Camera m_PlayerCamera;
 
     [SerializeField] private float m_MaxTutorialTime = 2f;
@@ -34,6 +35,7 @@ public class TutorialManager : MonoBehaviour
     // Tracks whether a given tutorial has been shown
     private Dictionary<TutorialAction, bool> m_TutorialsShown;
 
+    // Tutorial prompts waiting to be shown
     private Queue<TutorialAction> m_TutorialQueue;
 
     private Text m_Text;

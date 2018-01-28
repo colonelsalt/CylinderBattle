@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateMovementDirection()
     {
-        // Get Player's movement input and determine direction and set run speed
+        // Get Player's movement input and determine direction
         float horizontalInput = InputHelper.GetMovementX(m_PlayerNum);
         float verticalInput = InputHelper.GetMovementY(m_PlayerNum);
 
@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour
             // Move character
             m_CharacterController.Move(m_CurrentMovementOffset);
 
-            // If Player is using a GamePad, allow for manual rotation
+            // If Player is using controller, allow for manual rotation via right stick
             if (InputHelper.GamePadConnected(m_PlayerNum))
             {
                 RotateFromGamePad();

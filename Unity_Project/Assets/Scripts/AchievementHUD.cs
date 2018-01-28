@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Displays Achievements inside of a Canvas VerticalLayout
 public class AchievementHUD : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    // Notification rect with space for achivement icon and title
     [SerializeField] private GameObject m_NotificationPrefab;
 
     // --------------------------------------------------------------
@@ -16,6 +18,7 @@ public class AchievementHUD : MonoBehaviour
         AchievementManager.OnAchievementUnlocked += OnAchievementUnlocked;
     }
 
+    // Retrieve info and icon from achievement and insert into notification prefab
     private void OnAchievementUnlocked(Achievement a)
     {
         GameObject notification = Instantiate(m_NotificationPrefab, transform) as GameObject;

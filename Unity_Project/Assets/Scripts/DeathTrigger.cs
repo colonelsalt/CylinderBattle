@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Instant death
 public class DeathTrigger : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -35,16 +36,15 @@ public class DeathTrigger : MonoBehaviour
             // Spawn explosion effect
             Instantiate(m_ExplosionEffect, other.transform.position + (3f * transform.up), Quaternion.identity);
 
-            // Kill object
+            // Kill Player
             player.Die(gameObject);
 
             if (m_OutOfBounds)
             {
                 OnPlayerOutOfBounds();
             }
-
         }
-        else if (other.GetComponent<PlayerFeet>() == null)
+        else
         {
             Destroy(other.gameObject);
         }

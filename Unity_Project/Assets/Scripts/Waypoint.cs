@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Waypoint : MonoBehaviour {
+public class Waypoint : MonoBehaviour
+{
 
     // --------------------------------------------------------------
 
@@ -12,6 +13,7 @@ public class Waypoint : MonoBehaviour {
 
     // --------------------------------------------------------------
 
+    // List of Waypoints reachable from this one
     private List<Waypoint> m_WaypointsInRange;
 
     // --------------------------------------------------------------

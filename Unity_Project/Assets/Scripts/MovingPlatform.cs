@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Platforms that moves back and forth along a single dimension
 public class MovingPlatform : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -12,18 +13,17 @@ public class MovingPlatform : MonoBehaviour
 
     [SerializeField] private Direction m_Direction;
 
+    // How far to move before reversing direction
     [SerializeField] private float m_MoveDistance;
 
     [SerializeField] private float m_Speed = 2.5f;
 
-    // How long to wait at destination point before changing direction
+    // How long to wait at destination point before reversing
     [SerializeField] private float m_DelayTime = 2f;
 
     // --------------------------------------------------------------
 
     private Vector3 m_StartPosition;
-
-    private Vector3 m_GoalPosition;
 
     private Vector3 m_MovementDirection;
 
@@ -34,10 +34,11 @@ public class MovingPlatform : MonoBehaviour
     private void Awake()
     {
         m_StartPosition = transform.position;
-        m_WaitTimeRemaining = 2.5f * m_DelayTime;
+        m_WaitTimeRemaining = 2.5f * m_DelayTime; // Wait a little extra on level start to give Players chance to reach platform
         m_MovementDirection = (m_Direction == Direction.HORIZONTAL) ? -transform.forward : transform.up;
     }
 
+    // Visualise movement in Scene View
     private void OnDrawGizmos()
     {
         Vector3 dir = (m_Direction == Direction.HORIZONTAL) ? -transform.forward : transform.up;
@@ -55,6 +56,7 @@ public class MovingPlatform : MonoBehaviour
             transform.Translate(m_MovementDirection * m_Speed * Time.deltaTime);
         }
 
+        // If travelled desired distance, reverse direction and wait before moving again
         if (Vector3.Distance(m_StartPosition, transform.position) >= m_MoveDistance)
         {
             m_MovementDirection *= -1;
@@ -63,6 +65,7 @@ public class MovingPlatform : MonoBehaviour
         }
     }
 
+    // Child Player to platform on touch so they travel along with it
     private void OnTriggerStay(Collider other)
     {
         if (other.GetComponent<IPlayer>() != null)

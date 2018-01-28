@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
+// Launches a powerful charge attack once Player spotted
 public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
 {
     // --------------------------------------------------------------
 
     [SerializeField] private float m_AttackSpeed = 20f;
 
+    // Force dealt to any RigidBody in the way of Enemy's attack
     [SerializeField] private float m_ImpactForce = 50f;
 
     // --------------------------------------------------------------
@@ -49,26 +51,26 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
     {
         if (!m_IsAttacking)
         {
+            // Set target 3m in front of Player
+            transform.LookAt(m_Patrol.PlayerPos);
             StartCoroutine(Attack(m_Patrol.PlayerPos + (3 * transform.forward)));
         }
     }
 
-    public void Disable()
-    {
-
-    }
+    public void Disable() { }
 
     private IEnumerator Attack(Vector3 target)
-    {
+    {   
+        // Wait a moment, initiate attack animation and sound
         yield return new WaitForSeconds(0.2f);
         m_IsAttacking = true;
         m_Animator.SetBool("isAttacking", true);
-        transform.LookAt(target);
-
         m_Audio.Play();
 
+        // Wait some more
         yield return new WaitForSeconds(0.3f);
 
+        // Lerp move to target 
         Vector3 startPosition = transform.position;
         float distanceToTarget = Vector3.Distance(startPosition, target);
         float startTime = Time.time;
@@ -105,13 +107,14 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
             manualMovedObject.ActivatePhysicsReactions(true, gameObject);
         }
 
+        // Apply force
         Rigidbody body = other.GetComponent<Rigidbody>();
         if (body != null && m_IsAttacking)
         {
             body.AddForce(transform.forward * m_ImpactForce);
         }
 
-
+        // Damage Players
         PlayerHealth player = other.GetComponent<PlayerHealth>();
         if (player != null)
         {
@@ -124,6 +127,7 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
         OnTriggerEnter(collision.collider);
     }
 
+    // Broadcast from EnemyHealth
     private void OnDeath()
     {
         StopAllCoroutines();

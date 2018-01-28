@@ -5,12 +5,14 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 
+// Controller for Title Screeen UI and scene loading
 public class MenuManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
     [SerializeField] private AudioClip m_ButtonClickSound;
 
+    // Panel to fade out on level load
     [SerializeField] private Animator m_FadePanelAnim;
 
     [SerializeField] private GameObject m_PrimaryButtonsParent;
@@ -25,8 +27,10 @@ public class MenuManager : MonoBehaviour
 
     private Button[] m_PrimaryButtons;
 
+    // Last menu item selected before sub-menu opened; upon dismissing, this will be selected again
     private GameObject m_LastSelectedMenuItem;
 
+    // Scene to load when "LoadLevel" invoked
     private string m_SelectedScene;
 
     // --------------------------------------------------------------
@@ -42,7 +46,7 @@ public class MenuManager : MonoBehaviour
         SoundManager.Instance.Play(m_ButtonClickSound);
     }
 
-    // Load level select scene
+    // Show level select scene
     public void OnPlayButtonClicked()
     {
         ButtonSound();
@@ -51,6 +55,7 @@ public class MenuManager : MonoBehaviour
         m_LevelSelectPanel.SetActive(true);
     }
 
+    // Show "How to play" panel
     public void OnTutorialButtonClicked()
     {
         ButtonSound();
@@ -59,6 +64,7 @@ public class MenuManager : MonoBehaviour
         m_TutorialPanel.SetActive(true);
     }
 
+    // Show Achievements Panel
     public void OnAchievementsButtonClicked()
     {
         ButtonSound();
@@ -67,6 +73,7 @@ public class MenuManager : MonoBehaviour
         m_AchievementsPanel.SetActive(true);
     }
 
+    // Called from OnClick on level selection sub-menu
     public void OnLevelSelected(int level)
     {
         ButtonSound();

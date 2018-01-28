@@ -1,9 +1,9 @@
-﻿//using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerHealth))]
+// Component for picking up Collectibles
+[RequireComponent(typeof(PowerupManager))]
 public class Collector : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -11,7 +11,7 @@ public class Collector : MonoBehaviour
     // Prefab to spawn when Player takes damage and drops a Pi
     [SerializeField] private GameObject m_PiPrefab;
 
-    // When Player drops a Pi, how much force is it pushed away by
+    // When Player drops a Pi, how much force it is pushed away by
     [SerializeField] private float m_DropForce;
 
     // --------------------------------------------------------------
@@ -26,12 +26,13 @@ public class Collector : MonoBehaviour
 
     private int m_PlayerNum;
 
-    // Number of Pluses collected
+    // Number of Pluses collected (reset upon death)
     private int m_NumPluses = 0;
 
     // Number of Pis collected
     private int m_NumPis = 0;
 
+    // Ref. to PowerupManager to prompt it to check for Powerups once enough Pluses collected
     private PowerupManager m_PowerupManager;
 
     private const float TIME_BETWEEN_PI_DROPS = 1f;
@@ -78,6 +79,7 @@ public class Collector : MonoBehaviour
 
     public void PickupCollectible(Collectible.Type type)
     {
+        // Increment counters and notify listeners of increments
         switch (type)
         {
             case Collectible.Type.PLUS:
@@ -130,6 +132,8 @@ public class Collector : MonoBehaviour
         Vector3 dropDirection = new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)).normalized; 
         GameObject pi = Instantiate(m_PiPrefab, transform.position + (2f * transform.up), Quaternion.identity) as GameObject;
         pi.GetComponent<Rigidbody>().AddForce(dropDirection * m_DropForce);
+
+        // Mark Pi as having been dropped by this Player
         pi.GetComponent<Collectible>().AssignOwner(gameObject);
 
         OnPiDrop(m_PlayerNum);

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(AudioSource))]
+// Chases Player when spotted
 public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
 {
     // --------------------------------------------------------------
@@ -38,6 +39,7 @@ public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
         m_Colliders = GetComponents<Collider>();
         m_Audio = GetComponent<AudioSource>();
 
+        // Remember default speed to reset after Player chase finished
         m_WalkSpeed = m_NavMeshAgent.speed;
     }
 
@@ -57,9 +59,12 @@ public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
         }
         else
         {
+            // Avoid walking into Player
             m_Patrol.StandStill();
         }
     }
+
+    // Return speed to normal and fade out audio
     public void Disable()
     {
         m_NavMeshAgent.speed = m_WalkSpeed;
@@ -95,13 +100,16 @@ public class EnemyChaser : MonoBehaviour, IEnemyBehaviour
         m_TouchingPlayer = false;
     }
 
+    // Broadcast from EnemyHealth
     private void OnDeath()
     {
+        // Disable Colliders to prevent Enemy dealing damage
         foreach (Collider col in m_Colliders)
         {
             col.enabled = false;
         }
 
+        // Fall to pieces
         foreach (Rigidbody body in GetComponentsInChildren<Rigidbody>())
         {
             body.isKinematic = false;

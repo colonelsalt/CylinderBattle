@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Instantiated by PortalGun on Portal fire
 public class PortalProjectile : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -12,13 +13,13 @@ public class PortalProjectile : MonoBehaviour
 
     // --------------------------------------------------------------
 
-    // Called when PortalGun fired
+    // Called when PortalGun fired to set destination
     public void SetTarget(Vector3 target, Quaternion portalRotation)
     {
         StartCoroutine(MoveToTarget(target, portalRotation));
     }
 
-    // Move to target aimed at by PortalGun
+    // Lerp move to target aimed at by PortalGun
     private IEnumerator MoveToTarget(Vector3 target, Quaternion portalRotation)
     {
         Vector3 startPosition = transform.position;

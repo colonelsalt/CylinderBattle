@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
+// Top-level controller for HUD Canvas in each level; displays common info, but delegates Player-specific tasks to PlayerHUD components
 public class UIManager : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -75,18 +76,21 @@ public class UIManager : MonoBehaviour
         m_FadePanelAnim.SetTrigger("fadeOutTrigger");
     }
 
+    // Show level objective text when scene loaded
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         m_ObjectiveTitleAnim.SetTrigger("showTrigger");
         Destroy(m_ObjectiveTitleAnim.gameObject, 4f);
     }
 
+    // Show "Go!" text when game started
     private void OnGameStart()
     {
         m_StartTitle.enabled = true;
         Destroy(m_StartTitle.gameObject, 2f);
     }
 
+    // Cover screen with panel and display pause menu options on pause
     private void OnGamePaused()
     {
         m_PauseTitle.enabled = true;
@@ -100,6 +104,7 @@ public class UIManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(m_PauseButtons[0].gameObject);
     }
 
+    // Remove panel and buttons when pause ended 
     private void OnGameResumed()
     {
         m_PauseTitle.enabled = false;

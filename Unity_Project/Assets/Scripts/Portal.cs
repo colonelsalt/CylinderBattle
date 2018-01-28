@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Portal : MonoBehaviour {
+// Fired from PortalGun; teleports anything in scene it triggers against between its two endpoints
+public class Portal : MonoBehaviour
+{
 
     // --------------------------------------------------------------
 
     public enum Type { FIRST, SECOND }
 
-    public static Portal[] PORTALS_IN_PLAY = new Portal[2];
+    // Keep static ref. to each portal in scene (allow only 2 at one time)
+    private static Portal[] PORTALS_IN_PLAY = new Portal[2];
 
     // --------------------------------------------------------------
 
     [SerializeField] private Type m_Type;
-
-    // --------------------------------------------------------------
 
     [SerializeField] private AudioClip[] m_SpawnSounds;
 
@@ -48,6 +49,7 @@ public class Portal : MonoBehaviour {
         {
             PORTALS_IN_PLAY[1] = this;
 
+            // If other portal already fired, activate link between them
             Activate();
             PORTALS_IN_PLAY[0].Activate();
         }

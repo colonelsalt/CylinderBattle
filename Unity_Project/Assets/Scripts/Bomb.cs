@@ -39,6 +39,7 @@ public class Bomb : MonoBehaviour
         Invoke("Explode", m_ExplosionTime);
     }
 
+    // Called from WeaponManager; Attacker will take credit for deaths caused by this bomb
     public void AssignOwner(GameObject attacker)
     {
         m_BombOwner = attacker;

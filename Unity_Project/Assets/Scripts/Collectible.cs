@@ -15,10 +15,8 @@ public class Collectible : MonoBehaviour
 
     [SerializeField] private Type m_Type;
 
-    // How long after Collectible has spawned until it can be collected
+    // How long after Collectible has spawned until it can be collected (useful if spawned right next to Player)
     [SerializeField] private float m_CollectionWaitTime = 0f;
-
-    [SerializeField] private bool m_IsAchievementSpecial = false;
 
     // --------------------------------------------------------------
 
@@ -30,13 +28,16 @@ public class Collectible : MonoBehaviour
 
     private Animator m_Animator;
 
+    // Flag to prevent multiple pickups
     private bool m_HasBeenCollected = false;
 
+    // If Collectible dropped, object it was dropped by
     private GameObject m_Owner;
 
     // --------------------------------------------------------------
 
-    private void Awake()
+    // Marked virtual to allow AchievementCollectible to override
+    protected virtual void Awake()
     {
         m_Animator = GetComponent<Animator>();
     }
@@ -54,6 +55,7 @@ public class Collectible : MonoBehaviour
         }
     }
 
+    // Store ref. to object who dropped Collectible (currently only used when Player drops Pi)
     public void AssignOwner(GameObject owner)
     {
         m_Owner = owner;
@@ -66,7 +68,9 @@ public class Collectible : MonoBehaviour
         Collector collector = other.GetComponent<Collector>();
         if (collector != null && m_CollectionWaitTime <= 0)
         {
+            // Indicate to Collector that Collectible picked up
             collector.PickupCollectible(m_Type);
+
             m_HasBeenCollected = true;
 
             if (m_Owner != null)
@@ -78,12 +82,9 @@ public class Collectible : MonoBehaviour
         }
     }
 
-    private void Vanish()
+    // Marked virtual to allow AchievementCollectible to override
+    protected virtual void Vanish()
     {
-        if (m_IsAchievementSpecial)
-        {
-            BroadcastMessage("OnVanish");
-        }
         SoundManager.Instance.PlayRandom(m_PickupSounds);
         m_Animator.SetTrigger("VanishTrigger");
         Destroy(gameObject, 0.5f);
