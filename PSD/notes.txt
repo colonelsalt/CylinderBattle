@@ -1,21 +1,28 @@
-SUBMISSION TODOS:
--"How to play" screen
-	-Controller layout
-	-Aim of game
-	-Jumping
-	-Crouching
-	-Backflipping
-	-Getting weapons
-	-Collecting points for powerups
 
+cameraOffset: vector that points from midpoint to player 1
+	of length splitDistance
+
+SUBMISSION TODOS:
 -Simplify and thoroughly comment VoronoiSplitScreen => CameraManager
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
+-Set priority render queue for line renderer?
 -Deal with post-game over NullReferenceExceptions
 -Solve "Invalid world AABB" glitch
 -Clean up unused tags and layers
--Remove direct call by weapons to WeaponManager.DisableWeapon in favour
- of SendMessageUpwards?
+-Drop direct call to WeaponManager.disableWeapon in favour of
+ sendmessageupwards?
+-Make RandomSpawner prefer not to spawn in same location
+ consecutively?
+-Test build
+-Thoroughly comment remaining code
+-Remove unused assets
+-Organise remaining assets
+-Write credits list
+-Create itch.io page
+-Edit gameplay footage and make gifs
+-Write additional info in pdf with submission
+-SUBMIT BITCH
 
 17 march 10.20am 
 

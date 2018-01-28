@@ -2,23 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 
 public class CameraManager : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    [SerializeField] private float m_ActivationDistance = 9f;
+    // How far apart Players have to be (from midpoint) for split screen to activate
+    [SerializeField] private float m_SplitDistance = 9f;
 
-    // Distance between camera and corresponding Player
+    // Distance to maintain between Players and each camera
     [SerializeField] private float m_CameraDistance = 20f;
 
+    // Mask to place in front of secondary camera to display primary camera feed through
     [SerializeField] private GameObject m_SplitScreenMask;
 
+    // Follows both Players when in range; Player 1 when split screen active
     [SerializeField] private Camera m_PrimaryCamera;
 
+    // Deactivated when both Players in range; follows Player 2 when split screen active
     [SerializeField] private Camera m_SecondaryCamera;
 
+    // References to Player Transforms to track positions
     [SerializeField] private Transform m_Player1;
-
     [SerializeField] private Transform m_Player2;
 
     // --------------------------------------------------------------
@@ -26,10 +31,13 @@ public class CameraManager : MonoBehaviour
     // Midpoint between Players
     private Vector3 m_Midpoint;
 
-    // Whether screen is currently split
+    // Offset from Player to place camera to allow room for both screens
+    private Vector3 m_CameraOffset;
+
+    // Whether split screen is currently active
     private bool m_SplitScreenActive = false;
 
-    // Distance in front of secondary camera to place splitscreen mask
+    // Distance in front of secondary camera to place render mask
     private float m_MaskOffset;
 
     // --------------------------------------------------------------
@@ -37,78 +45,71 @@ public class CameraManager : MonoBehaviour
     private void Awake()
     {
         m_SecondaryCamera.enabled = false;
-
         m_MaskOffset = m_PrimaryCamera.nearClipPlane + 0.1f;
     }
 
     private void LateUpdate()
     {
-        // Set midpoint between Players
         m_Midpoint = (m_Player1.position + m_Player2.position) / 2f;
 
         // Check if Players are far enough apart to split screen
-        float distanceFromMiddle = (m_Midpoint - m_Player1.position).magnitude;
-        if (!m_SplitScreenActive && distanceFromMiddle >= m_ActivationDistance)
+        float distanceFromMiddle = Vector3.Distance(m_Midpoint, m_Player1.position);
+        if (!m_SplitScreenActive && distanceFromMiddle >= m_SplitDistance)
         {
             SetSplitScreenActive(true);
         }
-        else if (m_SplitScreenActive && distanceFromMiddle < m_ActivationDistance)
+        else if (m_SplitScreenActive && distanceFromMiddle < m_SplitDistance)
         {
             SetSplitScreenActive(false);
         }
 
         if (m_SplitScreenActive)
         {
-            PositionCameras();
-            PositionScreenMask();
+            m_CameraOffset = (m_Midpoint - m_Player1.position).normalized * m_SplitDistance;
 
+            PositionCameras();
+            RotateScreenMask();
         }
         else
         {
-            // If splitscreen not active, just point cameras at midpoint
-            m_PrimaryCamera.transform.position = m_Midpoint - (m_PrimaryCamera.transform.forward * m_CameraDistance);
-            m_SecondaryCamera.transform.position = m_PrimaryCamera.transform.position;
+            // If splitscreen not active, just place primary camera at midpoint
+            m_PrimaryCamera.transform.position = m_Midpoint - (m_PrimaryCamera.transform.forward * m_CameraDistance);;
         }
     }
 
-    private void SetSplitScreenActive(bool enabled)
+    // Activate or de-activate secondary camera and render mask
+    private void SetSplitScreenActive(bool active)
     {
-        m_SplitScreenActive = enabled;
-        m_SecondaryCamera.enabled = enabled;
+        m_SplitScreenActive = active;
+        m_SecondaryCamera.enabled = active;
 
-        m_SplitScreenMask.SetActive(enabled);
+        m_SplitScreenMask.SetActive(active);
     }
+
 
     private void PositionCameras()
     {
-        Vector3 cameraDisplacement = (m_Midpoint - m_Player1.position).normalized * m_ActivationDistance;
+        m_PrimaryCamera.transform.position = m_Player1.position + m_CameraOffset - (m_PrimaryCamera.transform.forward * m_CameraDistance);
 
-        m_PrimaryCamera.transform.position = m_Player1.position + cameraDisplacement - (m_PrimaryCamera.transform.forward * m_CameraDistance);
-        m_SecondaryCamera.transform.position = m_Player2.position - cameraDisplacement - (m_SecondaryCamera.transform.forward * m_CameraDistance);
+        // Subtract because Player 2 is in opposite direction
+        m_SecondaryCamera.transform.position = m_Player2.position - m_CameraOffset - (m_SecondaryCamera.transform.forward * m_CameraDistance);
     }
 
-    private void PositionScreenMask()
+    private void RotateScreenMask()
     {
-        // Resize splitscreen mask to fill other half of screen
-        float screenWidth = Mathf.Tan(m_SecondaryCamera.fieldOfView * 0.5f * Mathf.Deg2Rad) * m_SecondaryCamera.aspect;
-        float scaleAmount = (2 * Mathf.Sqrt(2)) * m_MaskOffset * screenWidth;
-        m_SplitScreenMask.transform.localScale = new Vector3(scaleAmount, scaleAmount, 1f);
-
-        // Rotate mask based on split screen angle
-
-
-        Vector3 cameraDisplacement = (m_Midpoint - m_Player1.position).normalized * m_ActivationDistance;
-
-        Vector3 screenDisplacement = m_SecondaryCamera.WorldToScreenPoint(m_Player2.position) - m_SecondaryCamera.WorldToScreenPoint(m_Player2.position + cameraDisplacement);
         m_SplitScreenMask.transform.rotation = m_SecondaryCamera.transform.rotation;
 
+        // Vector between screen midpoint and Player 2
+        Vector3 screenOffset = m_SecondaryCamera.WorldToScreenPoint(m_Player2.position) - m_SecondaryCamera.WorldToScreenPoint(m_Player2.position + m_CameraOffset);   
 
+        // Rotate mask away from camera by this angle
+        m_SplitScreenMask.transform.Rotate(m_SplitScreenMask.transform.forward, Mathf.Atan2(screenOffset.y, screenOffset.x) * Mathf.Rad2Deg, Space.World);
 
-        // Rotate by this amount around z-axis
-        m_SplitScreenMask.transform.Rotate(m_SplitScreenMask.transform.forward, Mathf.Atan2(screenDisplacement.y, screenDisplacement.x) * Mathf.Rad2Deg, Space.World);
+        // Movement of mask so it covers half of secondary camera
+        Vector3 horizontalOffset = (m_SplitScreenMask.transform.right * m_SplitScreenMask.transform.lossyScale.x / 2f);
 
         // Place mask in front of camera
-        m_SplitScreenMask.transform.position = m_SecondaryCamera.transform.position + (m_SecondaryCamera.transform.forward * m_MaskOffset) + (m_SplitScreenMask.transform.right * m_SplitScreenMask.transform.lossyScale.x * 0.5f);
+        m_SplitScreenMask.transform.position = m_SecondaryCamera.transform.position + (m_SecondaryCamera.transform.forward * m_MaskOffset) + horizontalOffset; 
     }
 
 }
