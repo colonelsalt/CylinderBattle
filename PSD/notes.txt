@@ -1,15 +1,19 @@
 SUBMISSION TODOS:
+-"How to play" screen
+	-Controller layout
+	-Aim of game
+	-Jumping
+	-Crouching
+	-Backflipping
+	-Getting weapons
+	-Collecting points for powerups
+
 -Simplify and thoroughly comment VoronoiSplitScreen => CameraManager
 -Factor out specific InputHelper methods into generic GetButtonDown/Up
  methods
 -Deal with post-game over NullReferenceExceptions
--Adjust size of Level 2 MiniMap camera
--Hide Spike Trap spikes while idle
--Get and insert Game Over screen music
 -Solve "Invalid world AABB" glitch
 -Clean up unused tags and layers
--Add square blob shadow under Weapon Blocks?
--Add blob shadows to Pis on transparent platforms?
 -Remove direct call by weapons to WeaponManager.DisableWeapon in favour
  of SendMessageUpwards?
 

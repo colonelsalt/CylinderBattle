@@ -58,16 +58,23 @@ public class PhysicsSwitch : MonoBehaviour
 
     private void DeactivatePhysicsReactions()
     {
-        if (m_NavMeshAgent != null)
-        {
-            m_NavMeshAgent.enabled = true;
-        }
-        else if (m_CharacterController != null)
+        m_Body.isKinematic = true;
+
+        if (m_CharacterController != null)
         {
             m_CharacterController.enabled = true;
         }
 
-        m_Body.isKinematic = true;
+        // Do not return manual control to non-Player object if it's already dead
+        if (!GetComponent<IHealth>()?.IsAlive() ?? false)
+        {
+            return;
+        }
+
+        if (m_NavMeshAgent != null)
+        {
+            m_NavMeshAgent.enabled = true;
+        }
     }
 
 

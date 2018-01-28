@@ -11,4 +11,6 @@ public interface IPlayer
 
     Vector3 Position();
 
+    GameObject GetGameObject();
+
 }

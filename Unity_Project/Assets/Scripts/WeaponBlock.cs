@@ -15,13 +15,21 @@ public class WeaponBlock : MonoBehaviour
 {
     // --------------------------------------------------------------
 
+    [SerializeField] private GameObject m_ShadowPrefab;
+
+    // --------------------------------------------------------------
+
     private Animator m_Animator;
+
+    private GameObject m_Shadow;
 
     // --------------------------------------------------------------
 
     private void Awake()
     {
         m_Animator = GetComponent<Animator>();
+        m_Shadow = Instantiate(m_ShadowPrefab) as GameObject;
+        m_Shadow.GetComponent<FollowObject>().SetTarget(transform);
     }
 
     private static Weapon RandomWeapon()
@@ -36,5 +44,14 @@ public class WeaponBlock : MonoBehaviour
         m_Animator.SetTrigger("BreakTrigger");
         
         Destroy(gameObject, 0.3f);
+        Destroy(m_Shadow);
+    }
+
+    private void OnDestroy()
+    {
+        if (m_Shadow != null)
+        {
+            Destroy(m_Shadow);
+        }
     }
 }

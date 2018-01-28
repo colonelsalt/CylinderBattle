@@ -116,6 +116,11 @@ public class PlayerStats : MonoBehaviour, IPlayer
         return transform.position;
     }
 
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
+
     private void Awake()
     {
         m_PlayerHealth = GetComponent<PlayerHealth>();

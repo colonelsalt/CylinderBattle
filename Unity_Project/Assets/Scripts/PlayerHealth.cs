@@ -186,6 +186,7 @@ public class PlayerHealth : MonoBehaviour, IHealth
         BroadcastMessage("OnDeath");
 
         StopAllCoroutines();
+        m_IsInvincible = false;
         StartCoroutine(MoveToSpawnPos());
     }
 }
