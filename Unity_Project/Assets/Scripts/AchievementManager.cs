@@ -11,12 +11,14 @@ public class AchievementManager : MonoBehaviour
     private enum AchievementType
     {
         SURVIVOR,
+        STEAL_PI,
         TEN_THOUSAND_METRES,
         FIFTY_PLUSES,
         FIVE_PLAYER_KILLS,
         TEN_ENEMY_KILLS,
         FIVE_ZERO_GAME,
         BROKE_ALL_CRATES,
+        COLLECT_ALL_SPIKE_PLUSES,
         OUT_OF_BOUNDS,
         SUICIDE,
         INDECENCY
@@ -86,6 +88,7 @@ public class AchievementManager : MonoBehaviour
 
         DeathTrigger.OnPlayerOutOfBounds += OnPlayerOutOfBounds;
         Breakable.OnAllObjectsBroken += OnAllCratesBroken;
+        AchievementCollectible.OnAllSpecialCollectiblesGrabbed += OnAllSpikePlusesCollected;
         StatsTracker.OnFiftyPlusesCollected += OnFiftyPlusesCollected;
         StatsTracker.OnTenThousandMetresMoved += OnPlayerWalkedTenThousandMeters;
         StatsTracker.OnFivePlayerKills += OnFivePlayerKills;
@@ -94,6 +97,7 @@ public class AchievementManager : MonoBehaviour
         StatsTracker.OnFiveZeroGame += OnFiveZeroGame;
         StatsTracker.OnPlayerIndecency += OnPlayerIndeceny;
         StatsTracker.OnPlayerSuicide += OnPlayerSuicide;
+        StatsTracker.OnPlayerStolePi += OnPiStolen;
 
         if (m_DeleteAllOnStart)
         {
@@ -103,6 +107,11 @@ public class AchievementManager : MonoBehaviour
         m_Achievements[AchievementType.SURVIVOR] = new Achievement(
             "Survivor",
             "Survive an entire game without dying"
+            );
+
+        m_Achievements[AchievementType.STEAL_PI] = new Achievement(
+            "MINE!",
+            "Steal a Pi from your fellow player"
             );
 
         m_Achievements[AchievementType.TEN_THOUSAND_METRES] = new Achievement(
@@ -135,6 +144,12 @@ public class AchievementManager : MonoBehaviour
             "Break all the crates in a level"
             );
 
+        m_Achievements[AchievementType.COLLECT_ALL_SPIKE_PLUSES] = new Achievement(
+            "Livin' on the Edge",
+            "Collect all Pluses in <i>Limits from Above</i>'s grid of Spike Traps",
+            true
+            );
+
         m_Achievements[AchievementType.SUICIDE] = new Achievement(
             "Suicide",
             "Kill yourself with your own bomb",
@@ -154,6 +169,16 @@ public class AchievementManager : MonoBehaviour
             );
 
         m_PostGameAchievements = new List<Achievement>();
+    }
+
+    private void OnPiStolen()
+    {
+        TryUnlock(m_Achievements[AchievementType.STEAL_PI]);
+    }
+
+    private void OnAllSpikePlusesCollected()
+    {
+        TryUnlock(m_Achievements[AchievementType.COLLECT_ALL_SPIKE_PLUSES]);
     }
 
     private void OnAllCratesBroken()

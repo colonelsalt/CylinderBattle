@@ -28,6 +28,8 @@ public class Breakable : MonoBehaviour
 
     private Collider m_Collider;
 
+    private bool m_IsBroken = false;
+
     private static int m_NumBreakables = 0;
 
     // --------------------------------------------------------------
@@ -55,8 +57,10 @@ public class Breakable : MonoBehaviour
         m_NumBreakables++;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
+        if (m_IsBroken) return;
+            
         Vector3 velocityChange = m_LastVelocity - m_Body.velocity;
         if (velocityChange.magnitude > m_BreakThreshold)
         {
@@ -68,14 +72,16 @@ public class Breakable : MonoBehaviour
     private void Break()
     {
         SoundManager.Instance.PlayRandom(m_BreakSounds);
+        m_IsBroken = true;
+        m_Collider.enabled = false;
         Instantiate(m_ShatteredVersion, transform.position, transform.rotation);
         m_NumBreakables--;
         if (m_NumBreakables <= 0)
         {
             OnAllObjectsBroken();
         }
-        
 
+        Destroy(gameObject);
     }
 
     private static void OnResetBreakableCount()

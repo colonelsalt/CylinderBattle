@@ -130,6 +130,7 @@ public class Collector : MonoBehaviour
         Vector3 dropDirection = new Vector3(Random.Range(-1f, 1f), 1f, Random.Range(-1f, 1f)).normalized; 
         GameObject pi = Instantiate(m_PiPrefab, transform.position + (2f * transform.up), Quaternion.identity) as GameObject;
         pi.GetComponent<Rigidbody>().AddForce(dropDirection * m_DropForce);
+        pi.GetComponent<Collectible>().AssignOwner(gameObject);
 
         OnPiDrop(m_PlayerNum);
     }

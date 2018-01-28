@@ -18,6 +18,7 @@ public class StatsTracker : MonoBehaviour
     public static event PlayerStatEvent OnFiveZeroGame;
     public static event PlayerStatEvent OnPlayerIndecency;
     public static event PlayerStatEvent OnPlayerSuicide;
+    public static event PlayerStatEvent OnPlayerStolePi;
 
     // --------------------------------------------------------------
 
@@ -133,11 +134,28 @@ public class StatsTracker : MonoBehaviour
         PlayerHealth.OnPlayerDeath += OnPlayerDeath;
         EnemyHealth.OnEnemyDeath += OnEnemyDeath;
         PhysicsSwitch.OnObjectKnockedBack += OnObjectKnockedBack;
+        Collectible.OnDroppedItemPickup += OnDroppedPiPickup;
 
         m_PlayerController = m_Player.GetComponent<PlayerController>();
 
         m_LastPlayerPos = m_Player.Position();
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnDroppedPiPickup(GameObject owner, GameObject receiver)
+    {
+        int ownerNum = owner.GetComponent<IPlayer>()?.PlayerNum() ?? 0;
+        if (ownerNum == m_Player.PlayerNum())
+        {
+            IPlayer playerReceiver = receiver.GetComponent<IPlayer>();
+            if (playerReceiver != null)
+            {
+                if (playerReceiver.PlayerNum() != m_Player.PlayerNum())
+                {
+                    OnPlayerStolePi();
+                }
+            }
+        }
     }
 
     private void OnGameExit()
@@ -153,7 +171,6 @@ public class StatsTracker : MonoBehaviour
         if (m_Player.IsPlayerAlive)
         {
             m_Distance += Vector3.Distance(m_LastPlayerPos, m_Player.Position());
-            m_LastPlayerPos = m_Player.Position();
 
             if (m_Distance >= 10000f && !m_ReachedTenThousandMetres)
             {
@@ -161,6 +178,7 @@ public class StatsTracker : MonoBehaviour
                 m_ReachedTenThousandMetres = true;
             }
         }
+        m_LastPlayerPos = m_Player.Position();
 
         if (m_TimeSinceKnockOver < m_KnockBackTime)
         {

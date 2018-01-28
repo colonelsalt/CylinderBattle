@@ -8,10 +8,17 @@ public class Collectible : MonoBehaviour
 
     // --------------------------------------------------------------
 
+    public delegate void DroppedItemEvent(GameObject owner, GameObject receiver);
+    public static event DroppedItemEvent OnDroppedItemPickup;
+
+    // --------------------------------------------------------------
+
     [SerializeField] private Type m_Type;
 
     // How long after Collectible has spawned until it can be collected
     [SerializeField] private float m_CollectionWaitTime = 0f;
+
+    [SerializeField] private bool m_IsAchievementSpecial = false;
 
     // --------------------------------------------------------------
 
@@ -24,6 +31,8 @@ public class Collectible : MonoBehaviour
     private Animator m_Animator;
 
     private bool m_HasBeenCollected = false;
+
+    private GameObject m_Owner;
 
     // --------------------------------------------------------------
 
@@ -45,6 +54,11 @@ public class Collectible : MonoBehaviour
         }
     }
 
+    public void AssignOwner(GameObject owner)
+    {
+        m_Owner = owner;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (m_HasBeenCollected) return;
@@ -54,12 +68,22 @@ public class Collectible : MonoBehaviour
         {
             collector.PickupCollectible(m_Type);
             m_HasBeenCollected = true;
+
+            if (m_Owner != null)
+            {
+                OnDroppedItemPickup(m_Owner, other.gameObject);
+            }
+
             Vanish();
         }
     }
 
     private void Vanish()
     {
+        if (m_IsAchievementSpecial)
+        {
+            BroadcastMessage("OnVanish");
+        }
         SoundManager.Instance.PlayRandom(m_PickupSounds);
         m_Animator.SetTrigger("VanishTrigger");
         Destroy(gameObject, 0.5f);
