@@ -54,24 +54,18 @@ public class Bomb : MonoBehaviour
         {
             // If struck kinematic Rigidbody, make it temporarily be affected by physics
             PhysicsSwitch manualMovedObject = hit.GetComponent<PhysicsSwitch>();
-            if (manualMovedObject != null)
-            {
-                manualMovedObject.ActivatePhysicsReactions(true, m_BombOwner);
-            }
+            manualMovedObject?.ActivatePhysicsReactions(true, m_BombOwner);
 
             // Apply explosion force to each Rigidbody hit
-            Rigidbody rigidBody = hit.GetComponent<Rigidbody>();
-            if (rigidBody != null)
+            Rigidbody body = hit.GetComponent<Rigidbody>();
+            if (body != null)
             {
-                rigidBody.AddExplosionForce(m_ExplosionForce, transform.position, m_ExplosionRadius, m_ExplosionUpForce);
+                body.AddExplosionForce(m_ExplosionForce, transform.position, m_ExplosionRadius, m_ExplosionUpForce);
             }
 
             // Deal damage to all objects with Health
             IHealth health = hit.GetComponent<IHealth>();
-            if (health != null)
-            {
-                health.TakeDamage(m_Damage, m_BombOwner);
-            }
+            health?.TakeDamage(m_Damage, m_BombOwner);
         }
 
         Destroy(gameObject, 1f);

@@ -145,16 +145,13 @@ public class StatsTracker : MonoBehaviour
     // Check for Pi steal
     private void OnDroppedPiPickup(GameObject owner, GameObject receiver)
     {
-        int ownerNum = owner.GetComponent<IPlayer>()?.PlayerNum() ?? 0;
+        int? ownerNum = owner.GetComponent<IPlayer>()?.PlayerNum();
         if (ownerNum == m_Player.PlayerNum())
         {
-            IPlayer playerReceiver = receiver.GetComponent<IPlayer>();
-            if (playerReceiver != null)
+            int? receiverNum = receiver.GetComponent<IPlayer>()?.PlayerNum();
+            if (receiverNum != m_Player.PlayerNum())
             {
-                if (playerReceiver.PlayerNum() != m_Player.PlayerNum())
-                {
-                    OnPlayerStolePi();
-                }
+                OnPlayerStolePi();
             }
         }
     }
@@ -239,26 +236,21 @@ public class StatsTracker : MonoBehaviour
         if (playerNum == m_Player.PlayerNum())
         {
             m_Deaths++;
-            IPlayer playerAttacker = killer.GetComponent<IPlayer>();
-            if (playerAttacker != null)
+
+            int? playerAttackerNum = killer.GetComponent<IPlayer>()?.PlayerNum();
+            if (playerAttackerNum == m_Player.PlayerNum())
             {
-                if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
-                {
-                    OnPlayerSuicide();
-                }
+                OnPlayerSuicide();
             }
         }
         else
         {
             // If other Player was killed by this Player, increment PlayerKills count
-            IPlayer playerAttacker = killer.GetComponent<IPlayer>();
+            int? playerAttackerNum = killer.GetComponent<IPlayer>()?.PlayerNum();
 
-            if (playerAttacker != null)
+            if (playerAttackerNum == m_Player.PlayerNum())
             {
-                if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
-                {
-                    m_PlayerKills++;
-                }
+                m_PlayerKills++;
             }
 
             // If other player fell in lava, check if this counts as our kill
@@ -280,32 +272,26 @@ public class StatsTracker : MonoBehaviour
     // Increment enemy kill count if this tracker's Player killed enemy
     private void OnEnemyDeath(GameObject killer)
     {
-        IPlayer playerAttacker = killer.GetComponent<IPlayer>();
-        if (playerAttacker != null)
+        int? playerKillerNum = killer.GetComponent<IPlayer>()?.PlayerNum();
+        if (playerKillerNum == m_Player.PlayerNum())
         {
-            if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
+            m_EnemyKills++;
+            if (m_EnemyKills >= 10)
             {
-                m_EnemyKills++;
-                if (m_EnemyKills >= 10)
-                {
-                    OnTenEnemyKills();
-                }
+                OnTenEnemyKills();
             }
         }
     }
 
-    // If this tracker's Player knocked opponent over, keep track of it for a few seconds in case it leads to an indirect kill
+    // If this tracker's Player knocked opponent (or self) over, keep track of it for a few seconds in case it leads to an indirect kill
     private void OnObjectKnockedBack(GameObject victim, GameObject attacker)
     {
-        IPlayer playerAttacker = attacker.GetComponent<IPlayer>();
-        if (playerAttacker != null)
+        int? playerAttackerNum = attacker.GetComponent<IPlayer>()?.PlayerNum();
+        if (playerAttackerNum == m_Player.PlayerNum())
         {
-            if (playerAttacker.PlayerNum() == m_Player.PlayerNum())
+            if (victim.GetComponent<IPlayer>() != null)
             {
-                if (victim.GetComponent<IPlayer>() != null)
-                {
-                    m_TimeSinceKnockOver = 0f;
-                }
+                m_TimeSinceKnockOver = 0f;
             }
         }
     }

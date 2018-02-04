@@ -105,9 +105,9 @@ public class EnemyAttacker : MonoBehaviour, IEnemyBehaviour
     {
         // If attacking, and struck kinematic Rigidbody, make it temporarily affected by physics
         PhysicsSwitch manualMovedObject = other.GetComponent<PhysicsSwitch>();
-        if (manualMovedObject != null && m_IsAttacking)
+        if (m_IsAttacking)
         {
-            manualMovedObject.ActivatePhysicsReactions(true, gameObject);
+            manualMovedObject?.ActivatePhysicsReactions(true, gameObject);
         }
 
         // Apply force

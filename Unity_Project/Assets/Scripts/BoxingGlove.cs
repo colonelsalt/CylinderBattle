@@ -122,10 +122,7 @@ public class BoxingGlove : MonoBehaviour
     {
         // If struck a Kinematic Rigidbody, make it temporarily affected by physics
         PhysicsSwitch manualMovedObject = collision.gameObject.GetComponent<PhysicsSwitch>();
-        if (manualMovedObject != null)
-        {
-            manualMovedObject.ActivatePhysicsReactions(true, m_Player.GetGameObject());
-        }
+        manualMovedObject?.ActivatePhysicsReactions(true, m_Player.GetGameObject());
 
         // If object struck has Rigidbody, apply force to it
         Rigidbody bodyStruck = collision.gameObject.GetComponent<Rigidbody>();

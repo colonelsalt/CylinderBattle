@@ -71,10 +71,7 @@ public class SpikeTrap : MonoBehaviour
 
             // If kinematic Rigidbody, temporarily activate its reactions to ohysics
             PhysicsSwitch manualMovedObject = other.GetComponent<PhysicsSwitch>();
-            if (manualMovedObject != null)
-            {
-                manualMovedObject.ActivatePhysicsReactions(true, gameObject);
-            }
+            manualMovedObject?.ActivatePhysicsReactions(true, gameObject);
 
             // Apply knockback force
             Rigidbody body = other.GetComponent<Rigidbody>();
@@ -85,10 +82,7 @@ public class SpikeTrap : MonoBehaviour
 
             // Damage objects with Health
             IHealth otherHealth = other.GetComponent<IHealth>();
-            if (otherHealth != null)
-            {
-                otherHealth.TakeDamage(1, gameObject);
-            }
+            otherHealth?.TakeDamage(1, gameObject);
         }
     }
 
