@@ -5,7 +5,6 @@ using UnityEngine;
 // Fired from PortalGun; teleports anything in scene it triggers against between its two endpoints
 public class Portal : MonoBehaviour
 {
-
     // --------------------------------------------------------------
 
     public enum Type { FIRST, SECOND }
@@ -77,11 +76,9 @@ public class Portal : MonoBehaviour
 
     public static void DeactivateAll()
     {
-        if (PORTALS_IN_PLAY[0] != null) PORTALS_IN_PLAY[0].Deactivate();
-        if (PORTALS_IN_PLAY[1] != null) PORTALS_IN_PLAY[1].Deactivate();
+        PORTALS_IN_PLAY[0]?.Deactivate();
+        PORTALS_IN_PLAY[1]?.Deactivate();
     }
-
-
 
     private void OnTriggerEnter(Collider other)
     {

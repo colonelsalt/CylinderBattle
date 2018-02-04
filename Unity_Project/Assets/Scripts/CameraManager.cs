@@ -101,16 +101,16 @@ public class CameraManager : MonoBehaviour
     {
         m_SplitScreenMask.transform.rotation = m_SecondaryCamera.transform.rotation;
 
-        // Perpendicular between screen midpoint and Player 2
-        Vector3 screenOffset = m_SecondaryCamera.WorldToScreenPoint(m_Player2.position) - m_SecondaryCamera.WorldToScreenPoint(m_Player2.position + m_CameraOffset);   
+        // Perpendicular between Player 2's corner of the screen and screen midpoint
+        Vector3 halfScreenDiagonal = m_SecondaryCamera.WorldToScreenPoint(m_Midpoint) - m_SecondaryCamera.WorldToScreenPoint(m_Player2.position + m_CameraOffset);   
 
-        // Rotate mask away from camera by this angle
-        m_SplitScreenMask.transform.Rotate(m_SplitScreenMask.transform.forward, Mathf.Atan2(screenOffset.y, screenOffset.x) * Mathf.Rad2Deg, Space.World);
+        // Rotate mask away from camera by angle (formed by diagonal and bottom screen horizontal line)
+        m_SplitScreenMask.transform.Rotate(m_SplitScreenMask.transform.forward, Mathf.Atan2(halfScreenDiagonal.y, halfScreenDiagonal.x) * Mathf.Rad2Deg, Space.World);
 
-        // Movement of mask so it covers half of secondary camera
+        // Shift mask over by half its width so it covers half of secondary camera
         Vector3 horizontalShift = m_SplitScreenMask.transform.right * m_SplitScreenMask.transform.lossyScale.x / 2f;
 
-        // Place mask in front of camera
+        // Place mask in front of camera + shift
         m_SplitScreenMask.transform.position = m_SecondaryCamera.transform.position + (m_SecondaryCamera.transform.forward * m_MaskOffset) + horizontalShift; 
     }
 

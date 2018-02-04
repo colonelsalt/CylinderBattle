@@ -33,10 +33,12 @@ public class WeaponManager : MonoBehaviour
 
     private int m_PlayerNum;
 
+    // Whether Player currently holds (but has not yet activated) a weapon
     private bool m_HasWeapon = false;
 
     private bool m_WeaponIsActive = false;
 
+    // Currently held weapon
     private Weapon m_Weapon;
 
     // --------------------------------------------------------------

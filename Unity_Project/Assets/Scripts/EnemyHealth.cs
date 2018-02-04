@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Health component for enemies
 public class EnemyHealth : MonoBehaviour, IHealth
 {
     // --------------------------------------------------------------

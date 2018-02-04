@@ -15,7 +15,7 @@ public class WeaponBlock : MonoBehaviour
 {
     // --------------------------------------------------------------
 
-    // Renderer material doesn't cast shadown, so spawn blob shadow prefab to follow Block's position
+    // Renderer material doesn't cast shadow, so spawn blob shadow prefab to emulate it
     [SerializeField] private GameObject m_ShadowPrefab;
 
     // --------------------------------------------------------------

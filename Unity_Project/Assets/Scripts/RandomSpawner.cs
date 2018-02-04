@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Spawns objects of any type in a random selection of its Transform children
+// Spawns given prefab in a random selection of Transform children (Spawn positions)
 public class RandomSpawner : MonoBehaviour
 {
     // --------------------------------------------------------------
@@ -72,7 +72,7 @@ public class RandomSpawner : MonoBehaviour
     {
         m_TimeSinceLastSpawn = 0f;
         m_NextSpawnTime = Random.Range(m_MinTimeBetweenSpawns, m_MaxTimeBetweenSpawns);
-        UpdateVacantCount();
+        UpdateVacancyCount();
 
         // Do not spawn if already occupied all allowed positions
         if (m_NumVacantPositions <= 0) return;
@@ -96,14 +96,14 @@ public class RandomSpawner : MonoBehaviour
         }
     }
 
-    // Whether a given spawn position already in use by another object of this type
+    // Whether a given spawn position is already in use by another object of this type
     private bool IsOccupied(Transform t) 
     {
         return (t.childCount != 0);
     }
 
     // Check each spawn position (in case spawned object was destroyed), and update count of vacant positions
-    private void UpdateVacantCount()
+    private void UpdateVacancyCount()
     {
         int numOccupied = 0;
         foreach (Transform child in transform)
