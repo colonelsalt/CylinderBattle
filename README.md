@@ -1,32 +1,8 @@
-# README #
+# Cylinder Battle #
 
-This README documents whatever steps are necessary to get your application up and running.
+2-player local split-screen action platformer. Collect all the Pis before your opponent to win the game!
+Controls are as follows:
 
-### What is this repository for? ###
+![Controls](https://img.itch.zone/aW1nLzEwMzIxMTQucG5n/original/EeG2BK.png)
 
-* Search For A Star 2018
-
-### Unity_Project folder? ###
-
-* This folder contains the base Unity project of the game.
-
-### Playable_Demo folder? ###
-
-* This folder contains an .exe file that you can run to play a build version of the core project.
-
-### What are the controls? ###
-
-* Player 1 uses W,A,S,D keys to move and SPACE to jump.
-* Player 2 uses ARROW keys to move and RIGHT CTRL to jump.
-
-### What does the UI represent? ###
-
-* If Player 1 falls into the water Player 2 gets a point and vice versa.
-
-### Do I have to keep the same game mechanics? ###
-
-* No, you can be as creative as you like. :)
-
-### Can I edit the existing code? ###
-
-* Yes, we encourage you to use and edit the existing code to your needs. It must be clear to the assessors though that there is purpose behind these changes and that you fully understand the original source.
+Unity game submission for Aardvark Swift's 2018 Rising Star competition. Download Windows executable from [the game's Itch.io page](https://itch.io/jam/rising-star-game-dev-challenge-2018/rate/218423).
